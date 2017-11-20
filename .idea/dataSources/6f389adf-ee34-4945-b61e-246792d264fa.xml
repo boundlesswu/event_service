@@ -1,0 +1,4796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="vs_ieye@192.168.20.222">
+  <database-model serializer="dbm" rdbms="POSTGRES" format-version="4.4">
+    <root id="1"/>
+    <database id="2" parent="1" name="vs_ieye">
+      <ObjectId>16385</ObjectId>
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </database>
+    <database id="3" parent="1" name="postgres">
+      <ObjectId>12128</ObjectId>
+    </database>
+    <database id="4" parent="1" name="test">
+      <ObjectId>25554</ObjectId>
+    </database>
+    <database id="5" parent="1" name="justTest">
+      <ObjectId>28755</ObjectId>
+    </database>
+    <schema id="6" parent="2" name="public">
+      <ObjectId>2200</ObjectId>
+      <IntrospectionTimestamp>2017-11-14.11:48:59.132</IntrospectionTimestamp>
+      <IntrospectionStateNumber>9271439</IntrospectionStateNumber>
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="7" parent="2" name="pg_catalog">
+      <ObjectId>11</ObjectId>
+    </schema>
+    <schema id="8" parent="2" name="pg_toast">
+      <ObjectId>99</ObjectId>
+    </schema>
+    <schema id="9" parent="2" name="pg_temp_1">
+      <ObjectId>11215</ObjectId>
+    </schema>
+    <schema id="10" parent="2" name="pg_toast_temp_1">
+      <ObjectId>11216</ObjectId>
+    </schema>
+    <schema id="11" parent="2" name="information_schema">
+      <ObjectId>11580</ObjectId>
+    </schema>
+    <sequence id="12" parent="6" name="td_device_type_id_seq">
+      <ObjectId>27884</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="13" parent="6" name="td_pmsn_function_id_seq">
+      <ObjectId>27886</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="14" parent="6" name="td_pmsn_system_id_seq">
+      <ObjectId>27888</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="15" parent="6" name="td_resource_type_id_seq">
+      <ObjectId>27890</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="16" parent="6" name="td_server_type_id_seq">
+      <ObjectId>27892</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="17" parent="6" name="ti_Role_RoleID_seq">
+      <ObjectId>27916</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="18" parent="6" name="ti_User_UserID_seq">
+      <ObjectId>27922</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="19" parent="6" name="ti_casecade_casecade_id_seq">
+      <ObjectId>29846</ObjectId>
+      <StateNumber>9252588</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="20" parent="6" name="ti_cloud_cloud_id_seq">
+      <ObjectId>27894</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="21" parent="6" name="ti_cruise_cruise_id_seq">
+      <ObjectId>27896</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="22" parent="6" name="ti_device_dev_id_seq">
+      <ObjectId>27898</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="23" parent="6" name="ti_device_iau_ex_dev_id_seq">
+      <ObjectId>28712</ObjectId>
+      <StateNumber>9093789</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="24" parent="6" name="ti_device_nvs_ex_dev_id_seq">
+      <ObjectId>27900</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="25" parent="6" name="ti_event_contacts_contact_id_seq">
+      <ObjectId>29598</ObjectId>
+      <StateNumber>9166940</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="26" parent="6" name="ti_event_event_id_seq">
+      <ObjectId>28739</ObjectId>
+      <StateNumber>9094300</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="27" parent="6" name="ti_event_linkage_linkage_id_seq">
+      <ObjectId>29893</ObjectId>
+      <StateNumber>9271437</StateNumber>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="28" parent="6" name="ti_event_stom_stom_id_seq">
+      <ObjectId>29572</ObjectId>
+      <StateNumber>9161815</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="29" parent="6" name="ti_ftp_ftp_id_seq">
+      <ObjectId>27902</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="30" parent="6" name="ti_group_group_id_seq">
+      <ObjectId>27904</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="31" parent="6" name="ti_guard_plan_guard_plan_id_seq">
+      <ObjectId>28682</ObjectId>
+      <StateNumber>55450</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="32" parent="6" name="ti_machine_machine_id_seq">
+      <ObjectId>27906</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="33" parent="6" name="ti_protocol_type_id_seq">
+      <ObjectId>27908</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="34" parent="6" name="ti_record_plan_rec_plan_id_seq">
+      <ObjectId>27910</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="35" parent="6" name="ti_record_timeplan_rec_timeplan_id_seq">
+      <ObjectId>27912</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="36" parent="6" name="ti_resource_res_id_seq">
+      <ObjectId>27914</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="37" parent="6" name="ti_server_main_ex_svr_id_seq">
+      <ObjectId>27918</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="38" parent="6" name="ti_server_svr_id_seq">
+      <ObjectId>27920</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="39" parent="6" name="ti_switch_plan_switch_plan_id_seq">
+      <ObjectId>29827</ObjectId>
+      <StateNumber>9252540</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="40" parent="6" name="ti_switch_seq_switch_seq_id_seq">
+      <ObjectId>29751</ObjectId>
+      <StateNumber>9167343</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="41" parent="6" name="ti_switch_task_switch_task_id_seq">
+      <ObjectId>29714</ObjectId>
+      <StateNumber>9167326</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="42" parent="6" name="ti_video_seq_seq_id_seq">
+      <ObjectId>27924</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="43" parent="6" name="ti_video_wall_wall_id_seq">
+      <ObjectId>27926</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="44" parent="6" name="tl_operator_log_id_seq">
+      <ObjectId>27928</ObjectId>
+      <StateNumber>46863</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <sequence id="45" parent="6" name="tr_iaag_cam_iaag_chn_id_seq">
+      <ObjectId>28721</ObjectId>
+      <StateNumber>9094299</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+    </sequence>
+    <table id="46" parent="6" name="td_device_type">
+      <ObjectId>27930</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="47" parent="6" name="td_event_type">
+      <ObjectId>29583</ObjectId>
+      <StateNumber>9165433</StateNumber>
+    </table>
+    <table id="48" parent="6" name="td_pmsn_function">
+      <ObjectId>27935</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="49" parent="6" name="td_pmsn_system">
+      <ObjectId>27940</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="50" parent="6" name="td_protocol_type">
+      <ObjectId>27945</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="51" parent="6" name="td_resource_type">
+      <ObjectId>27950</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="52" parent="6" name="td_server_type">
+      <ObjectId>27955</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="53" parent="6" name="ti_cascade">
+      <ObjectId>29848</ObjectId>
+      <StateNumber>9252671</StateNumber>
+    </table>
+    <table id="54" parent="6" name="ti_cloud">
+      <ObjectId>27960</ObjectId>
+      <StateNumber>9252650</StateNumber>
+    </table>
+    <table id="55" parent="6" name="ti_cruise">
+      <ObjectId>27967</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="56" parent="6" name="ti_cruise_ex">
+      <ObjectId>27971</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="57" parent="6" name="ti_dev_state">
+      <ObjectId>27979</ObjectId>
+      <StateNumber>47667</StateNumber>
+    </table>
+    <table id="58" parent="6" name="ti_device">
+      <ObjectId>27985</ObjectId>
+      <StateNumber>9167176</StateNumber>
+    </table>
+    <table id="59" parent="6" name="ti_device_dec_ex">
+      <ObjectId>27992</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="60" parent="6" name="ti_device_iau_ex">
+      <ObjectId>28703</ObjectId>
+      <StateNumber>9093789</StateNumber>
+    </table>
+    <table id="61" parent="6" name="ti_device_matrix_ex">
+      <ObjectId>27997</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="62" parent="6" name="ti_device_nvs_ex">
+      <ObjectId>28002</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="63" parent="6" name="ti_device_sio_ex">
+      <ObjectId>28008</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="64" parent="6" name="ti_event">
+      <ObjectId>28741</ObjectId>
+      <StateNumber>9271439</StateNumber>
+    </table>
+    <table id="65" parent="6" name="ti_event_contacts">
+      <ObjectId>29600</ObjectId>
+      <StateNumber>9166940</StateNumber>
+    </table>
+    <table id="66" parent="6" name="ti_event_device_ex">
+      <ObjectId>29645</ObjectId>
+      <StateNumber>9167176</StateNumber>
+    </table>
+    <table id="67" parent="6" name="ti_event_ia_ex">
+      <ObjectId>29675</ObjectId>
+      <StateNumber>9167303</StateNumber>
+    </table>
+    <table id="68" parent="6" name="ti_event_linkage">
+      <ObjectId>29895</ObjectId>
+      <StateNumber>9271439</StateNumber>
+    </table>
+    <table id="69" parent="6" name="ti_event_machine_ex">
+      <ObjectId>29660</ObjectId>
+      <StateNumber>9167189</StateNumber>
+    </table>
+    <table id="70" parent="6" name="ti_event_monitor_ex">
+      <ObjectId>29611</ObjectId>
+      <StateNumber>9252792</StateNumber>
+    </table>
+    <table id="71" parent="6" name="ti_event_sio_ex">
+      <ObjectId>29630</ObjectId>
+      <StateNumber>9167151</StateNumber>
+    </table>
+    <table id="72" parent="6" name="ti_event_stom">
+      <ObjectId>29574</ObjectId>
+      <StateNumber>9161815</StateNumber>
+    </table>
+    <table id="73" parent="6" name="ti_ftp">
+      <ObjectId>28013</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="74" parent="6" name="ti_group">
+      <ObjectId>28020</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="75" parent="6" name="ti_guard_plan">
+      <ObjectId>28679</ObjectId>
+      <StateNumber>9166964</StateNumber>
+    </table>
+    <table id="76" parent="6" name="ti_machine">
+      <ObjectId>28026</ObjectId>
+      <StateNumber>9167189</StateNumber>
+    </table>
+    <table id="77" parent="6" name="ti_preset">
+      <ObjectId>28030</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="78" parent="6" name="ti_record_plan">
+      <ObjectId>28033</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="79" parent="6" name="ti_record_timeplan">
+      <ObjectId>28047</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="80" parent="6" name="ti_res_cam_ex">
+      <ObjectId>28054</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="81" parent="6" name="ti_res_screen_ex">
+      <ObjectId>28065</ObjectId>
+      <StateNumber>9271237</StateNumber>
+    </table>
+    <table id="82" parent="6" name="ti_res_sio_ex">
+      <ObjectId>28074</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="83" parent="6" name="ti_res_state">
+      <ObjectId>28078</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="84" parent="6" name="ti_resource">
+      <ObjectId>28083</ObjectId>
+      <StateNumber>9252792</StateNumber>
+    </table>
+    <table id="85" parent="6" name="ti_role">
+      <ObjectId>28087</ObjectId>
+      <StateNumber>9252671</StateNumber>
+    </table>
+    <table id="86" parent="6" name="ti_server">
+      <ObjectId>28093</ObjectId>
+      <StateNumber>9167191</StateNumber>
+    </table>
+    <table id="87" parent="6" name="ti_server_main_ex">
+      <ObjectId>28098</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="88" parent="6" name="ti_server_media_ex">
+      <ObjectId>28101</ObjectId>
+      <StateNumber>9271235</StateNumber>
+    </table>
+    <table id="89" parent="6" name="ti_server_state">
+      <ObjectId>28104</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="90" parent="6" name="ti_smtp">
+      <ObjectId>28109</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="91" parent="6" name="ti_sub_pmsn_sys">
+      <ObjectId>28119</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="92" parent="6" name="ti_sub_res">
+      <ObjectId>28122</ObjectId>
+      <Comment>摄像机订阅</Comment>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="93" parent="6" name="ti_switch_plan">
+      <ObjectId>29829</ObjectId>
+      <StateNumber>9252549</StateNumber>
+    </table>
+    <table id="94" parent="6" name="ti_switch_plan_ex">
+      <ObjectId>28130</ObjectId>
+      <StateNumber>9252549</StateNumber>
+    </table>
+    <table id="95" parent="6" name="ti_switch_seq">
+      <ObjectId>29753</ObjectId>
+      <StateNumber>9167379</StateNumber>
+    </table>
+    <table id="96" parent="6" name="ti_switch_seq_ex">
+      <ObjectId>28139</ObjectId>
+      <StateNumber>9167346</StateNumber>
+    </table>
+    <table id="97" parent="6" name="ti_switch_task">
+      <ObjectId>29716</ObjectId>
+      <StateNumber>9167375</StateNumber>
+    </table>
+    <table id="98" parent="6" name="ti_switch_task_ex">
+      <ObjectId>29783</ObjectId>
+      <StateNumber>9167379</StateNumber>
+    </table>
+    <table id="99" parent="6" name="ti_system_config">
+      <ObjectId>28150</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="100" parent="6" name="ti_user">
+      <ObjectId>28155</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="101" parent="6" name="ti_user_state">
+      <ObjectId>28171</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="102" parent="6" name="ti_video_seq">
+      <ObjectId>28177</ObjectId>
+      <Comment>用户自定义序列,实时页面切换</Comment>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="103" parent="6" name="ti_video_seq_ex">
+      <ObjectId>28185</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="104" parent="6" name="ti_video_wall">
+      <ObjectId>28189</ObjectId>
+      <StateNumber>9167330</StateNumber>
+    </table>
+    <table id="105" parent="6" name="tl_operator">
+      <ObjectId>28196</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="106" parent="6" name="tr_func_user_res">
+      <ObjectId>28203</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="107" parent="6" name="tr_group_res">
+      <ObjectId>28208</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="108" parent="6" name="tr_iaag_cam">
+      <ObjectId>28723</ObjectId>
+      <StateNumber>9167191</StateNumber>
+    </table>
+    <table id="109" parent="6" name="tr_record_plan_cam">
+      <ObjectId>28211</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="110" parent="6" name="tr_role_funcpmsn_group">
+      <ObjectId>28214</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="111" parent="6" name="tr_role_group">
+      <ObjectId>28217</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="112" parent="6" name="tr_role_pmsm_sys">
+      <ObjectId>28220</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <table id="113" parent="6" name="tr_user_role">
+      <ObjectId>28223</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </table>
+    <view id="114" parent="6" name="vi_getPresetName">
+      <ObjectId>29556</ObjectId>
+      <StateNumber>9157174</StateNumber>
+    </view>
+    <view id="115" parent="6" name="vi_getcamplanlist">
+      <ObjectId>28226</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </view>
+    <view id="116" parent="6" name="vi_getcamplanlist2">
+      <ObjectId>28231</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </view>
+    <view id="117" parent="6" name="vi_getdevlist">
+      <ObjectId>28236</ObjectId>
+      <StateNumber>9093549</StateNumber>
+    </view>
+    <view id="118" parent="6" name="vi_geteventlist">
+      <ObjectId>29706</ObjectId>
+      <StateNumber>9167639</StateNumber>
+    </view>
+    <view id="119" parent="6" name="vi_getgrouplist">
+      <ObjectId>28241</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </view>
+    <view id="120" parent="6" name="vi_getiaag_cam_by_user">
+      <ObjectId>29880</ObjectId>
+      <StateNumber>9260399</StateNumber>
+    </view>
+    <view id="121" parent="6" name="vi_getiaaggrouplist">
+      <ObjectId>29560</ObjectId>
+      <StateNumber>9157594</StateNumber>
+    </view>
+    <view id="122" parent="6" name="vi_getreslist">
+      <ObjectId>28245</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </view>
+    <view id="123" parent="6" name="vi_getreslist2">
+      <ObjectId>28250</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </view>
+    <view id="124" parent="6" name="vi_getswitchtasklist">
+      <ObjectId>29747</ObjectId>
+      <StateNumber>9167335</StateNumber>
+    </view>
+    <view id="125" parent="6" name="vi_getuserlist">
+      <ObjectId>28255</ObjectId>
+      <StateNumber>46863</StateNumber>
+    </view>
+    <column id="126" parent="46" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>td_device_type_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;td_device_type_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="127" parent="46" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="128" parent="46" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="129" parent="46" name="parentid">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="130" parent="46" name="td_device_type_pkey">
+      <ObjectId>28259</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="131" parent="46" name="td_device_type_pkey">
+      <ObjectId>28260</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_device_type_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="132" parent="47" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9165433</StateNumber>
+    </column>
+    <column id="133" parent="47" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9165433</StateNumber>
+    </column>
+    <column id="134" parent="47" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9165433</StateNumber>
+    </column>
+    <column id="135" parent="47" name="parentid">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9165433</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="136" parent="47" name="td_event_type_pkey">
+      <ObjectId>29587</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="137" parent="47" name="td_event_type_pkey">
+      <ObjectId>29588</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_event_type_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="138" parent="48" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>td_pmsn_function_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;td_pmsn_function_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="139" parent="48" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="140" parent="48" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="141" parent="48" name="parentid">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="142" parent="48" name="td_pmsn_function_pkey">
+      <ObjectId>28261</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="143" parent="48" name="td_pmsn_function_pkey">
+      <ObjectId>28262</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_pmsn_function_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="144" parent="49" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>td_pmsn_system_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;td_pmsn_system_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="145" parent="49" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="146" parent="49" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="147" parent="49" name="parentid">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="148" parent="49" name="td_pmsn_system_pkey">
+      <ObjectId>28263</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="149" parent="49" name="td_pmsn_system_pkey">
+      <ObjectId>28264</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_pmsn_system_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="150" parent="50" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_protocol_type_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_protocol_type_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="151" parent="50" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="152" parent="50" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="153" parent="50" name="parentid">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="154" parent="50" name="td_protocol_type_pkey">
+      <ObjectId>28265</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="155" parent="50" name="td_protocol_type_pkey">
+      <ObjectId>28266</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_protocol_type_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="156" parent="51" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>td_resource_type_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;td_resource_type_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="157" parent="51" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="158" parent="51" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="159" parent="51" name="parentid">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="160" parent="51" name="td_resource_type_pkey">
+      <ObjectId>28267</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="161" parent="51" name="td_resource_type_pkey">
+      <ObjectId>28268</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_resource_type_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="162" parent="52" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>td_server_type_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;td_server_type_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="163" parent="52" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="164" parent="52" name="refvalue">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="165" parent="52" name="parent_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="166" parent="52" name="td_server_type_pkey">
+      <ObjectId>28269</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="167" parent="52" name="td_server_type_pkey">
+      <ObjectId>28270</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>td_server_type_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="168" parent="53" name="cascade_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252670</StateNumber>
+      <SequenceName>ti_casecade_casecade_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_casecade_casecade_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="169" parent="53" name="cascade_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252670</StateNumber>
+    </column>
+    <column id="170" parent="53" name="cascade_type">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252670</StateNumber>
+    </column>
+    <column id="171" parent="53" name="cascade_prototype">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252670</StateNumber>
+    </column>
+    <column id="172" parent="53" name="enable_state">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <column id="173" parent="53" name="ip">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <column id="174" parent="53" name="port">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <column id="175" parent="53" name="username">
+      <Position>8</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <column id="176" parent="53" name="password">
+      <Position>9</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <column id="177" parent="53" name="sip_id">
+      <Position>10</Position>
+      <DataType>varchar(60)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <column id="178" parent="53" name="role_id">
+      <Position>11</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9252588</StateNumber>
+    </column>
+    <index id="179" parent="53" name="ti_casecade_pkey">
+      <ObjectId>29852</ObjectId>
+      <ColNames>cascade_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="180" parent="53" name="ti_casecade_pkey">
+      <ObjectId>29853</ObjectId>
+      <ColNames>cascade_id</ColNames>
+      <UnderlyingIndexName>ti_casecade_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="181" parent="53" name="ti_cascade_role_id_fkey">
+      <ObjectId>29864</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <column id="182" parent="54" name="cloud_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_cloud_cloud_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_cloud_cloud_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="183" parent="54" name="cloud_type">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="184" parent="54" name="enable_state">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="185" parent="54" name="ip">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="186" parent="54" name="port">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="187" parent="54" name="username">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="188" parent="54" name="password">
+      <Position>7</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="189" parent="54" name="cloud_key">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="190" parent="54" name="role_id">
+      <Position>10</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9252650</StateNumber>
+    </column>
+    <index id="191" parent="54" name="ti_cloud_pkey">
+      <ObjectId>28271</ObjectId>
+      <ColNames>cloud_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="192" parent="54" name="ti_cloud_pkey">
+      <ObjectId>28272</ObjectId>
+      <ColNames>cloud_id</ColNames>
+      <UnderlyingIndexName>ti_cloud_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="193" parent="54" name="fk_cloud_role">
+      <ObjectId>29859</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="194" parent="55" name="cruise_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_cruise_cruise_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_cruise_cruise_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="195" parent="55" name="res_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="196" parent="55" name="cruise_no">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="197" parent="55" name="cruise_name">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="198" parent="55" name="cruise_token">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="199" parent="55" name="ti_cruise_pkey">
+      <ObjectId>28273</ObjectId>
+      <ColNames>cruise_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="200" parent="55" name="ti_cruise_pkey">
+      <ObjectId>28274</ObjectId>
+      <ColNames>cruise_id</ColNames>
+      <UnderlyingIndexName>ti_cruise_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="201" parent="55" name="ti_cruise_res_id_fkey">
+      <ObjectId>28360</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="202" parent="56" name="cruise_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="203" parent="56" name="preset_no">
+      <Position>2</Position>
+      <DataType>varchar|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="204" parent="56" name="preset_index">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="205" parent="56" name="cruise_time">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>20</DefaultExpression>
+    </column>
+    <column id="206" parent="56" name="cruise_speed">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>180</DefaultExpression>
+    </column>
+    <index id="207" parent="56" name="ti_cruise_ex_pkey">
+      <ObjectId>28275</ObjectId>
+      <ColNames>cruise_id
+preset_no
+preset_index</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="208" parent="56" name="ti_cruise_ex_pkey">
+      <ObjectId>28276</ObjectId>
+      <ColNames>cruise_id
+preset_no
+preset_index</ColNames>
+      <UnderlyingIndexName>ti_cruise_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="209" parent="56" name="ti_cruise_ex_cruise_id_fkey">
+      <ObjectId>28365</ObjectId>
+      <ColNames>cruise_id</ColNames>
+      <RefTableId>27967</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_cruise</RefTableName>
+      <RefKeyName>ti_cruise_pkey</RefKeyName>
+      <RefColNames>cruise_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="210" parent="57" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="211" parent="57" name="online_state">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="212" parent="57" name="alarm_state">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="213" parent="57" name="burden">
+      <Position>4</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="214" parent="57" name="ti_dev_state_pkey">
+      <ObjectId>28277</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="215" parent="57" name="ti_dev_state_pkey">
+      <ObjectId>28278</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_dev_state_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="216" parent="57" name="ti_dev_state_dev_id_fkey">
+      <ObjectId>28626</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="217" parent="58" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_device_dev_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_device_dev_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="218" parent="58" name="dev_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="219" parent="58" name="svr_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="220" parent="58" name="dev_name">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="221" parent="58" name="dev_type">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="222" parent="58" name="protocol_type">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="223" parent="58" name="dev_sn">
+      <Position>7</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="224" parent="58" name="group_id">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="225" parent="58" name="remark">
+      <Position>9</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="226" parent="58" name="ti_device_pkey">
+      <ObjectId>28279</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="227" parent="58" name="ti_device_pkey">
+      <ObjectId>28280</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_device_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="228" parent="58" name="ti_device_svr_id_fkey">
+      <ObjectId>28370</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <RefTableId>28093</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_server</RefTableName>
+      <RefKeyName>ti_server_pkey</RefKeyName>
+      <RefColNames>svr_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="229" parent="58" name="ti_device_group_id_fkey">
+      <ObjectId>28375</ObjectId>
+      <ColNames>group_id</ColNames>
+      <RefTableId>28020</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_group</RefTableName>
+      <RefKeyName>ti_group_pkey</RefKeyName>
+      <RefColNames>group_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="230" parent="59" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="231" parent="59" name="chn_dec">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="232" parent="59" name="dec_mode">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>2</DefaultExpression>
+    </column>
+    <column id="233" parent="59" name="ip">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="234" parent="59" name="port">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="235" parent="59" name="username">
+      <Position>6</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="236" parent="59" name="password">
+      <Position>7</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="237" parent="59" name="web_mgr">
+      <Position>8</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="238" parent="59" name="ti_device_dec_ex_pkey">
+      <ObjectId>28281</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="239" parent="59" name="ti_device_dec_ex_pkey">
+      <ObjectId>28282</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_device_dec_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="240" parent="59" name="ti_device_dec_ex_dev_id_fkey">
+      <ObjectId>28380</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="241" parent="60" name="chn_video">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9093310</StateNumber>
+    </column>
+    <column id="242" parent="60" name="ip">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9093310</StateNumber>
+    </column>
+    <column id="243" parent="60" name="port">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9093310</StateNumber>
+    </column>
+    <column id="244" parent="60" name="username">
+      <Position>5</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>9093310</StateNumber>
+    </column>
+    <column id="245" parent="60" name="password">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9093310</StateNumber>
+    </column>
+    <column id="246" parent="60" name="dev_id">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9093789</StateNumber>
+      <SequenceName>ti_device_iau_ex_dev_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_device_iau_ex_dev_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <index id="247" parent="60" name="ti_device_iau_ex_pkey">
+      <ObjectId>28715</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="248" parent="60" name="ti_device_iau_ex_pkey">
+      <ObjectId>28716</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_device_iau_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="249" parent="61" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="250" parent="61" name="chn_videoin">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="251" parent="61" name="chn_videoout">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="252" parent="61" name="com">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="253" parent="61" name="addr">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="254" parent="61" name="ip">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="255" parent="61" name="port">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="256" parent="61" name="username">
+      <Position>8</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="257" parent="61" name="password">
+      <Position>9</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="258" parent="61" name="web_mgr">
+      <Position>10</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="259" parent="61" name="ti_device_matrix_ex_pkey">
+      <ObjectId>28283</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="260" parent="61" name="ti_device_matrix_ex_pkey">
+      <ObjectId>28284</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_device_matrix_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="261" parent="61" name="ti_device_matrix_ex_dev_id_fkey">
+      <ObjectId>28385</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="262" parent="62" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_device_nvs_ex_dev_id_seq</SequenceName>
+    </column>
+    <column id="263" parent="62" name="chn_video">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="264" parent="62" name="chn_alarmin">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="265" parent="62" name="chn_alarmout">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="266" parent="62" name="ip">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="267" parent="62" name="port">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="268" parent="62" name="username">
+      <Position>7</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="269" parent="62" name="password">
+      <Position>8</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="270" parent="62" name="web_mgr">
+      <Position>9</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="271" parent="62" name="ti_device_nvs_ex_pkey">
+      <ObjectId>28285</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="272" parent="62" name="ti_device_nvs_ex_pkey">
+      <ObjectId>28286</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_device_nvs_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="273" parent="62" name="ti_device_nvs_ex_dev_id_fkey">
+      <ObjectId>28390</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="274" parent="63" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="275" parent="63" name="chn_alarmin">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="276" parent="63" name="chn_alarmout">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="277" parent="63" name="com">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="278" parent="63" name="addr">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="279" parent="63" name="ip">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="280" parent="63" name="port">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="281" parent="63" name="username">
+      <Position>8</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="282" parent="63" name="password">
+      <Position>9</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="283" parent="63" name="ti_device_sio_ex_pkey">
+      <ObjectId>28287</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="284" parent="63" name="ti_device_sio_ex_pkey">
+      <ObjectId>28288</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <UnderlyingIndexName>ti_device_sio_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="285" parent="63" name="ti_device_sio_ex_dev_id_fkey">
+      <ObjectId>28395</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="286" parent="64" name="event_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+      <SequenceName>ti_event_event_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_event_event_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="287" parent="64" name="event_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+    </column>
+    <column id="288" parent="64" name="event_genus">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+    </column>
+    <column id="289" parent="64" name="event_name">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+    </column>
+    <column id="290" parent="64" name="event_desc">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9094300</StateNumber>
+    </column>
+    <column id="291" parent="64" name="enable_state">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="292" parent="64" name="event_level">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+      <DefaultExpression>2</DefaultExpression>
+    </column>
+    <column id="293" parent="64" name="auto_release_interval">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094300</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="294" parent="64" name="guard_plan_id">
+      <Position>9</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9094300</StateNumber>
+    </column>
+    <column id="295" parent="64" name="event_type">
+      <Position>10</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9264016</StateNumber>
+    </column>
+    <index id="296" parent="64" name="ti_event_pkey">
+      <ObjectId>28748</ObjectId>
+      <ColNames>event_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="297" parent="64" name="ti_event_pkey">
+      <ObjectId>28749</ObjectId>
+      <ColNames>event_id</ColNames>
+      <UnderlyingIndexName>ti_event_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="298" parent="64" name="ti_event_guard_plan_id_fkey">
+      <ObjectId>29606</ObjectId>
+      <ColNames>guard_plan_id</ColNames>
+      <RefTableId>28679</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_guard_plan</RefTableName>
+      <RefKeyName>ti_guard_plan_pkey</RefKeyName>
+      <RefColNames>guard_plan_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <column id="299" parent="65" name="contact_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9166940</StateNumber>
+      <SequenceName>ti_event_contacts_contact_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_event_contacts_contact_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="300" parent="65" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9166940</StateNumber>
+    </column>
+    <column id="301" parent="65" name="phone_number">
+      <Position>3</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>9166940</StateNumber>
+    </column>
+    <column id="302" parent="65" name="email">
+      <Position>4</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>9166940</StateNumber>
+    </column>
+    <column id="303" parent="65" name="cellphone">
+      <Position>5</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>9166940</StateNumber>
+    </column>
+    <index id="304" parent="65" name="ti_event_contacts_pkey">
+      <ObjectId>29604</ObjectId>
+      <ColNames>contact_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="305" parent="65" name="ti_event_contacts_pkey">
+      <ObjectId>29605</ObjectId>
+      <ColNames>contact_id</ColNames>
+      <UnderlyingIndexName>ti_event_contacts_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="306" parent="66" name="event_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167176</StateNumber>
+    </column>
+    <column id="307" parent="66" name="dev_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167176</StateNumber>
+    </column>
+    <column id="308" parent="66" name="event_type">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167176</StateNumber>
+    </column>
+    <index id="309" parent="66" name="ti_event_device_ex_pkey">
+      <ObjectId>29648</ObjectId>
+      <ColNames>event_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="310" parent="66" name="ti_event_device_ex_pkey">
+      <ObjectId>29649</ObjectId>
+      <ColNames>event_id</ColNames>
+      <UnderlyingIndexName>ti_event_device_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="311" parent="66" name="ti_event_device_ex_event_id_fkey">
+      <ObjectId>29650</ObjectId>
+      <ColNames>event_id</ColNames>
+      <RefTableId>28741</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_event</RefTableName>
+      <RefKeyName>ti_event_pkey</RefKeyName>
+      <RefColNames>event_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="312" parent="66" name="ti_event_device_ex_dev_id_fkey">
+      <ObjectId>29655</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="313" parent="67" name="event_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167191</StateNumber>
+    </column>
+    <column id="314" parent="67" name="iaag_chn_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167191</StateNumber>
+    </column>
+    <column id="315" parent="67" name="svr_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167191</StateNumber>
+    </column>
+    <column id="316" parent="67" name="res_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167191</StateNumber>
+    </column>
+    <index id="317" parent="67" name="ti_event_ ia_ex_pkey">
+      <ObjectId>29678</ObjectId>
+      <ColNames>event_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="318" parent="67" name="ti_event_ ia_ex_pkey">
+      <ObjectId>29679</ObjectId>
+      <ColNames>event_id</ColNames>
+      <UnderlyingIndexName>ti_event_ ia_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="319" parent="67" name="ti_event_ ia_ex_event_id_fkey">
+      <ObjectId>29680</ObjectId>
+      <ColNames>event_id</ColNames>
+      <RefTableId>28741</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_event</RefTableName>
+      <RefKeyName>ti_event_pkey</RefKeyName>
+      <RefColNames>event_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="320" parent="67" name="ti_event_ ia_ex_iaag_chn_id_fkey">
+      <ObjectId>29685</ObjectId>
+      <ColNames>iaag_chn_id</ColNames>
+      <RefTableId>28723</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>tr_iaag_cam</RefTableName>
+      <RefKeyName>tr_iaag_cam_pkey</RefKeyName>
+      <RefColNames>iaag_chn_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="321" parent="67" name="ti_event_ ia_ex_svr_id_fkey">
+      <ObjectId>29690</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <RefTableId>28093</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_server</RefTableName>
+      <RefKeyName>ti_server_pkey</RefKeyName>
+      <RefColNames>svr_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="322" parent="67" name="ti_event_ ia_ex_res_id_fkey">
+      <ObjectId>29695</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="323" parent="68" name="linkage_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9271437</StateNumber>
+      <SequenceName>ti_event_linkage_linkage_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_event_linkage_linkage_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="324" parent="68" name="event_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9271437</StateNumber>
+    </column>
+    <column id="325" parent="68" name="linkage_type">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9271437</StateNumber>
+    </column>
+    <column id="326" parent="68" name="arg1">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9271437</StateNumber>
+    </column>
+    <column id="327" parent="68" name="arg2">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9271438</StateNumber>
+    </column>
+    <column id="328" parent="68" name="arg3">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9271438</StateNumber>
+    </column>
+    <column id="329" parent="68" name="arg4">
+      <Position>7</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9271438</StateNumber>
+    </column>
+    <column id="330" parent="68" name="arg5">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9271438</StateNumber>
+    </column>
+    <column id="331" parent="68" name="arg6">
+      <Position>9</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9271438</StateNumber>
+    </column>
+    <index id="332" parent="68" name="ti_event_linkage_pkey">
+      <ObjectId>29899</ObjectId>
+      <ColNames>linkage_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="333" parent="68" name="ti_event_linkage_pkey">
+      <ObjectId>29900</ObjectId>
+      <ColNames>linkage_id</ColNames>
+      <UnderlyingIndexName>ti_event_linkage_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="334" parent="68" name="fk_linkage_event">
+      <ObjectId>29904</ObjectId>
+      <ColNames>event_id</ColNames>
+      <RefTableId>28741</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_event</RefTableName>
+      <RefKeyName>ti_event_pkey</RefKeyName>
+      <RefColNames>event_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="335" parent="69" name="event_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167189</StateNumber>
+    </column>
+    <column id="336" parent="69" name="machine_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167189</StateNumber>
+    </column>
+    <index id="337" parent="69" name="ti_event_machine_ex_pkey">
+      <ObjectId>29663</ObjectId>
+      <ColNames>event_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="338" parent="69" name="ti_event_machine_ex_pkey">
+      <ObjectId>29664</ObjectId>
+      <ColNames>event_id</ColNames>
+      <UnderlyingIndexName>ti_event_machine_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="339" parent="69" name="ti_event_machine_ex_event_id_fkey">
+      <ObjectId>29665</ObjectId>
+      <ColNames>event_id</ColNames>
+      <RefTableId>28741</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_event</RefTableName>
+      <RefKeyName>ti_event_pkey</RefKeyName>
+      <RefColNames>event_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="340" parent="69" name="ti_event_machine_ex_machine_id_fkey">
+      <ObjectId>29670</ObjectId>
+      <ColNames>machine_id</ColNames>
+      <RefTableId>28026</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_machine</RefTableName>
+      <RefKeyName>ti_machine_pkey</RefKeyName>
+      <RefColNames>machine_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="341" parent="70" name="event_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167146</StateNumber>
+    </column>
+    <column id="342" parent="70" name="res_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167146</StateNumber>
+    </column>
+    <index id="343" parent="70" name="ti_event_monitor_ex_pkey">
+      <ObjectId>29614</ObjectId>
+      <ColNames>event_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="344" parent="70" name="ti_event_monitor_ex_pkey">
+      <ObjectId>29615</ObjectId>
+      <ColNames>event_id</ColNames>
+      <UnderlyingIndexName>ti_event_monitor_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="345" parent="70" name="ti_event_monitor_ex_event_id_fkey">
+      <ObjectId>29869</ObjectId>
+      <ColNames>event_id</ColNames>
+      <RefTableId>28741</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_event</RefTableName>
+      <RefKeyName>ti_event_pkey</RefKeyName>
+      <RefColNames>event_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="346" parent="70" name="ti_event_monitor_ex_res_id_fkey">
+      <ObjectId>29874</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="347" parent="71" name="event_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167150</StateNumber>
+    </column>
+    <column id="348" parent="71" name="res_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167150</StateNumber>
+    </column>
+    <column id="349" parent="71" name="event_type">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167150</StateNumber>
+    </column>
+    <index id="350" parent="71" name="ti_event_sio_ex_pkey">
+      <ObjectId>29633</ObjectId>
+      <ColNames>event_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="351" parent="71" name="ti_event_sio_ex_pkey">
+      <ObjectId>29634</ObjectId>
+      <ColNames>event_id</ColNames>
+      <UnderlyingIndexName>ti_event_sio_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="352" parent="71" name="ti_event_sio_ex_event_id_fkey">
+      <ObjectId>29635</ObjectId>
+      <ColNames>event_id</ColNames>
+      <RefTableId>28741</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_event</RefTableName>
+      <RefKeyName>ti_event_pkey</RefKeyName>
+      <RefColNames>event_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="353" parent="71" name="ti_event_sio_ex_res_id_fkey">
+      <ObjectId>29640</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="354" parent="72" name="stom_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9161815</StateNumber>
+      <SequenceName>ti_event_stom_stom_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_event_stom_stom_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="355" parent="72" name="event_type">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9161815</StateNumber>
+    </column>
+    <column id="356" parent="72" name="event_stom">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9161815</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="357" parent="72" name="ti_event_stom_pkey">
+      <ObjectId>29579</ObjectId>
+      <ColNames>stom_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="358" parent="72" name="ti_event_stom_pkey">
+      <ObjectId>29580</ObjectId>
+      <ColNames>stom_id</ColNames>
+      <UnderlyingIndexName>ti_event_stom_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="359" parent="73" name="ftp_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_ftp_ftp_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_ftp_ftp_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="360" parent="73" name="ftp_path1">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="361" parent="73" name="ftp_port1">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="362" parent="73" name="ftp_path2">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="363" parent="73" name="ftp_port2">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="364" parent="73" name="username">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="365" parent="73" name="password">
+      <Position>7</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="366" parent="73" name="ti_ftp_pkey">
+      <ObjectId>28289</ObjectId>
+      <ColNames>ftp_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="367" parent="73" name="ti_ftp_pkey">
+      <ObjectId>28290</ObjectId>
+      <ColNames>ftp_id</ColNames>
+      <UnderlyingIndexName>ti_ftp_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="368" parent="74" name="group_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_group_group_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_group_group_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="369" parent="74" name="group_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="370" parent="74" name="group_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="371" parent="74" name="group_type">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="372" parent="74" name="parent_group_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="373" parent="74" name="ti_group_pkey">
+      <ObjectId>28291</ObjectId>
+      <ColNames>group_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="374" parent="74" name="ti_group_pkey">
+      <ObjectId>28292</ObjectId>
+      <ColNames>group_id</ColNames>
+      <UnderlyingIndexName>ti_group_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="375" parent="75" name="guard_plan_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>55450</StateNumber>
+      <SequenceName>ti_guard_plan_guard_plan_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_guard_plan_guard_plan_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="376" parent="75" name="guard_plan_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>55451</StateNumber>
+    </column>
+    <column id="377" parent="75" name="time_schedule">
+      <Position>3</Position>
+      <DataType>varchar(2048)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>55451</StateNumber>
+    </column>
+    <column id="378" parent="75" name="guard_plan_type">
+      <Position>4</Position>
+      <DataType>smallint|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>55451</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="379" parent="75" name="start_time">
+      <Position>5</Position>
+      <DataType>timestamp(0)|0</DataType>
+      <StateNumber>9160001</StateNumber>
+    </column>
+    <column id="380" parent="75" name="end_time">
+      <Position>6</Position>
+      <DataType>timestamp(0)|0</DataType>
+      <StateNumber>9160001</StateNumber>
+    </column>
+    <index id="381" parent="75" name="ti_guard_plan_pkey">
+      <ObjectId>28685</ObjectId>
+      <ColNames>guard_plan_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="382" parent="75" name="ti_guard_plan_pkey">
+      <ObjectId>28686</ObjectId>
+      <ColNames>guard_plan_id</ColNames>
+      <UnderlyingIndexName>ti_guard_plan_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="383" parent="76" name="machine_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_machine_machine_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_machine_machine_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="384" parent="76" name="machine_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="385" parent="76" name="machine_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="386" parent="76" name="ip">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="387" parent="76" name="group_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="388" parent="76" name="remark">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="389" parent="76" name="ti_machine_pkey">
+      <ObjectId>28293</ObjectId>
+      <ColNames>machine_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="390" parent="76" name="ti_machine_pkey">
+      <ObjectId>28294</ObjectId>
+      <ColNames>machine_id</ColNames>
+      <UnderlyingIndexName>ti_machine_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="391" parent="76" name="ti_machine_group_id_fkey">
+      <ObjectId>28400</ObjectId>
+      <ColNames>group_id</ColNames>
+      <RefTableId>28020</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_group</RefTableName>
+      <RefKeyName>ti_group_pkey</RefKeyName>
+      <RefColNames>group_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="392" parent="77" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="393" parent="77" name="preset_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="394" parent="77" name="preset_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="395" parent="77" name="preset_token">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="396" parent="77" name="ti_preset_pkey">
+      <ObjectId>28295</ObjectId>
+      <ColNames>res_id
+preset_no</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="397" parent="77" name="ti_preset_pkey">
+      <ObjectId>28296</ObjectId>
+      <ColNames>res_id
+preset_no</ColNames>
+      <UnderlyingIndexName>ti_preset_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="398" parent="77" name="ti_preset_res_id_fkey">
+      <ObjectId>28405</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="399" parent="78" name="rec_plan_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_record_plan_rec_plan_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_record_plan_rec_plan_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="400" parent="78" name="enable_state">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="401" parent="78" name="rec_plan_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="402" parent="78" name="rec_timeplan_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="403" parent="78" name="stream_type">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="404" parent="78" name="pre_record">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="405" parent="78" name="delay_record">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>5</DefaultExpression>
+    </column>
+    <column id="406" parent="78" name="flag_redundant">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="407" parent="78" name="flag_overwrite">
+      <Position>9</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="408" parent="78" name="flag_audio">
+      <Position>10</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="409" parent="78" name="expired_time">
+      <Position>11</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>30</DefaultExpression>
+    </column>
+    <column id="410" parent="78" name="file_size">
+      <Position>12</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1024</DefaultExpression>
+    </column>
+    <column id="411" parent="78" name="rec_path">
+      <Position>13</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="412" parent="78" name="free_space">
+      <Position>14</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1024</DefaultExpression>
+    </column>
+    <index id="413" parent="78" name="ti_record_plan_pkey">
+      <ObjectId>28297</ObjectId>
+      <ColNames>rec_plan_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="414" parent="78" name="ti_record_plan_pkey">
+      <ObjectId>28298</ObjectId>
+      <ColNames>rec_plan_id</ColNames>
+      <UnderlyingIndexName>ti_record_plan_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="415" parent="78" name="ti_record_plan_rec_timeplan_id_fkey">
+      <ObjectId>28410</ObjectId>
+      <ColNames>rec_timeplan_id</ColNames>
+      <RefTableId>28047</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_record_timeplan</RefTableName>
+      <RefKeyName>ti_record_timeplan_pkey</RefKeyName>
+      <RefColNames>rec_timeplan_id</RefColNames>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <column id="416" parent="79" name="rec_timeplan_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_record_timeplan_rec_timeplan_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_record_timeplan_rec_timeplan_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="417" parent="79" name="timeplan_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="418" parent="79" name="time_schedule">
+      <Position>3</Position>
+      <DataType>varchar(2048)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="419" parent="79" name="ti_record_timeplan_pkey">
+      <ObjectId>28299</ObjectId>
+      <ColNames>rec_timeplan_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="420" parent="79" name="ti_record_timeplan_pkey">
+      <ObjectId>28300</ObjectId>
+      <ColNames>rec_timeplan_id</ColNames>
+      <UnderlyingIndexName>ti_record_timeplan_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="421" parent="80" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="422" parent="80" name="stream_type">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>2</DefaultExpression>
+    </column>
+    <column id="423" parent="80" name="stream_format">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="424" parent="80" name="rtsp_addr">
+      <Position>4</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="425" parent="80" name="multicast_addr">
+      <Position>5</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="426" parent="80" name="cam_type">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="427" parent="80" name="ptzctrl">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="428" parent="80" name="audio_bind">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="429" parent="80" name="intercom">
+      <Position>9</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="430" parent="80" name="direction_type">
+      <Position>10</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="431" parent="80" name="thumbnail">
+      <Position>11</Position>
+      <DataType>varchar(200)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="432" parent="80" name="ti_res_cam_ex_pkey">
+      <ObjectId>28301</ObjectId>
+      <ColNames>res_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="433" parent="80" name="ti_res_cam_ex_pkey">
+      <ObjectId>28302</ObjectId>
+      <ColNames>res_id</ColNames>
+      <UnderlyingIndexName>ti_res_cam_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="434" parent="80" name="ti_res_cam_ex_res_id_fkey">
+      <ObjectId>28415</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="435" parent="81" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="436" parent="81" name="flag_split">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="437" parent="81" name="display_mode">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="438" parent="81" name="resolution">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="439" parent="81" name="split_ability">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>4</DefaultExpression>
+    </column>
+    <column id="440" parent="81" name="split_mode">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="441" parent="81" name="switch_mode">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="442" parent="81" name="res_index">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9271237</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <index id="443" parent="81" name="ti_res_screen_ex_pkey">
+      <ObjectId>28303</ObjectId>
+      <ColNames>res_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="444" parent="81" name="ti_res_screen_ex_pkey">
+      <ObjectId>28304</ObjectId>
+      <ColNames>res_id</ColNames>
+      <UnderlyingIndexName>ti_res_screen_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="445" parent="81" name="ti_res_screen_ex_res_id_fkey">
+      <ObjectId>28420</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="446" parent="82" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="447" parent="82" name="sio_mode">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="448" parent="82" name="ti_res_sio_ex_pkey">
+      <ObjectId>28305</ObjectId>
+      <ColNames>res_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="449" parent="82" name="ti_res_sio_ex_pkey">
+      <ObjectId>28306</ObjectId>
+      <ColNames>res_id</ColNames>
+      <UnderlyingIndexName>ti_res_sio_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="450" parent="82" name="ti_res_sio_ex_res_id_fkey">
+      <ObjectId>28425</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="451" parent="83" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="452" parent="83" name="online_state">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="453" parent="83" name="alarm_state">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="454" parent="83" name="ti_res_state_pkey">
+      <ObjectId>28307</ObjectId>
+      <ColNames>res_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="455" parent="83" name="ti_res_state_pkey">
+      <ObjectId>28308</ObjectId>
+      <ColNames>res_id</ColNames>
+      <UnderlyingIndexName>ti_res_state_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="456" parent="83" name="ti_res_state_res_id_fkey">
+      <ObjectId>28430</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="457" parent="84" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_resource_res_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_resource_res_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="458" parent="84" name="res_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="459" parent="84" name="res_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="460" parent="84" name="res_type">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="461" parent="84" name="dev_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="462" parent="84" name="res_uid">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="463" parent="84" name="chn_type">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="464" parent="84" name="remark">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="465" parent="84" name="ti_resource_pkey">
+      <ObjectId>28311</ObjectId>
+      <ColNames>res_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="466" parent="84" name="ti_resource_res_no_key">
+      <ObjectId>28309</ObjectId>
+      <ColNames>res_no</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="467" parent="84" name="ti_resource_pkey">
+      <ObjectId>28312</ObjectId>
+      <ColNames>res_id</ColNames>
+      <UnderlyingIndexName>ti_resource_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <key id="468" parent="84" name="ti_resource_res_no_key">
+      <ObjectId>28310</ObjectId>
+      <ColNames>res_no</ColNames>
+      <UnderlyingIndexName>ti_resource_res_no_key</UnderlyingIndexName>
+    </key>
+    <foreign-key id="469" parent="84" name="ti_resource_dev_id_fkey">
+      <ObjectId>28435</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="470" parent="85" name="role_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_Role_RoleID_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;&quot;ti_Role_RoleID_seq&quot;&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="471" parent="85" name="role_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>&apos;&apos;::character varying</DefaultExpression>
+    </column>
+    <column id="472" parent="85" name="role_desc">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="473" parent="85" name="role_level">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="474" parent="85" name="pmsn_sys">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="475" parent="85" name="ti_role_pkey">
+      <ObjectId>28313</ObjectId>
+      <ColNames>role_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="476" parent="85" name="ti_role_pkey">
+      <ObjectId>28314</ObjectId>
+      <ColNames>role_id</ColNames>
+      <UnderlyingIndexName>ti_role_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="477" parent="86" name="svr_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_server_svr_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_server_svr_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="478" parent="86" name="svr_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="479" parent="86" name="svr_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="480" parent="86" name="svr_type">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="481" parent="86" name="machine_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="482" parent="86" name="enable_state">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="483" parent="86" name="remark">
+      <Position>7</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="484" parent="86" name="ti_server_pkey">
+      <ObjectId>28315</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="485" parent="86" name="ti_server_pkey">
+      <ObjectId>28316</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <UnderlyingIndexName>ti_server_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="486" parent="86" name="ti_server_machine_id_fkey">
+      <ObjectId>28440</ObjectId>
+      <ColNames>machine_id</ColNames>
+      <RefTableId>28026</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_machine</RefTableName>
+      <RefKeyName>ti_machine_pkey</RefKeyName>
+      <RefColNames>machine_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="487" parent="87" name="svr_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_server_main_ex_svr_id_seq</SequenceName>
+    </column>
+    <column id="488" parent="87" name="ip_extranet">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="489" parent="87" name="ip_intranet">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="490" parent="87" name="port_extranet">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="491" parent="87" name="port_intranet">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="492" parent="87" name="ti_server_main_ex_pkey">
+      <ObjectId>28317</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="493" parent="87" name="ti_server_main_ex_pkey">
+      <ObjectId>28318</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <UnderlyingIndexName>ti_server_main_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="494" parent="87" name="ti_server_main_ex_svr_id_fkey">
+      <ObjectId>28445</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <RefTableId>28093</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_server</RefTableName>
+      <RefKeyName>ti_server_pkey</RefKeyName>
+      <RefColNames>svr_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="495" parent="88" name="svr_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="496" parent="88" name="ip_extranet">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="497" parent="88" name="ip_intranet">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="498" parent="88" name="port_manage">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="499" parent="88" name="port_media">
+      <Position>5</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="500" parent="88" name="http_port">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9271235</StateNumber>
+    </column>
+    <index id="501" parent="88" name="ti_server_media_ex_pkey">
+      <ObjectId>28319</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="502" parent="88" name="ti_server_media_ex_pkey">
+      <ObjectId>28320</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <UnderlyingIndexName>ti_server_media_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="503" parent="88" name="ti_server_media_ex_svr_id_fkey">
+      <ObjectId>28450</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <RefTableId>28093</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_server</RefTableName>
+      <RefKeyName>ti_server_pkey</RefKeyName>
+      <RefColNames>svr_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="504" parent="89" name="svr_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="505" parent="89" name="online_state">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="506" parent="89" name="alarm_state">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="507" parent="89" name="ti_server_state_pkey">
+      <ObjectId>28321</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="508" parent="89" name="ti_server_state_pkey">
+      <ObjectId>28322</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <UnderlyingIndexName>ti_server_state_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="509" parent="89" name="ti_server_state_svr_id_fkey">
+      <ObjectId>28455</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <RefTableId>28093</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_server</RefTableName>
+      <RefKeyName>ti_server_pkey</RefKeyName>
+      <RefColNames>svr_id</RefColNames>
+      <OnDelete>restrict</OnDelete>
+    </foreign-key>
+    <column id="510" parent="90" name="sender_mailbox">
+      <Position>1</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="511" parent="90" name="smtp_address">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="512" parent="90" name="smtp_port">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="513" parent="90" name="username">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>NULL::character varying</DefaultExpression>
+    </column>
+    <column id="514" parent="90" name="password">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>NULL::character varying</DefaultExpression>
+    </column>
+    <column id="515" parent="90" name="enable_state">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="516" parent="90" name="enable_ssl">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="517" parent="91" name="user_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="518" parent="91" name="pmsn_sys">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="519" parent="91" name="index">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <foreign-key id="520" parent="91" name="ti_sub_pmsn_sys_user_id_fkey">
+      <ObjectId>28460</ObjectId>
+      <ColNames>user_id</ColNames>
+      <RefTableId>28155</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_user</RefTableName>
+      <RefKeyName>ti_user_pkey</RefKeyName>
+      <RefColNames>user_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="521" parent="92" name="user_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="522" parent="92" name="res_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <foreign-key id="523" parent="92" name="ti_sub_res_user_id_fkey">
+      <ObjectId>28470</ObjectId>
+      <ColNames>user_id</ColNames>
+      <RefTableId>28155</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_user</RefTableName>
+      <RefKeyName>ti_user_pkey</RefKeyName>
+      <RefColNames>user_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="524" parent="92" name="ti_sub_res_res_id_fkey">
+      <ObjectId>28465</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="525" parent="93" name="switch_plan_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252540</StateNumber>
+      <SequenceName>ti_switch_plan_switch_plan_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_switch_plan_switch_plan_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="526" parent="93" name="plan_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252548</StateNumber>
+    </column>
+    <column id="527" parent="93" name="plan_no">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252548</StateNumber>
+    </column>
+    <column id="528" parent="93" name="plan_type">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252548</StateNumber>
+      <DefaultExpression>2</DefaultExpression>
+    </column>
+    <column id="529" parent="93" name="enable_state">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9252548</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <index id="530" parent="93" name="ti_switch_plan_pkey">
+      <ObjectId>29833</ObjectId>
+      <ColNames>switch_plan_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="531" parent="93" name="ti_switch_plan_pkey">
+      <ObjectId>29834</ObjectId>
+      <ColNames>switch_plan_id</ColNames>
+      <UnderlyingIndexName>ti_switch_plan_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="532" parent="94" name="switch_plan_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="533" parent="94" name="switch_task_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="534" parent="94" name="start_time">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="535" parent="94" name="end_time">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="536" parent="94" name="keep_time">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>60</DefaultExpression>
+    </column>
+    <column id="537" parent="94" name="exec_index">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <foreign-key id="538" parent="94" name="ti_switch_plan_ex_switch_plan_id_fkey">
+      <ObjectId>29838</ObjectId>
+      <ColNames>switch_plan_id</ColNames>
+      <RefTableId>29829</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_switch_plan</RefTableName>
+      <RefKeyName>ti_switch_plan_pkey</RefKeyName>
+      <RefColNames>switch_plan_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="539" parent="94" name="ti_switch_plan_ex_switch_task_id_fkey">
+      <ObjectId>29737</ObjectId>
+      <ColNames>switch_task_id</ColNames>
+      <RefTableId>29716</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_switch_task</RefTableName>
+      <RefKeyName>ti_switch_task_pkey</RefKeyName>
+      <RefColNames>switch_task_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="540" parent="95" name="switch_seq_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167343</StateNumber>
+      <SequenceName>ti_switch_seq_switch_seq_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_switch_seq_switch_seq_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="541" parent="95" name="seq_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167344</StateNumber>
+    </column>
+    <column id="542" parent="95" name="seq_no">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167344</StateNumber>
+    </column>
+    <column id="543" parent="95" name="keep_time">
+      <Position>4</Position>
+      <DataType>smallint|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167345</StateNumber>
+    </column>
+    <index id="544" parent="95" name="ti_switch_seq_pkey">
+      <ObjectId>29757</ObjectId>
+      <ColNames>switch_seq_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="545" parent="95" name="ti_switch_seq_pkey">
+      <ObjectId>29758</ObjectId>
+      <ColNames>switch_seq_id</ColNames>
+      <UnderlyingIndexName>ti_switch_seq_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="546" parent="96" name="switch_seq_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="547" parent="96" name="res_cam_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="548" parent="96" name="stream_type">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="549" parent="96" name="preset_no">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="550" parent="96" name="exec_index">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <index id="551" parent="96" name="ti_switch_seq_ex_pkey">
+      <ObjectId>28327</ObjectId>
+      <ColNames>switch_seq_id
+res_cam_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="552" parent="96" name="ti_switch_seq_ex_pkey">
+      <ObjectId>28328</ObjectId>
+      <ColNames>switch_seq_id
+res_cam_id</ColNames>
+      <UnderlyingIndexName>ti_switch_seq_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="553" parent="96" name="ti_switch_seq_ex_switch_seq_id_fkey">
+      <ObjectId>29759</ObjectId>
+      <ColNames>switch_seq_id</ColNames>
+      <RefTableId>29753</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_switch_seq</RefTableName>
+      <RefKeyName>ti_switch_seq_pkey</RefKeyName>
+      <RefColNames>switch_seq_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="554" parent="96" name="ti_switch_seq_ex_res_cam_id_fkey">
+      <ObjectId>28631</ObjectId>
+      <ColNames>res_cam_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="555" parent="97" name="switch_task_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167326</StateNumber>
+      <SequenceName>ti_switch_task_switch_task_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_switch_task_switch_task_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="556" parent="97" name="task_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167327</StateNumber>
+    </column>
+    <column id="557" parent="97" name="task_no">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167328</StateNumber>
+    </column>
+    <column id="558" parent="97" name="wall_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167329</StateNumber>
+    </column>
+    <index id="559" parent="97" name="ti_switch_task_pkey">
+      <ObjectId>29720</ObjectId>
+      <ColNames>switch_task_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="560" parent="97" name="ti_switch_task_pkey">
+      <ObjectId>29721</ObjectId>
+      <ColNames>switch_task_id</ColNames>
+      <UnderlyingIndexName>ti_switch_task_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="561" parent="97" name="ti_switch_task_wall_id_fkey">
+      <ObjectId>29722</ObjectId>
+      <ColNames>wall_id</ColNames>
+      <RefTableId>28189</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_video_wall</RefTableName>
+      <RefKeyName>ti_video_wall_pkey</RefKeyName>
+      <RefColNames>wall_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="562" parent="98" name="switch_task_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167369</StateNumber>
+    </column>
+    <column id="563" parent="98" name="res_screen_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167373</StateNumber>
+    </column>
+    <column id="564" parent="98" name="window_no">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167476</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="565" parent="98" name="switch_seq_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9167373</StateNumber>
+    </column>
+    <index id="566" parent="98" name="ti_switch_task_ex_pkey">
+      <ObjectId>29818</ObjectId>
+      <ColNames>res_screen_no
+window_no</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="567" parent="98" name="ti_switch_task_ex_pkey">
+      <ObjectId>29819</ObjectId>
+      <ColNames>res_screen_no
+window_no</ColNames>
+      <UnderlyingIndexName>ti_switch_task_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="568" parent="98" name="ti_switch_task_ex_switch_task_id_fkey">
+      <ObjectId>29792</ObjectId>
+      <ColNames>switch_task_id</ColNames>
+      <RefTableId>29716</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_switch_task</RefTableName>
+      <RefKeyName>ti_switch_task_pkey</RefKeyName>
+      <RefColNames>switch_task_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="569" parent="98" name="ti_switch_task_ex_res_screen_no_fkey">
+      <ObjectId>29802</ObjectId>
+      <ColNames>res_screen_no</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>2</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_res_no_key</RefKeyName>
+      <RefColNames>res_no</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="570" parent="98" name="ti_switch_task_ex_switch_seq_id_fkey">
+      <ObjectId>29807</ObjectId>
+      <ColNames>switch_seq_id</ColNames>
+      <RefTableId>29753</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_switch_seq</RefTableName>
+      <RefKeyName>ti_switch_seq_pkey</RefKeyName>
+      <RefColNames>switch_seq_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="571" parent="99" name="log_event_keep">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="572" parent="99" name="log_system_keep">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>30</DefaultExpression>
+    </column>
+    <column id="573" parent="100" name="user_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_User_UserID_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;&quot;ti_User_UserID_seq&quot;&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="574" parent="100" name="username">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>&apos;&apos;::character varying</DefaultExpression>
+    </column>
+    <column id="575" parent="100" name="nickname">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="576" parent="100" name="password">
+      <Position>4</Position>
+      <DataType>varchar(32)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>&apos;&apos;::character varying</DefaultExpression>
+    </column>
+    <column id="577" parent="100" name="user_type">
+      <Position>5</Position>
+      <DataType>smallint|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>3</DefaultExpression>
+    </column>
+    <column id="578" parent="100" name="sex">
+      <Position>6</Position>
+      <DataType>smallint|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="579" parent="100" name="email">
+      <Position>7</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="580" parent="100" name="phonenumber">
+      <Position>8</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="581" parent="100" name="firstname">
+      <Position>9</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="582" parent="100" name="lastname">
+      <Position>10</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="583" parent="100" name="description">
+      <Position>11</Position>
+      <DataType>varchar(128)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="584" parent="100" name="create_time">
+      <Position>12</Position>
+      <DataType>timestamp(0)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>now()</DefaultExpression>
+    </column>
+    <column id="585" parent="100" name="event_substate">
+      <Position>13</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="586" parent="100" name="flag_pwd_mod">
+      <Position>14</Position>
+      <DataType>smallint|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="587" parent="100" name="flag_locked">
+      <Position>15</Position>
+      <DataType>smallint|0</DataType>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="588" parent="100" name="cellphone">
+      <Position>16</Position>
+      <DataType>varchar(32)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="589" parent="100" name="id_number">
+      <Position>17</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="590" parent="100" name="flag_multiple_login">
+      <Position>18</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="591" parent="100" name="ti_user_pkey">
+      <ObjectId>28333</ObjectId>
+      <ColNames>user_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="592" parent="100" name="ti_user_pkey">
+      <ObjectId>28334</ObjectId>
+      <ColNames>user_id</ColNames>
+      <UnderlyingIndexName>ti_user_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="593" parent="101" name="user_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="594" parent="101" name="mobile_user_state">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="595" parent="101" name="mobile_type">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="596" parent="101" name="mobile_version">
+      <Position>4</Position>
+      <DataType>varchar|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="597" parent="101" name="ios_token">
+      <Position>5</Position>
+      <DataType>varchar|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="598" parent="101" name="browser_user_state">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="599" parent="101" name="browser_type">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="600" parent="101" name="browser_version">
+      <Position>8</Position>
+      <DataType>varchar|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="601" parent="101" name="lastlogin_time">
+      <Position>9</Position>
+      <DataType>date|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="602" parent="101" name="lastlogin_ip">
+      <Position>10</Position>
+      <DataType>varchar|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="603" parent="101" name="ti_user_state_pkey">
+      <ObjectId>28335</ObjectId>
+      <ColNames>user_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="604" parent="101" name="ti_user_state_pkey">
+      <ObjectId>28336</ObjectId>
+      <ColNames>user_id</ColNames>
+      <UnderlyingIndexName>ti_user_state_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="605" parent="102" name="seq_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_video_seq_seq_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_video_seq_seq_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="606" parent="102" name="seq_name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="607" parent="102" name="seq_no">
+      <Position>3</Position>
+      <DataType>varchar|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="608" parent="102" name="keep_time">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>20</DefaultExpression>
+    </column>
+    <column id="609" parent="102" name="user_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="610" parent="102" name="ti_video_seq_pkey">
+      <ObjectId>28337</ObjectId>
+      <ColNames>seq_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="611" parent="102" name="ti_video_seq_pkey">
+      <ObjectId>28338</ObjectId>
+      <ColNames>seq_id</ColNames>
+      <UnderlyingIndexName>ti_video_seq_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="612" parent="102" name="ti_video_seq_user_id_fkey">
+      <ObjectId>28515</ObjectId>
+      <ColNames>user_id</ColNames>
+      <RefTableId>28155</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_user</RefTableName>
+      <RefKeyName>ti_user_pkey</RefKeyName>
+      <RefColNames>user_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="613" parent="103" name="seq_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="614" parent="103" name="res_cam_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="615" parent="103" name="exec_index">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <index id="616" parent="103" name="ti_video_seq_ex_pkey">
+      <ObjectId>28339</ObjectId>
+      <ColNames>seq_id
+res_cam_id
+exec_index</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="617" parent="103" name="ti_video_seq_ex_pkey">
+      <ObjectId>28340</ObjectId>
+      <ColNames>seq_id
+res_cam_id
+exec_index</ColNames>
+      <UnderlyingIndexName>ti_video_seq_ex_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="618" parent="103" name="ti_video_seq_ex_seq_id_fkey">
+      <ObjectId>28525</ObjectId>
+      <ColNames>seq_id</ColNames>
+      <RefTableId>28177</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_video_seq</RefTableName>
+      <RefKeyName>ti_video_seq_pkey</RefKeyName>
+      <RefColNames>seq_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="619" parent="103" name="ti_video_seq_ex_res_cam_id_fkey">
+      <ObjectId>28520</ObjectId>
+      <ColNames>res_cam_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="620" parent="104" name="wall_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>ti_video_wall_wall_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;ti_video_wall_wall_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="621" parent="104" name="name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="622" parent="104" name="wall_config">
+      <Position>3</Position>
+      <DataType>varchar(2048)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="623" parent="104" name="remark">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="624" parent="104" name="ti_video_wall_pkey">
+      <ObjectId>28341</ObjectId>
+      <ColNames>wall_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="625" parent="104" name="ti_video_wall_pkey">
+      <ObjectId>28342</ObjectId>
+      <ColNames>wall_id</ColNames>
+      <UnderlyingIndexName>ti_video_wall_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="626" parent="105" name="log_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <SequenceName>tl_operator_log_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;tl_operator_log_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="627" parent="105" name="business_id">
+      <Position>2</Position>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="628" parent="105" name="log_type">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="629" parent="105" name="username">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="630" parent="105" name="nickname">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="631" parent="105" name="rec_time">
+      <Position>6</Position>
+      <DataType>timestamp(6)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="632" parent="105" name="log_desc">
+      <Position>7</Position>
+      <DataType>varchar(1024)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="633" parent="105" name="res_id">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="634" parent="105" name="res_name">
+      <Position>9</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="635" parent="105" name="tl_operator_pkey">
+      <ObjectId>28343</ObjectId>
+      <ColNames>log_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="636" parent="105" name="tl_operator_pkey">
+      <ObjectId>28344</ObjectId>
+      <ColNames>log_id</ColNames>
+      <UnderlyingIndexName>tl_operator_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="637" parent="106" name="role_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="638" parent="106" name="user_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="639" parent="106" name="group_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="640" parent="106" name="res_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="641" parent="106" name="pmsn_sys">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="642" parent="106" name="res_no">
+      <Position>6</Position>
+      <DataType>varchar(100)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>&apos;&apos;::character varying</DefaultExpression>
+    </column>
+    <column id="643" parent="106" name="username">
+      <Position>7</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+      <DefaultExpression>&apos;&apos;::character varying</DefaultExpression>
+    </column>
+    <index id="644" parent="106" name="tr_func_user_res_pkey">
+      <ObjectId>28345</ObjectId>
+      <ColNames>role_id
+user_id
+pmsn_sys
+res_id
+group_id
+res_no
+username</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="645" parent="106" name="tr_func_user_res_pkey">
+      <ObjectId>28346</ObjectId>
+      <ColNames>role_id
+user_id
+pmsn_sys
+res_id
+group_id
+res_no
+username</ColNames>
+      <UnderlyingIndexName>tr_func_user_res_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="646" parent="106" name="tr_func_user_res_role_id_fkey">
+      <ObjectId>28540</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="647" parent="106" name="tr_func_user_res_user_id_fkey">
+      <ObjectId>28535</ObjectId>
+      <ColNames>user_id</ColNames>
+      <RefTableId>28155</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_user</RefTableName>
+      <RefKeyName>ti_user_pkey</RefKeyName>
+      <RefColNames>user_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="648" parent="106" name="tr_func_user_res_group_id_fkey">
+      <ObjectId>28545</ObjectId>
+      <ColNames>group_id</ColNames>
+      <RefTableId>28020</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_group</RefTableName>
+      <RefKeyName>ti_group_pkey</RefKeyName>
+      <RefColNames>group_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="649" parent="106" name="tr_func_user_res_res_id_fkey">
+      <ObjectId>28530</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="650" parent="107" name="group_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="651" parent="107" name="res_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="652" parent="107" name="tr_group_res_pkey">
+      <ObjectId>28348</ObjectId>
+      <ColNames>group_id
+res_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="653" parent="107" name="tr_group_res_pkey">
+      <ObjectId>28349</ObjectId>
+      <ColNames>group_id
+res_id</ColNames>
+      <UnderlyingIndexName>tr_group_res_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="654" parent="107" name="tr_group_res_group_id_fkey">
+      <ObjectId>28555</ObjectId>
+      <ColNames>group_id</ColNames>
+      <RefTableId>28020</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_group</RefTableName>
+      <RefKeyName>ti_group_pkey</RefKeyName>
+      <RefColNames>group_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <foreign-key id="655" parent="107" name="tr_group_res_res_id_fkey">
+      <ObjectId>28550</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="656" parent="108" name="iaag_chn_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094299</StateNumber>
+      <SequenceName>tr_iaag_cam_iaag_chn_id_seq</SequenceName>
+      <DefaultExpression>nextval(&apos;tr_iaag_cam_iaag_chn_id_seq&apos;::regclass)</DefaultExpression>
+    </column>
+    <column id="657" parent="108" name="svr_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094299</StateNumber>
+    </column>
+    <column id="658" parent="108" name="res_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>9094299</StateNumber>
+    </column>
+    <column id="659" parent="108" name="preset_no">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9094299</StateNumber>
+    </column>
+    <index id="660" parent="108" name="tr_iaag_cam_pkey">
+      <ObjectId>28727</ObjectId>
+      <ColNames>iaag_chn_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="661" parent="108" name="tr_iaag_cam_pkey">
+      <ObjectId>28728</ObjectId>
+      <ColNames>iaag_chn_id</ColNames>
+      <UnderlyingIndexName>tr_iaag_cam_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="662" parent="108" name="tr_iaag_cam_svr_id_fkey">
+      <ObjectId>28734</ObjectId>
+      <ColNames>svr_id</ColNames>
+      <RefTableId>28093</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_server</RefTableName>
+      <RefKeyName>ti_server_pkey</RefKeyName>
+      <RefColNames>svr_id</RefColNames>
+    </foreign-key>
+    <foreign-key id="663" parent="108" name="tr_iaag_cam_res_id_fkey">
+      <ObjectId>28729</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+    </foreign-key>
+    <column id="664" parent="109" name="rec_plan_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="665" parent="109" name="dev_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="666" parent="109" name="res_uid">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="667" parent="109" name="res_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="668" parent="109" name="tr_record_plan_cam_pkey">
+      <ObjectId>28350</ObjectId>
+      <ColNames>dev_id
+res_uid</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="669" parent="109" name="tr_record_plan_cam_pkey">
+      <ObjectId>28351</ObjectId>
+      <ColNames>dev_id
+res_uid</ColNames>
+      <UnderlyingIndexName>tr_record_plan_cam_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="670" parent="109" name="tr_record_plan_cam_rec_plan_id_fkey">
+      <ObjectId>28570</ObjectId>
+      <ColNames>rec_plan_id</ColNames>
+      <RefTableId>28033</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_record_plan</RefTableName>
+      <RefKeyName>ti_record_plan_pkey</RefKeyName>
+      <RefColNames>rec_plan_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="671" parent="109" name="tr_record_plan_cam_dev_id_fkey">
+      <ObjectId>28565</ObjectId>
+      <ColNames>dev_id</ColNames>
+      <RefTableId>27985</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_device</RefTableName>
+      <RefKeyName>ti_device_pkey</RefKeyName>
+      <RefColNames>dev_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="672" parent="109" name="tr_record_plan_cam_res_id_fkey">
+      <ObjectId>28560</ObjectId>
+      <ColNames>res_id</ColNames>
+      <RefTableId>28083</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_resource</RefTableName>
+      <RefKeyName>ti_resource_pkey</RefKeyName>
+      <RefColNames>res_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="673" parent="110" name="role_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="674" parent="110" name="group_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="675" parent="110" name="pmsn_func">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="676" parent="110" name="tr_role_funcpmsn_group_pkey">
+      <ObjectId>28352</ObjectId>
+      <ColNames>role_id
+group_id
+pmsn_func</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="677" parent="110" name="tr_role_funcpmsn_group_pkey">
+      <ObjectId>28353</ObjectId>
+      <ColNames>role_id
+group_id
+pmsn_func</ColNames>
+      <UnderlyingIndexName>tr_role_funcpmsn_group_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="678" parent="110" name="tr_role_funcpmsn_group_role_id_fkey">
+      <ObjectId>28580</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="679" parent="110" name="tr_role_funcpmsn_group_group_id_fkey">
+      <ObjectId>28575</ObjectId>
+      <ColNames>group_id</ColNames>
+      <RefTableId>28020</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_group</RefTableName>
+      <RefKeyName>ti_group_pkey</RefKeyName>
+      <RefColNames>group_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="680" parent="111" name="role_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="681" parent="111" name="group_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="682" parent="111" name="tr_role_group_pkey">
+      <ObjectId>28354</ObjectId>
+      <ColNames>role_id
+group_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="683" parent="111" name="tr_role_group_pkey">
+      <ObjectId>28355</ObjectId>
+      <ColNames>role_id
+group_id</ColNames>
+      <UnderlyingIndexName>tr_role_group_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="684" parent="111" name="tr_role_group_role_id_fkey">
+      <ObjectId>28590</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="685" parent="111" name="tr_role_group_group_id_fkey">
+      <ObjectId>28585</ObjectId>
+      <ColNames>group_id</ColNames>
+      <RefTableId>28020</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_group</RefTableName>
+      <RefKeyName>ti_group_pkey</RefKeyName>
+      <RefColNames>group_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="686" parent="112" name="role_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="687" parent="112" name="pmsn_sys">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="688" parent="112" name="tr_role_pmsm_sys_pkey">
+      <ObjectId>28356</ObjectId>
+      <ColNames>role_id
+pmsn_sys</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="689" parent="112" name="tr_role_pmsm_sys_pkey">
+      <ObjectId>28357</ObjectId>
+      <ColNames>role_id
+pmsn_sys</ColNames>
+      <UnderlyingIndexName>tr_role_pmsm_sys_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="690" parent="112" name="tr_role_pmsm_sys_role_id_fkey">
+      <ObjectId>28595</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="691" parent="113" name="role_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="692" parent="113" name="user_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <index id="693" parent="113" name="tr_user_role_pkey">
+      <ObjectId>28358</ObjectId>
+      <ColNames>role_id
+user_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="694" parent="113" name="tr_user_role_pkey">
+      <ObjectId>28359</ObjectId>
+      <ColNames>role_id
+user_id</ColNames>
+      <UnderlyingIndexName>tr_user_role_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="695" parent="113" name="tr_user_role_role_id_fkey">
+      <ObjectId>28605</ObjectId>
+      <ColNames>role_id</ColNames>
+      <RefTableId>28087</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_role</RefTableName>
+      <RefKeyName>ti_role_pkey</RefKeyName>
+      <RefColNames>role_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="696" parent="113" name="tr_user_role_user_id_fkey">
+      <ObjectId>28600</ObjectId>
+      <ColNames>user_id</ColNames>
+      <RefTableId>28155</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>ti_user</RefTableName>
+      <RefKeyName>ti_user_pkey</RefKeyName>
+      <RefColNames>user_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="697" parent="114" name="preset_no">
+      <Position>1</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9157174</StateNumber>
+    </column>
+    <column id="698" parent="114" name="iaag_chn_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9157174</StateNumber>
+    </column>
+    <column id="699" parent="114" name="svr_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9157174</StateNumber>
+    </column>
+    <column id="700" parent="114" name="res_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9157174</StateNumber>
+    </column>
+    <column id="701" parent="114" name="preset_name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9157174</StateNumber>
+    </column>
+    <column id="702" parent="114" name="preset_token">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9157174</StateNumber>
+    </column>
+    <column id="703" parent="115" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="704" parent="115" name="res_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="705" parent="115" name="chn_type">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="706" parent="115" name="group_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="707" parent="115" name="rec_plan_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="708" parent="115" name="rec_plan_name">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="709" parent="115" name="enable_state">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="710" parent="115" name="stream_type">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="711" parent="115" name="rec_path">
+      <Position>9</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="712" parent="116" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="713" parent="116" name="res_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="714" parent="116" name="chn_type">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="715" parent="116" name="rec_plan_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="716" parent="116" name="rec_plan_name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="717" parent="116" name="enable_state">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="718" parent="116" name="stream_type">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="719" parent="116" name="rec_path">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="720" parent="117" name="dev_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="721" parent="117" name="dev_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="722" parent="117" name="svr_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="723" parent="117" name="dev_name">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="724" parent="117" name="dev_type">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="725" parent="117" name="protocol_type">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="726" parent="117" name="dev_sn">
+      <Position>7</Position>
+      <DataType>varchar(100)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="727" parent="117" name="group_id">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="728" parent="117" name="remark">
+      <Position>9</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="729" parent="117" name="group_name">
+      <Position>10</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="730" parent="117" name="name">
+      <Position>11</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="731" parent="117" name="refvalue">
+      <Position>12</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="732" parent="117" name="online_state">
+      <Position>13</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9093546</StateNumber>
+    </column>
+    <column id="733" parent="118" name="guard_plan_name">
+      <Position>1</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="734" parent="118" name="event_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="735" parent="118" name="event_no">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="736" parent="118" name="event_genus">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="737" parent="118" name="event_name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="738" parent="118" name="event_desc">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="739" parent="118" name="enable_state">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="740" parent="118" name="event_level">
+      <Position>8</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="741" parent="118" name="auto_release_interval">
+      <Position>9</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="742" parent="118" name="guard_plan_id">
+      <Position>10</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167264</StateNumber>
+    </column>
+    <column id="743" parent="118" name="guard_plan_type">
+      <Position>11</Position>
+      <DataType>smallint|0</DataType>
+      <StateNumber>9167639</StateNumber>
+    </column>
+    <column id="744" parent="118" name="time_schedule">
+      <Position>12</Position>
+      <DataType>varchar(2048)|0</DataType>
+      <StateNumber>9167639</StateNumber>
+    </column>
+    <column id="745" parent="118" name="start_time">
+      <Position>13</Position>
+      <DataType>timestamp(0)|0</DataType>
+      <StateNumber>9167639</StateNumber>
+    </column>
+    <column id="746" parent="118" name="end_time">
+      <Position>14</Position>
+      <DataType>timestamp(0)|0</DataType>
+      <StateNumber>9167639</StateNumber>
+    </column>
+    <column id="747" parent="119" name="group_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="748" parent="119" name="group_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="749" parent="119" name="group_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="750" parent="119" name="group_type">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="751" parent="119" name="parent_group_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="752" parent="119" name="parentname">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="753" parent="120" name="group_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9260399</StateNumber>
+    </column>
+    <column id="754" parent="120" name="res_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9260399</StateNumber>
+    </column>
+    <column id="755" parent="120" name="res_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9260399</StateNumber>
+    </column>
+    <column id="756" parent="120" name="svr_id">
+      <Position>4</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9260399</StateNumber>
+    </column>
+    <column id="757" parent="120" name="svr_name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9260399</StateNumber>
+    </column>
+    <column id="758" parent="120" name="user_id">
+      <Position>6</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9260399</StateNumber>
+    </column>
+    <column id="759" parent="121" name="iaag_chn_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="760" parent="121" name="svr_id">
+      <Position>2</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="761" parent="121" name="res_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="762" parent="121" name="preset_no">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="763" parent="121" name="res_no">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="764" parent="121" name="res_name">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="765" parent="121" name="preset_name">
+      <Position>7</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9157594</StateNumber>
+    </column>
+    <column id="766" parent="122" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="767" parent="122" name="res_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="768" parent="122" name="res_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="769" parent="122" name="res_type">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="770" parent="122" name="dev_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="771" parent="122" name="res_uid">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="772" parent="122" name="chn_type">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="773" parent="122" name="remark">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="774" parent="122" name="group_id">
+      <Position>9</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="775" parent="122" name="dev_name">
+      <Position>10</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="776" parent="122" name="name">
+      <Position>11</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="777" parent="123" name="res_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="778" parent="123" name="res_no">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="779" parent="123" name="res_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="780" parent="123" name="res_type">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="781" parent="123" name="dev_id">
+      <Position>5</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="782" parent="123" name="res_uid">
+      <Position>6</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="783" parent="123" name="chn_type">
+      <Position>7</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="784" parent="123" name="remark">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="785" parent="123" name="name">
+      <Position>9</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="786" parent="123" name="dev_name">
+      <Position>10</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="787" parent="124" name="switch_task_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167335</StateNumber>
+    </column>
+    <column id="788" parent="124" name="task_name">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167335</StateNumber>
+    </column>
+    <column id="789" parent="124" name="wall_id">
+      <Position>3</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>9167335</StateNumber>
+    </column>
+    <column id="790" parent="124" name="task_no">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167335</StateNumber>
+    </column>
+    <column id="791" parent="124" name="name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>9167335</StateNumber>
+    </column>
+    <column id="792" parent="125" name="user_id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="793" parent="125" name="username">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="794" parent="125" name="nickname">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="795" parent="125" name="user_type">
+      <Position>4</Position>
+      <DataType>smallint|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="796" parent="125" name="create_time">
+      <Position>5</Position>
+      <DataType>timestamp(0)|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+    <column id="797" parent="125" name="flag_locked">
+      <Position>6</Position>
+      <DataType>smallint|0</DataType>
+      <StateNumber>46863</StateNumber>
+    </column>
+  </database-model>
+</dataSource>
