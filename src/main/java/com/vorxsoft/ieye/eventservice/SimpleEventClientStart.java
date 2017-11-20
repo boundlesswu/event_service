@@ -55,9 +55,9 @@ public class SimpleEventClientStart {
 
         do{
             VSAlarmResponse reply =  stub.sentAlarm(VSAlarmRequest.newBuilder().
-                                                                   setDeviceNo(randomString()).
+                                                                   setResourceId(0).
                                                                    setEvenType(VSEventTypeDigitalIOCommon).
-                                                                   setResourceUid(randomString()).
+                                                                   setResourceNo(randomString()).
                                                                    setHappenTime(getDateTimeNs()).build());
             System.out.println("reponse is " + reply);
             try {

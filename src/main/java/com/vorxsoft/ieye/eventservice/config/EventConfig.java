@@ -90,7 +90,7 @@ public class EventConfig {
       ResultSet ret2 = pstmt2.executeQuery(sql2);
       guardPlan.setGuard_plan_id(guard_plan_id);
       guardPlan.setGuard_plan_name(ret2.getString("guard_plan_name"));
-      guardPlan.setGuard_plan_type(ret2.getLong("guard_plan_type"));
+      guardPlan.setGuard_plan_type(guardPlan.Long2GuardPlanType(ret2.getLong("guard_plan_type")));
       guardPlan.setTime_schedule(ret2.getString("time_schedule"));
       guardPlan.setStart_time(ret2.getTimestamp("start_time"));
       guardPlan.setEnd_time(ret2.getTimestamp("end_time"));

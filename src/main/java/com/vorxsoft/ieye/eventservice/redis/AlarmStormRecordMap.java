@@ -2,7 +2,7 @@ package com.vorxsoft.ieye.eventservice.redis;
 
 import java.util.HashMap;
 
-public class AlarmStormRecord {
+public class AlarmStormRecordMap {
 
 
   class AlarmStormRecordItem{
@@ -12,6 +12,14 @@ public class AlarmStormRecord {
 
     public void setAlarmStormInfo(AlarmStormInfo alarmStormInfo) {
       this.alarmStormInfo = alarmStormInfo;
+    }
+
+    public String getExtraContent() {
+      return extraContent;
+    }
+
+    public void setExtraContent(String extraContent) {
+      this.extraContent = extraContent;
     }
 
     class AlarmStormInfo{
@@ -44,9 +52,10 @@ public class AlarmStormRecord {
     }
     private AlarmStormInfo alarmStormInfo;
     private long happenTime;
+    private String extraContent;
 
     public long diffTime(){
-      return System.currentTimeMillis() - happenTime*1000;
+      return System.currentTimeMillis()/1000 - happenTime;
     }
 
 
@@ -64,16 +73,37 @@ public class AlarmStormRecord {
     return alarmStormRecordItemHashMap.put(item.getAlarmStormInfo(),item);
   }
 
-  public long diffCurrentTime(AlarmStormRecordItem.AlarmStormInfo info){
+  public AlarmStormRecordItem add(AlarmStormRecordItem.AlarmStormInfo info, long happenTime,String extraContent ){
+    AlarmStormRecordItem item = new AlarmStormRecordItem();
+    item.setAlarmStormInfo(info);
+    item.setHappenTime(happenTime);
+    item.setExtraContent(extraContent);
+    return alarmStormRecordItemHashMap.put(item.getAlarmStormInfo(),item);
+  }
+
+  public AlarmStormRecordItem add(String event_type,int resourceId, String resourceNo,long happenTime,String extraContent){
+    AlarmStormRecordItem item = new AlarmStormRecordItem();
+    AlarmStormRecordItem.AlarmStormInfo info = null;
+    info.setEvent_type(event_type);
+    info.setResourceId(resourceId);
+    info.setResourceNo(resourceNo);
+    item.setAlarmStormInfo(info);
+    item.setHappenTime(happenTime);
+    item.setExtraContent(extraContent);
+    return alarmStormRecordItemHashMap.put(info,item);
+  }
+  
+  public long diffCurrentTime(AlarmStormRecordItem.AlarmStormInfo info) {
     AlarmStormRecordItem a = alarmStormRecordItemHashMap.get(info);
-    if(a == null) {
-      System.out.println("no AlarmStormInfo: "+info+"found:");
+    if (a == null) {
+      System.out.println("no AlarmStormInfo: " + info + "found:");
       return Long.MIN_VALUE;
-    }else {
+    } else {
       return a.diffTime();
     }
   }
-
-
-
+  public long diffCurrentTime(long happenTime){
+      return System.currentTimeMillis()/1000 - happenTime;
   }
+}
+

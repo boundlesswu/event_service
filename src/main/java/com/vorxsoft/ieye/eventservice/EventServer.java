@@ -120,38 +120,41 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase{
         count++;
       Map<String, String> map = Alarm2map(request);
       String key = null;
+      boolean alarm_type_wrong = false;
       switch (eventType2genus(request.getEvenType())){
         case VSEventGenusMonitor:
           monitor_count++;
-          key = "alarm_monitor"+monitor_count;
+          //key = "alarm_monitor"+monitor_count;
           break;
         case VSEventGenusDigitalIO:
           sio_count++;
-          key = "alarm_sio"+ sio_count;
+          //key = "alarm_sio"+ sio_count;
           break;
         case VSEventGenusIntelligentChannel:
           ia_count++;
-          key = "alarm_ia" + ia_count;
+          //key = "alarm_ia" + ia_count;
           break;
         case VSEventGenusDevice:
           device_count++;
-          key = "alarm_device" + device_count;
+          //key = "alarm_device" + device_count;
           break;
         case VSEventGenusServer:
           server_count++;
-          key = "alarm_server" +  server_count;
+          //key = "alarm_server" +  server_count;
           break;
         case VSEventGenusNull:
         case UNRECOGNIZED:
-          return;
-
+          alarm_type_wrong = true;
+          break;
       }
-      jedis.hmset(key,map);
-      VSAlarmResponse reply = com.vorxsoft.ieye.proto.VSAlarmResponse.newBuilder().setDeviceNo(request.getDeviceNo()).
-                                                             setResourceUid(request.getResourceUid()).
+      key = "alarm_" + count;
+      if(!alarm_type_wrong)
+        jedis.hmset(key,map);
+      VSAlarmResponse reply = com.vorxsoft.ieye.proto.VSAlarmResponse.newBuilder().setResourceId(request.getResourceId()).
+                                                             setResourceNo(request.getResourceNo()).
                                                               setResult(true).build();
         response.onNext(reply);
         response.onCompleted();
     }
-    public void alarm2
+
 }

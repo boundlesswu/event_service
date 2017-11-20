@@ -1,13 +1,24 @@
 package com.vorxsoft.ieye.eventservice.config;
 
+import static com.vorxsoft.ieye.eventservice.config.GuardPlan.GuardPlanType.Permanent;
+
 public class GuardPlan {
   private Long guard_plan_id;
   private String guard_plan_name;
   private String time_schedule;
-  private Long guard_plan_type;
+  private GuardPlanType guard_plan_type;
   private java.sql.Timestamp start_time;
   private java.sql.Timestamp end_time;
-
+  public enum GuardPlanType{
+     Permanent,Temporary;
+  }
+  public GuardPlanType Long2GuardPlanType(Long a ){
+    if(a == 1)
+      return GuardPlanType.Permanent;
+    else if(a == 2)
+      return GuardPlanType.Temporary;
+    return GuardPlanType.Permanent;
+  }
   public Long getGuard_plan_id() {
     return guard_plan_id;
   }
@@ -32,11 +43,11 @@ public class GuardPlan {
     this.time_schedule = time_schedule;
   }
 
-  public Long getGuard_plan_type() {
+  public GuardPlanType getGuard_plan_type() {
     return guard_plan_type;
   }
 
-  public void setGuard_plan_type(Long guard_plan_type) {
+  public void setGuard_plan_type(GuardPlanType guard_plan_type) {
     this.guard_plan_type = guard_plan_type;
   }
 

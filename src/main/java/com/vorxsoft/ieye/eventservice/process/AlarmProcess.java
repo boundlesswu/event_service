@@ -3,6 +3,8 @@ package com.vorxsoft.ieye.eventservice.process;
 import com.vorxsoft.ieye.eventservice.config.AlarmStorm;
 import com.vorxsoft.ieye.eventservice.config.AlarmStormConfig;
 import com.vorxsoft.ieye.eventservice.config.EventConfig;
+import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
+import com.vorxsoft.ieye.eventservice.redis.eventRecordMap;
 import redis.clients.jedis.Jedis;
 
 import java.sql.SQLException;
@@ -16,6 +18,8 @@ import java.util.Set;
 public class AlarmProcess implements Runnable {
   private String name;
   private EventConfig eventConfig;
+  private AlarmStormConfig alarmStormConfig;
+  private AlarmStormRecordMap alarmStormRecordMap;
   private Jedis jedis;
 
   public ProcessType getProcessType() {
@@ -36,6 +40,7 @@ public class AlarmProcess implements Runnable {
   }
 
   private  ProcessType processType;
+  private eventRecordMap eventRecordMap;
   public String getName() {
     return name;
   }
@@ -52,9 +57,10 @@ public class AlarmProcess implements Runnable {
     this.eventConfig = eventConfig;
   }
 
-  AlarmProcess(String name,ProcessType type) {
+  AlarmProcess(String name, ProcessType type, eventRecordMap eventRecordMap) {
     this.name = name;
     this.processType = type;
+    this.eventRecordMap = eventRecordMap;
   }
   public AlarmProcess(String name) {
     this.name = name;
@@ -66,9 +72,26 @@ public class AlarmProcess implements Runnable {
     for (int i = 0; ; i++) {
       System.out.println(name + "运行  :  " + i);
       try {
+        switch (processType) {
+          case ProcessMonitorType:
+            break;
+          case ProcessIaType:
+            break;
+          case ProcessSioType:
+            break;
+          case ProcessServerType:
+            break;
+          case ProcessDeviceType:
+            break;
+          case ProcessAlarmStorm:
+            processAlarmStorm(alarmStormConfig,alarmStormRecordMap);
+            break;
+        }
         Thread.sleep((int) Math.random() * 10);
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
+        e.printStackTrace();
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -90,14 +113,19 @@ public class AlarmProcess implements Runnable {
     return re_time;
   }
 
-  public void processAlarmStorm(AlarmStormConfig alarmStormConfig) throws SQLException {
+  public void processAlarmStorm(AlarmStormConfig alarmStormConfig,AlarmStormRecordMap asrm) throws SQLException {
     Set<String> set = jedis.keys("alarm_" +"*");
     Iterator<String> it = set.iterator();
     while(it.hasNext()){
       String keyStr = it.next();
       System.out.println(keyStr);
       Map<String, String> map = jedis.hgetAll(keyStr);
+      String  sCount =  keyStr.substring(6);
       String type = map.get("event_type");
+      String resourceId = map.get("resourceId");
+      String resourceNo = map.get("resourceNo");
+      String  happenTime = map.get("happenTime");
+      String extraContent = map.get("extraContent");
       AlarmStorm alarmStorm =  alarmStormConfig.getAlarmStorm(type);
       if(alarmStorm == null){
         System.out.println("no alarm storm config of event_type:"+ type);
@@ -107,16 +135,21 @@ public class AlarmProcess implements Runnable {
       //need event process
       if( stom_time == 0){
         System.out.println("no alarm storm config of event_type:"+ type);
+        eventRecordMap.alarmMap2eventMap(map,jedis,Integer.parseInt(sCount));
+        asrm.add(type,Integer.parseInt(resourceId),resourceNo,Integer.parseInt(happenTime),extraContent);
         continue;
-      }else if( stom_time > 0){
-
+      }else if( stom_time <= asrm.diffCurrentTime(Integer.parseInt(happenTime))){
+        System.out.println("define storm time  <=  :");
+        eventRecordMap.alarmMap2eventMap(map,jedis,Integer.parseInt(sCount));
+        asrm.add(type,Integer.parseInt(resourceId),resourceNo,Integer.parseInt(happenTime),extraContent);
+      }else{
+        System.out.println("define storm time  >  :");
+        asrm.add(type,Integer.parseInt(resourceId),resourceNo,Integer.parseInt(happenTime),extraContent);
       }
       jedis.del(keyStr);
-      count++;
-      String key = emap.get("event_type") + count;
-      jedis.hmset(key,map);
     }
   }
+
 }
 
 
