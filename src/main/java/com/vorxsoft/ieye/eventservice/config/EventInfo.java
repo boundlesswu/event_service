@@ -3,6 +3,7 @@ package com.vorxsoft.ieye.eventservice.config;
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
 
 public class EventInfo {
+
   private Long event_id;
   private String event_no;
   private String event_genus;
@@ -13,9 +14,13 @@ public class EventInfo {
   private Long event_level;
   private Long auto_release_interval;
   private GuardPlan guardPlan;
-  private int sourceId;
-  private int iaagId;
-  private int iaag_chn_id;
+  private long res_id=0;
+  private long dev_id=0;
+  private long machine_id=0;
+  private long svr_id=0;
+  private long sourceId=0;
+  private long iaagId=0;
+  private long iaag_chn_id=0;
   private EventLinkage[] eventLinkagelist;
 
 
@@ -99,30 +104,6 @@ public class EventInfo {
     this.guardPlan = guardPlan;
   }
 
-  public int getSourceId() {
-    return sourceId;
-  }
-
-  public void setSourceId(int sourceId) {
-    this.sourceId = sourceId;
-  }
-
-  public int getIaagId() {
-    return iaagId;
-  }
-
-  public void setIaagId(int iaagId) {
-    this.iaagId = iaagId;
-  }
-
-  public int getIaag_chn_id() {
-    return iaag_chn_id;
-  }
-
-  public void setIaag_chn_id(int iaag_chn_id) {
-    this.iaag_chn_id = iaag_chn_id;
-  }
-
 
   public EventLinkage[] getEventLinkagelist() {
     return eventLinkagelist;
@@ -130,5 +111,61 @@ public class EventInfo {
 
   public void setEventLinkagelist(EventLinkage[] eventLinkagelist) {
     this.eventLinkagelist = eventLinkagelist;
+  }
+
+  public long getRes_id() {
+    return res_id;
+  }
+
+  public void setRes_id(long res_id) {
+    this.res_id = res_id;
+  }
+
+  public long getDev_id() {
+    return dev_id;
+  }
+
+  public void setDev_id(long dev_id) {
+    this.dev_id = dev_id;
+  }
+
+  public long getMachine_id() {
+    return machine_id;
+  }
+
+  public void setMachine_id(long machine_id) {
+    this.machine_id = machine_id;
+  }
+
+  public long getSvr_id() {
+    return svr_id;
+  }
+
+  public void setSvr_id(long svr_id) {
+    this.svr_id = svr_id;
+  }
+
+  public long getSourceId() {
+    return sourceId;
+  }
+
+  public void setSourceId(long sourceId) {
+    this.sourceId = sourceId;
+  }
+
+  public long getIaagId() {
+    return iaagId;
+  }
+
+  public void setIaagId(long iaagId) {
+    this.iaagId = iaagId;
+  }
+
+  public long getIaag_chn_id() {
+    return iaag_chn_id;
+  }
+
+  public void setIaag_chn_id(long iaag_chn_id) {
+    this.iaag_chn_id = iaag_chn_id;
   }
 }
