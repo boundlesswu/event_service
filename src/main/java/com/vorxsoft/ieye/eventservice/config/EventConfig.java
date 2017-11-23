@@ -9,10 +9,36 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class EventConfig {
-  public EventConfig() {
-  }
 
-  public class  MonitorConfigKey {
+
+  public static class  MonitorConfigKey {
+    private String event_type;
+    private long res_id;
+
+    MonitorConfigKey(){
+
+    }
+    public MonitorConfigKey(String event_type,long res_id ){
+      this.event_type = event_type;
+      this.res_id = res_id;
+    }
+    public String getEvent_type() {
+      return event_type;
+    }
+
+    public void setEvent_type(String event_type) {
+      this.event_type = event_type;
+    }
+
+    public long getRes_id() {
+      return res_id;
+    }
+
+    public void setRes_id(long res_id) {
+      this.res_id = res_id;
+    }
+  }
+  public static class SioConfigKey{
     private String event_type;
     private long res_id;
 
@@ -32,27 +58,7 @@ public class EventConfig {
       this.res_id = res_id;
     }
   }
-  public class SioConfigKey{
-    private String event_type;
-    private long res_id;
-
-    public String getEvent_type() {
-      return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-      this.event_type = event_type;
-    }
-
-    public long getRes_id() {
-      return res_id;
-    }
-
-    public void setRes_id(long res_id) {
-      this.res_id = res_id;
-    }
-  }
-  public class  IaConfigKey {
+  public static class  IaConfigKey {
     private String event_type;
     private long res_id;
     private long iaagId;
@@ -90,7 +96,7 @@ public class EventConfig {
       this.iaag_chn_id = iaag_chn_id;
     }
   }
-  public class ServerConfigKey{
+  public static class ServerConfigKey{
     private String event_type;
     private long machine_id=0;
 
@@ -110,7 +116,7 @@ public class EventConfig {
       this.machine_id = machine_id;
     }
   }
-  public class DeviceConfigKey {
+  public static class DeviceConfigKey {
     private String event_type;
     private long dev_id;
 
@@ -136,16 +142,12 @@ public class EventConfig {
   private HashMap<Long,EventInfo> sioConfigList;
   private HashMap<Long,EventInfo> serverConfigList;
   private HashMap<Long,EventInfo> deviceConfigList;
-  //private HashMap<Long,EventInfo> eventConfigList;
-  //private HashMap<Long,AlarmStorm> alarmStormConfigList;
 
   private HashMap<MonitorConfigKey,EventInfo> monitorConfigList2;
   private HashMap<IaConfigKey,EventInfo> iaConfigList2;
   private HashMap<SioConfigKey,EventInfo> sioConfigList2;
   private HashMap<ServerConfigKey,EventInfo> serverConfigList2;
   private HashMap<DeviceConfigKey,EventInfo> deviceConfigList2;
-  //private HashMap<Long,EventInfo> eventConfigList2;
-  //private HashMap<Long,AlarmStorm> alarmStormConfigList2;
 
   private int listNum;
   private int disListNum;
@@ -377,5 +379,8 @@ public class EventConfig {
         +sioConfigList.size()+serverConfigList.size()+deviceConfigList.size();
   }
 
+  public  EventInfo getMonitorConfig(MonitorConfigKey monitorConfigKey){
+    return this.deviceConfigList2.get(monitorConfigKey);
+  }
 
 }

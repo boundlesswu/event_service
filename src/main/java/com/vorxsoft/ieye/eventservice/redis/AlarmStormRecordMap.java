@@ -25,7 +25,7 @@ public class AlarmStormRecordMap {
     class AlarmStormInfo{
       private String event_type;
       private int resourceId;
-      private String resourceNo;
+      //private String resourceNo;
       public String getEvent_type() {
         return event_type;
       }
@@ -42,13 +42,13 @@ public class AlarmStormRecordMap {
         this.resourceId = resourceId;
       }
 
-      public String getResourceNo() {
-        return resourceNo;
-      }
-
-      public void setResourceNo(String resourceNo) {
-        this.resourceNo = resourceNo;
-      }
+//      public String getResourceNo() {
+//        return resourceNo;
+//      }
+//
+//      public void setResourceNo(String resourceNo) {
+//        this.resourceNo = resourceNo;
+//      }
     }
     private AlarmStormInfo alarmStormInfo;
     private long happenTime;
@@ -81,12 +81,12 @@ public class AlarmStormRecordMap {
     return alarmStormRecordItemHashMap.put(item.getAlarmStormInfo(),item);
   }
 
-  public AlarmStormRecordItem add(String event_type,int resourceId, String resourceNo,long happenTime,String extraContent){
+  public AlarmStormRecordItem add(String event_type,int resourceId,long happenTime,String extraContent){
     AlarmStormRecordItem item = new AlarmStormRecordItem();
     AlarmStormRecordItem.AlarmStormInfo info = null;
     info.setEvent_type(event_type);
     info.setResourceId(resourceId);
-    info.setResourceNo(resourceNo);
+    //info.setResourceNo(resourceNo);
     item.setAlarmStormInfo(info);
     item.setHappenTime(happenTime);
     item.setExtraContent(extraContent);

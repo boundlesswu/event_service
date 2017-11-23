@@ -4,7 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class GuardPlan {
@@ -198,11 +203,91 @@ public class GuardPlan {
     this.end_time = end_time;
   }
 
-  public static void main(String[] args){
-    GuardPlan guardPlan = new GuardPlan();
-    String json = "{\"TimeSchedule\":[{\"name\":\"1\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"2\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"3\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"4\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"5\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"6\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"7\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]}]}";
-    guardPlan.setTimeSchedule(json);
-    System.out.println(JSON.toJSON(guardPlan.getTimeSchedule()));
+//  public static void main(String[] args){
+//    GuardPlan guardPlan = new GuardPlan();
+//    String json = "{\"TimeSchedule\":[{\"name\":\"1\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"2\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"3\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"4\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"5\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"6\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]},{\"name\":\"7\",\"time\":[{\"type\":0,\"start\":\"6\",\"end\":\"11\"},{\"type\":0,\"start\":\"14\",\"end\":\"19\"},{\"type\":0,\"start\":\"20\",\"end\":\"23\"}]}]}";
+//    guardPlan.setTimeSchedule(json);
+//    System.out.println(JSON.toJSON(guardPlan.getTimeSchedule()));
+//
+//  }
+public Date timestamp2datetime(Timestamp ts){
+  Date date = new Date();
+  date = ts;
+  return date;
+}
 
+  public Timestamp datetime2timestamp( Date date){
+    Timestamp ts = new Timestamp(date.getTime());
+    return ts;
   }
+
+  public Timestamp String2timestamp(String time) {
+    Timestamp ts = new Timestamp(System.currentTimeMillis());
+    try {
+      ts = Timestamp.valueOf(time);
+      System.out.println(ts);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return ts;
+  }
+
+  public String stampToDate(String s){
+    String res;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    long lt = new Long(s);
+    Date date = new Date(lt);
+    res = simpleDateFormat.format(date);
+    return res;
+  }
+
+
+  public  int dayForWeek(String pTime) throws Exception {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Calendar c = Calendar.getInstance();
+    c.setTime(format.parse(pTime));
+    int dayForWeek = 0;
+    if(c.get(Calendar.DAY_OF_WEEK) == 1){
+      dayForWeek = 7;
+    }else{
+      dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+    }
+    return dayForWeek;
+  }
+
+  public float getFloatHHMM(String pTime) throws ParseException {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //Calendar cal =Calendar.getInstance();
+    Date date = simpleDateFormat.parse(pTime);
+    int h = date.getHours();      //获取当前时间的小时部分
+    int m = date.getMinutes();    //获取当前时间的分钟部分
+    return (float) ((float)h+(float)m/60.0);
+  }
+  public boolean isInGuardPlan(String happenTime) throws Exception {
+    boolean ret =  false;
+    switch (getGuard_plan_type()) {
+      case Permanent:
+      {
+        int day = dayForWeek(happenTime);
+        GuardPlan.TimeScheduleItem timeScheduleItem = getTimeScheduleItemIndexOf(day);
+        float ct = getFloatHHMM(happenTime);
+        ret = timeScheduleItem.isInTimeScheduleItem(ct);
+      }
+      break;
+      case Temporary:
+      {
+        Timestamp st = datetime2timestamp(getStart_time());
+        Timestamp et = datetime2timestamp(getEnd_time());
+        Timestamp ct = String2timestamp(happenTime);
+        if(ct.after(st) && ct.before(et)){
+          ret = true;
+        }else{
+          ret = false;
+        }
+      }
+      break;
+    }
+    return ret;
+  }
+
 }
