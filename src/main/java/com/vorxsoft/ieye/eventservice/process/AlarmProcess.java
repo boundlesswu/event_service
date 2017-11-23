@@ -113,71 +113,232 @@ public class AlarmProcess implements Runnable {
   }
 
   public void processMonitorAlarm(EventConfig eventConfig) throws Exception {
-    Set<String> set = jedis.keys("alarm_monitor_" +"*");
+    Set<String> set = jedis.keys("alarm_monitor_" + "*");
     Iterator<String> it = set.iterator();
-    while(it.hasNext()){
+    while (it.hasNext()) {
       String keyStr = it.next();
       System.out.println(keyStr);
       Map<String, String> map = jedis.hgetAll(keyStr);
-      String  sCount =  keyStr.substring(6);
+      String sCount = keyStr.substring(6);
       String evenType = map.get("evenType");
       int resourceId = Integer.parseInt(map.get("resourceId"));
       //String resourceNo = map.get("resourceNo");
-      String  happenTime = map.get("happenTime");
+      String happenTime = map.get("happenTime");
       String extraContent = map.get("extraContent");
-      EventConfig.MonitorConfigKey monitorConfigKey = new EventConfig.MonitorConfigKey(evenType,resourceId);
+      jedis.del(keyStr);
+      EventConfig.MonitorConfigKey monitorConfigKey = new EventConfig.MonitorConfigKey(evenType, resourceId);
       EventInfo eventInfo = eventConfig.getMonitorConfig(monitorConfigKey);
 
-      if(eventInfo == null){
-        System.out.println("No event config for monitor alarm evenType:"+evenType+"resourceId:"
-            +resourceId+"happenTime"+happenTime+"extraContent"+extraContent);
+      if (eventInfo == null) {
+        System.out.println("No event config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
         //insert into tl_event_src_monitor table todo
         continue;
       }
       GuardPlan guardPlan = eventInfo.getGuardPlan();
-      if(guardPlan == null || !guardPlan.isInGuardPlan(happenTime)){
-        System.out.println("No guard plan  config for monitor alarm evenType:"+evenType+"resourceId:"
-            +resourceId+"happenTime"+happenTime+"extraContent"+extraContent);
+      if (guardPlan == null || !guardPlan.isInGuardPlan(happenTime)) {
+        System.out.println("No guard plan  config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
         //insert into tl_event_src_monitor table todo
         continue;
       }
 
-      AlarmStorm alarmStorm =  alarmStormConfig.getAlarmStorm(evenType);
+      AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
 
-      if(alarmStorm == null){
-        System.out.println("no alarm storm config for monitor alarm evenType:"+evenType+"resourceId:"
-            +resourceId+"happenTime"+happenTime+"extraContent"+extraContent);
+      if (alarmStorm == null) {
+        System.out.println("no alarm storm config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
         // send to event queue todo
-      }else{
-        Long stom_time =  alarmStorm.getEvent_stom();
-        if( stom_time == 0){
-          System.out.println("no alarm storm config of event_type:"+ evenType);
-          eventRecordMap.alarmMap2eventMap(map,jedis,Integer.parseInt(sCount));
-          alarmStormRecordMap.add(evenType,resourceId,Integer.parseInt(happenTime),extraContent);
+      } else {
+        Long stom_time = alarmStorm.getEvent_stom();
+        if (stom_time == 0) {
+          System.out.println("storm time == 0 no alarm storm config of event_type:" + evenType);
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
           continue;
-        }else if( stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))){
+        } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
           System.out.println("define storm time  <=  :");
-          eventRecordMap.alarmMap2eventMap(map,jedis,Integer.parseInt(sCount));
-          alarmStormRecordMap.add(evenType,resourceId,Integer.parseInt(happenTime),extraContent);
-        }else{
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+        } else {
           System.out.println("define storm time  >  :");
-          alarmStormRecordMap.add(evenType,resourceId,Integer.parseInt(happenTime),extraContent);
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
           //insert into tl_event_src_monitor table todo
         }
       }
-
+    }
   }
 
-  public void processSioAlarm(){
+  public void processSioAlarm() throws Exception {
+    Set<String> set = jedis.keys("alarm_sio" + "*");
+    Iterator<String> it = set.iterator();
+    while (it.hasNext()) {
+      String keyStr = it.next();
+      System.out.println(keyStr);
+      Map<String, String> map = jedis.hgetAll(keyStr);
+      String sCount = keyStr.substring(6);
+      String evenType = map.get("evenType");
+      int resourceId = Integer.parseInt(map.get("resourceId"));
+      //String resourceNo = map.get("resourceNo");
+      String happenTime = map.get("happenTime");
+      String extraContent = map.get("extraContent");
+      jedis.del(keyStr);
+      EventConfig.SioConfigKey sioConfigKey = new EventConfig.SioConfigKey(evenType, resourceId);
+      EventInfo eventInfo = eventConfig.getSioConfig(sioConfigKey);
 
+      if (eventInfo == null) {
+        System.out.println("No event config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
+        //insert into tl_event_src_monitor table todo
+        continue;
+      }
+      GuardPlan guardPlan = eventInfo.getGuardPlan();
+      if (guardPlan == null || !guardPlan.isInGuardPlan(happenTime)) {
+        System.out.println("No guard plan  config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
+        //insert into tl_event_src_monitor table todo
+        continue;
+      }
+      AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
+
+      if (alarmStorm == null) {
+        System.out.println("no alarm storm config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
+        // send to event queue todo
+        eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+      } else {
+        Long stom_time = alarmStorm.getEvent_stom();
+        if (stom_time == 0) {
+          System.out.println("storm time == 0 of event_type:" + evenType);
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+          continue;
+        } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
+          System.out.println("define storm time  <=  :");
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+        } else {
+          System.out.println("define storm time  >  :");
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+          //insert into tl_event_src_monitor table todo
+        }
+      }
+    }
   }
 
-  public void processIaAlarm(){
+  public void processIaAlarm() throws Exception {
+    Set<String> set = jedis.keys("alarm_ia" + "*");
+    Iterator<String> it = set.iterator();
+    while (it.hasNext()) {
+      String keyStr = it.next();
+      System.out.println(keyStr);
+      Map<String, String> map = jedis.hgetAll(keyStr);
+      String sCount = keyStr.substring(6);
+      String evenType = map.get("evenType");
+      int iaadId =  Integer.parseInt(map.get("iaagId"));
+      int iauId =  Integer.parseInt(map.get("iauId"));
+      int resourceId = Integer.parseInt(map.get("resourceId"));
+      //String resourceNo = map.get("resourceNo");
+      String happenTime = map.get("happenTime");
+      String extraContent = map.get("extraContent");
+      jedis.del(keyStr);
+      EventConfig.IaConfigKey iaConfigKey = new EventConfig.IaConfigKey(evenType,resourceId,iaadId,iaadId);
+      EventInfo eventInfo = eventConfig.getIaConfig(iaConfigKey);
 
+      if (eventInfo == null) {
+        System.out.println("No event config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
+        //insert into tl_event_src_monitor table todo
+        continue;
+      }
+      GuardPlan guardPlan = eventInfo.getGuardPlan();
+      if (guardPlan == null || !guardPlan.isInGuardPlan(happenTime)) {
+        System.out.println("No guard plan  config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
+        //insert into tl_event_src_monitor table todo
+        continue;
+      }
+      AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
+
+      if (alarmStorm == null) {
+        System.out.println("no alarm storm config for monitor alarm evenType:" + evenType + "resourceId:"
+            + resourceId + "happenTime" + happenTime + "extraContent" + extraContent);
+        // send to event queue todo
+        eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+      } else {
+        Long stom_time = alarmStorm.getEvent_stom();
+        if (stom_time == 0) {
+          System.out.println("storm time == 0 of event_type:" + evenType);
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+          continue;
+        } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
+          System.out.println("define storm time  <=  :");
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+        } else {
+          System.out.println("define storm time  >  :");
+          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+          //insert into tl_event_src_monitor table todo
+        }
+      }
+    }
   }
 
-  public void processServerAlarm(){
+  public void processServerAlarm() throws Exception {
+    Set<String> set = jedis.keys("alarm_server_" + "*");
+    Iterator<String> it = set.iterator();
+    while (it.hasNext()) {
+      String keyStr = it.next();
+      System.out.println(keyStr);
+      Map<String, String> map = jedis.hgetAll(keyStr);
+      String sCount = keyStr.substring(6);
+      String evenType = map.get("evenType");
+      int machineId = Integer.parseInt(map.get("machineId"));
+      String happenTime = map.get("happenTime");
+      String extraContent = map.get("extraContent");
+      jedis.del(keyStr);
+      EventConfig.ServerConfigKey serverConfigKey = new EventConfig.ServerConfigKey(evenType, machineId);
+      EventInfo eventInfo = eventConfig.getServerConfig(serverConfigKey);
 
+      if (eventInfo == null) {
+        System.out.println("No event config for monitor alarm evenType:" + evenType + "machineId:"
+            + machineId + "happenTime" + happenTime + "extraContent" + extraContent);
+        //insert into tl_event_src_monitor table todo
+        continue;
+      }
+      GuardPlan guardPlan = eventInfo.getGuardPlan();
+      if (guardPlan == null || !guardPlan.isInGuardPlan(happenTime)) {
+        System.out.println("No guard plan  config for monitor alarm evenType:" + evenType + "machineId:"
+            + machineId + "happenTime" + happenTime + "extraContent" + extraContent);
+        //insert into tl_event_src_monitor table todo
+        continue;
+      }
+
+      AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
+
+      if (alarmStorm == null) {
+        System.out.println("no alarm storm config for monitor alarm evenType:" + evenType + "machineId:"
+            + machineId + "happenTime" + happenTime + "extraContent" + extraContent);
+        // send to event queue todo
+      } else {
+        Long stom_time = alarmStorm.getEvent_stom();
+        if (stom_time == 0) {
+          System.out.println("storm time == 0 no alarm storm config of event_type:" + evenType);
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, machineId, Integer.parseInt(happenTime), extraContent);
+          continue;
+        } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
+          System.out.println("define storm time  <=  :");
+          eventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          alarmStormRecordMap.add(evenType, machineId, Integer.parseInt(happenTime), extraContent);
+        } else {
+          System.out.println("define storm time  >  :");
+          alarmStormRecordMap.add(evenType, machineId, Integer.parseInt(happenTime), extraContent);
+          //insert into tl_event_src_monitor table todo
+        }
+      }
+    }
   }
   public void processDeviceAlarm(){
 

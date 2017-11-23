@@ -41,7 +41,11 @@ public class EventConfig {
   public static class SioConfigKey{
     private String event_type;
     private long res_id;
-
+    SioConfigKey(){}
+    public SioConfigKey(String type,long res_id){
+      this.event_type = type;
+      this.res_id = res_id;
+    }
     public String getEvent_type() {
       return event_type;
     }
@@ -64,6 +68,14 @@ public class EventConfig {
     private long iaagId;
     private long iaag_chn_id;
 
+    public IaConfigKey() {
+    }
+    public IaConfigKey(String event_type, long res_id, long iaagId, long iaag_chn_id) {
+      this.event_type = event_type;
+      this.res_id = res_id;
+      this.iaagId = iaagId;
+      this.iaag_chn_id = iaag_chn_id;
+    }
     public String getEvent_type() {
       return event_type;
     }
@@ -100,6 +112,14 @@ public class EventConfig {
     private String event_type;
     private long machine_id=0;
 
+    public ServerConfigKey() {
+    }
+
+    public ServerConfigKey(String event_type, long machine_id) {
+      this.event_type = event_type;
+      this.machine_id = machine_id;
+    }
+
     public String getEvent_type() {
       return event_type;
     }
@@ -119,6 +139,14 @@ public class EventConfig {
   public static class DeviceConfigKey {
     private String event_type;
     private long dev_id;
+
+    public DeviceConfigKey() {
+    }
+
+    public DeviceConfigKey(String event_type, long dev_id) {
+      this.event_type = event_type;
+      this.dev_id = dev_id;
+    }
 
     public String getEvent_type() {
       return event_type;
@@ -380,7 +408,25 @@ public class EventConfig {
   }
 
   public  EventInfo getMonitorConfig(MonitorConfigKey monitorConfigKey){
-    return this.deviceConfigList2.get(monitorConfigKey);
+    return this.monitorConfigList2.get(monitorConfigKey);
   }
+  public  EventInfo getSioConfig(SioConfigKey sioConfigKey){
+    return this.sioConfigList2.get(sioConfigKey);
+  }
+
+  public  EventInfo getIaConfig(IaConfigKey iaConfigKey){
+    return this.iaConfigList2.get(iaConfigKey);
+  }
+
+  public  EventInfo getServerConfig(ServerConfigKey serverConfigKey){
+    return this.serverConfigList2.get(serverConfigKey);
+  }
+
+  public  EventInfo getDeviceConfig(DeviceConfigKey deviceConfigKey){
+    return this.deviceConfigList2.get(deviceConfigKey);
+  }
+
+
+
 
 }
