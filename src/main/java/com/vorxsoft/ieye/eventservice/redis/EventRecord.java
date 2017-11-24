@@ -28,16 +28,16 @@ public class EventRecord {
   }
 
   private EventRecord(Builder builder) {
-    nResID = builder.nResID;
+    setnResID(builder.nResID);
     setsResNo(builder.sResNo);
     setsResName(builder.sResName);
-    nDevID = builder.nDevID;
+    setnDevID(builder.nDevID);
     setsDevNo(builder.sDevNo);
     setsDevName(builder.sDevName);
-    nMachineID = builder.nMachineID;
-    sMachineName = builder.sMachineName;
+    setnMachineID(builder.nMachineID);
+    setsMachineName(builder.sMachineName);
     setnSvrID(builder.nSvrID);
-    sSvrName = builder.sSvrName;
+    setsSvrName(builder.sSvrName);
     setnEventID(builder.nEventID);
     setsEventName(builder.sEventName);
     setsEventGenus(builder.sEventGenus);
@@ -48,7 +48,12 @@ public class EventRecord {
     setsEventlevel(builder.sEventlevel);
     setnEventlogID(builder.nEventlogID);
     setsExtraDesc(builder.sExtraDesc);
-    eventLinkage = builder.eventLinkage;
+    setEventLinkage(builder.eventLinkage);
+    setbSend2mq(builder.bSend2mq);
+    setbSend2cms(builder.bSend2cms);
+    setbSend2blg(builder.bSend2blg);
+    setbInsert2log(builder.bInsert2log);
+    setbInsert2srcLog(builder.bInsert2srcLog);
   }
 
   public static Builder newBuilder() {
@@ -316,6 +321,11 @@ public class EventRecord {
     private int nEventlogID;
     private String sExtraDesc;
     private EventLinkage eventLinkage;
+    private boolean bSend2mq;
+    private boolean bSend2cms;
+    private boolean bSend2blg;
+    private boolean bInsert2log;
+    private boolean bInsert2srcLog;
     private int nResID;
 
     public Builder() {
@@ -418,6 +428,31 @@ public class EventRecord {
 
     public Builder eventLinkage(EventLinkage val) {
       eventLinkage = val;
+      return this;
+    }
+
+    public Builder bSend2mq(boolean val) {
+      bSend2mq = val;
+      return this;
+    }
+
+    public Builder bSend2cms(boolean val) {
+      bSend2cms = val;
+      return this;
+    }
+
+    public Builder bSend2blg(boolean val) {
+      bSend2blg = val;
+      return this;
+    }
+
+    public Builder bInsert2log(boolean val) {
+      bInsert2log = val;
+      return this;
+    }
+
+    public Builder bInsert2srcLog(boolean val) {
+      bInsert2srcLog = val;
       return this;
     }
 

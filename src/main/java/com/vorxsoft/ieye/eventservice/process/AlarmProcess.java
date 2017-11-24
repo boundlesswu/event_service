@@ -2,7 +2,9 @@ package com.vorxsoft.ieye.eventservice.process;
 
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
+import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
+import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import redis.clients.jedis.Jedis;
 
 import java.sql.SQLException;
@@ -20,6 +22,7 @@ public class AlarmProcess implements Runnable {
   private EventConfig eventConfig;
   private AlarmStormConfig alarmStormConfig;
   private AlarmStormRecordMap alarmStormRecordMap;
+  private EventRecordMap eventRecordMap;
   private Jedis jedis;
 
   public ProcessType getProcessType() {
@@ -190,6 +193,41 @@ public class AlarmProcess implements Runnable {
                 "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
                 "machineId:" + machineId + " deviceId:" + deviceId);
         //insert into tl_event_src_monitor table todo
+        switch (processType) {
+          case ProcessMonitorType:
+            EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
+                                      sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                                      bInsert2srcLog(true).sEventGenus("event_monitor").build();
+            eventRecordMap.add(eventRecord);
+            break;
+          case ProcessIaType:
+            EventRecord eventRecord2 = EventRecord.newBuilder().sEventType(evenType).nSvrID(iaadId).
+                sSvrName(ResUtil.SvrID2SvrName(iaadId)).sHappentime(happenTime).
+                nResID(resourceId).sResName(ResUtil.ResID2ResName(resourceId)).
+                bInsert2srcLog(true).sEventGenus("event_ia").build();
+            eventRecordMap.add(eventRecord2);
+            break;
+          case ProcessSioType:
+            EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_sio").build();
+            eventRecordMap.add(eventRecord3);
+            break;
+          case ProcessServerType:
+            EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
+                sMachineName(ResUtil.MachineID2MachineName(machineId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_server").build();
+            eventRecordMap.add(eventRecord4);
+            break;
+          case ProcessDeviceType:
+            EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
+                sDevName(ResUtil.DevID2DevName(deviceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_server").build();
+            eventRecordMap.add(eventRecord5);
+            break;
+           default:
+            break;
+        }
         continue;
       }
       GuardPlan guardPlan = eventInfo.getGuardPlan();
@@ -199,6 +237,41 @@ public class AlarmProcess implements Runnable {
                 "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
                 "machineId:" + machineId + " deviceId:" + deviceId);
         //insert into tl_event_src_monitor table todo
+        switch (processType) {
+          case ProcessMonitorType:
+            EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_monitor").build();
+            eventRecordMap.add(eventRecord);
+            break;
+          case ProcessIaType:
+            EventRecord eventRecord2 = EventRecord.newBuilder().sEventType(evenType).nSvrID(iaadId).
+                sSvrName(ResUtil.SvrID2SvrName(iaadId)).sHappentime(happenTime).
+                nResID(resourceId).sResName(ResUtil.ResID2ResName(resourceId)).
+                bInsert2srcLog(true).sEventGenus("event_ia").build();
+            eventRecordMap.add(eventRecord2);
+            break;
+          case ProcessSioType:
+            EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_sio").build();
+            eventRecordMap.add(eventRecord3);
+            break;
+          case ProcessServerType:
+            EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
+                sMachineName(ResUtil.MachineID2MachineName(machineId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_server").build();
+            eventRecordMap.add(eventRecord4);
+            break;
+          case ProcessDeviceType:
+            EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
+                sDevName(ResUtil.DevID2DevName(deviceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_server").build();
+            eventRecordMap.add(eventRecord5);
+            break;
+          default:
+            break;
+        }
         continue;
       }
       AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
@@ -220,54 +293,19 @@ public class AlarmProcess implements Runnable {
           // send to event queue todo
         } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
           System.out.println("define storm time  <=  :");
-          EventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          // send to event queue todo
+          //EventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
           alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
         } else {
           System.out.println("define storm time  >  :");
+          //insert into tl_event_src_monitor table todo
           alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
           //insert into tl_event_src_monitor table todo
         }
       }
     }
   }
-public void  4.19.3event_src_monitor
 
-  public void processAlarmStorm(AlarmStormConfig alarmStormConfig, AlarmStormRecordMap asrm) throws SQLException {
-    Set<String> set = jedis.keys("alarm_" + "*");
-    Iterator<String> it = set.iterator();
-    while (it.hasNext()) {
-      String keyStr = it.next();
-      System.out.println(keyStr);
-      Map<String, String> map = jedis.hgetAll(keyStr);
-      String sCount = keyStr.substring(6);
-      String type = map.get("event_type");
-      String resourceId = map.get("resourceId");
-      String resourceNo = map.get("resourceNo");
-      String happenTime = map.get("happenTime");
-      String extraContent = map.get("extraContent");
-      AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(type);
-      if (alarmStorm == null) {
-        System.out.println("no alarm storm config of event_type:" + type);
-        continue;
-      }
-      Long stom_time = alarmStorm.getEvent_stom();
-      //need event process
-      if (stom_time == 0) {
-        System.out.println("no alarm storm config of event_type:" + type);
-        EventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
-        asrm.add(type, Integer.parseInt(resourceId), resourceNo, Integer.parseInt(happenTime), extraContent);
-        continue;
-      } else if (stom_time <= asrm.diffCurrentTime(Integer.parseInt(happenTime))) {
-        System.out.println("define storm time  <=  :");
-        EventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
-        asrm.add(type, Integer.parseInt(resourceId), resourceNo, Integer.parseInt(happenTime), extraContent);
-      } else {
-        System.out.println("define storm time  >  :");
-        asrm.add(type, Integer.parseInt(resourceId), resourceNo, Integer.parseInt(happenTime), extraContent);
-      }
-      jedis.del(keyStr);
-    }
-  }
 
 }
 
