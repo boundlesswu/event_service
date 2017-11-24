@@ -13,7 +13,7 @@ public class EventInfo {
   private Long enable_state;
   private Long event_level;
   private Long auto_release_interval;
-  private GuardPlan guardPlan;
+  private GuardPlan guardPlan=null;
   private long res_id=0;
   private long dev_id=0;
   private long machine_id=0;

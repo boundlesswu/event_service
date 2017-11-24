@@ -1,6 +1,5 @@
 package com.vorxsoft.ieye.eventservice.config;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -62,84 +61,6 @@ public class GuardPlan {
     return null;
   }
 
-
-  public class TimePeriod{
-    private int type;
-    private float st;
-    private float et;
-
-    public boolean isInTimePeriod(float t){
-      return (t <= et) && (t >= st);
-    }
-
-    public int getType() {
-      return type;
-    }
-
-    public void setType(int type) {
-      this.type = type;
-    }
-
-    public float getSt() {
-      return st;
-    }
-
-    public void setSt(float st) {
-      this.st = st;
-    }
-
-    public float getEt() {
-      return et;
-    }
-
-    public void setEt(float et) {
-      this.et = et;
-    }
-  }
-  public class TimeScheduleItem{
-
-    public int getDayOfWeek() {
-      return dayOfWeek;
-    }
-
-    public void setDayOfWeek(int dayOfWeek) {
-      this.dayOfWeek = dayOfWeek;
-    }
-
-    public List<TimePeriod> getTimePeriods() {
-      return timePeriods;
-    }
-
-    public void setTimePeriods(List<TimePeriod> timePeriods) {
-      this.timePeriods = timePeriods;
-    }
-
-    public boolean isInTimeScheduleItem(float t){
-      for (int i = 0; i < getTimePeriods().size(); i++) {
-        TimePeriod period = getTimePeriods().get(i);
-        if(period.isInTimePeriod(t))
-          return true;
-      }
-      return false;
-    }
-
-    private int dayOfWeek;
-    private List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
-  }
-  public class TimeSchedule{
-    public List<TimeScheduleItem> getTimeScheduleItems() {
-      return timeScheduleItems;
-    }
-
-    public void setTimeScheduleItems(List<TimeScheduleItem> timeScheduleItems) {
-      this.timeScheduleItems = timeScheduleItems;
-    }
-    public void addTimeScheduleItem(TimeScheduleItem timeScheduleItem) {
-      this.timeScheduleItems.add(timeScheduleItem);
-    }
-
-    private List<TimeScheduleItem> timeScheduleItems = new ArrayList<TimeScheduleItem>(7);
-  }
   private TimeSchedule timeSchedule = new TimeSchedule();
   private String time_schedule;
   private GuardPlanType guard_plan_type;
@@ -269,7 +190,7 @@ public Date timestamp2datetime(Timestamp ts){
       case Permanent:
       {
         int day = dayForWeek(happenTime);
-        GuardPlan.TimeScheduleItem timeScheduleItem = getTimeScheduleItemIndexOf(day);
+        TimeScheduleItem timeScheduleItem = getTimeScheduleItemIndexOf(day);
         float ct = getFloatHHMM(happenTime);
         ret = timeScheduleItem.isInTimeScheduleItem(ct);
       }

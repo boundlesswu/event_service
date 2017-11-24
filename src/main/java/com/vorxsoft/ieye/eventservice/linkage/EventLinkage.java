@@ -13,6 +13,38 @@ public class EventLinkage {
   private String arg7;
   private String arg8;
 
+  public EventLinkage() {
+    this.linkage_id = 0L;
+    this.event_id = 0L;
+    this.linkage_type = "";
+    this.arg1 = "";
+    this.arg2 = "";
+    this.arg3 = "";
+    this.arg4 = "";
+    this.arg5 = "";
+    this.arg6 = "";
+    this.arg7 = "";
+    this.arg8 = "";
+  }
+
+  private EventLinkage(Builder builder) {
+    setLinkage_id(builder.linkage_id);
+    setEvent_id(builder.event_id);
+    setLinkage_type(builder.linkage_type);
+    setArg1(builder.arg1);
+    setArg2(builder.arg2);
+    setArg3(builder.arg3);
+    setArg4(builder.arg4);
+    setArg5(builder.arg5);
+    setArg6(builder.arg6);
+    setArg7(builder.arg7);
+    setArg8(builder.arg8);
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
   public Long getLinkage_id() {
     return linkage_id;
   }
@@ -99,5 +131,81 @@ public class EventLinkage {
 
   public void setArg8(String arg8) {
     this.arg8 = arg8;
+  }
+
+  public static final class Builder {
+    private Long linkage_id;
+    private Long event_id;
+    private String linkage_type;
+    private String arg1;
+    private String arg2;
+    private String arg3;
+    private String arg4;
+    private String arg5;
+    private String arg6;
+    private String arg7;
+    private String arg8;
+
+    public Builder() {
+    }
+
+    public Builder linkage_id(Long val) {
+      linkage_id = val;
+      return this;
+    }
+
+    public Builder event_id(Long val) {
+      event_id = val;
+      return this;
+    }
+
+    public Builder linkage_type(String val) {
+      linkage_type = val;
+      return this;
+    }
+
+    public Builder arg1(String val) {
+      arg1 = val;
+      return this;
+    }
+
+    public Builder arg2(String val) {
+      arg2 = val;
+      return this;
+    }
+
+    public Builder arg3(String val) {
+      arg3 = val;
+      return this;
+    }
+
+    public Builder arg4(String val) {
+      arg4 = val;
+      return this;
+    }
+
+    public Builder arg5(String val) {
+      arg5 = val;
+      return this;
+    }
+
+    public Builder arg6(String val) {
+      arg6 = val;
+      return this;
+    }
+
+    public Builder arg7(String val) {
+      arg7 = val;
+      return this;
+    }
+
+    public Builder arg8(String val) {
+      arg8 = val;
+      return this;
+    }
+
+    public EventLinkage build() {
+      return new EventLinkage(this);
+    }
   }
 }

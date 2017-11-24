@@ -4,97 +4,27 @@ import java.util.HashMap;
 
 public class AlarmStormRecordMap {
 
+  private HashMap<AlarmStormInfo, AlarmStormRecordItem> map;
 
-  class AlarmStormRecordItem{
-    public AlarmStormInfo getAlarmStormInfo() {
-      return alarmStormInfo;
-    }
-
-    public void setAlarmStormInfo(AlarmStormInfo alarmStormInfo) {
-      this.alarmStormInfo = alarmStormInfo;
-    }
-
-    public String getExtraContent() {
-      return extraContent;
-    }
-
-    public void setExtraContent(String extraContent) {
-      this.extraContent = extraContent;
-    }
-
-    class AlarmStormInfo{
-      private String event_type;
-      private int resourceId;
-      //private String resourceNo;
-      public String getEvent_type() {
-        return event_type;
-      }
-
-      public void setEvent_type(String event_type) {
-        this.event_type = event_type;
-      }
-
-      public int getResourceId() {
-        return resourceId;
-      }
-
-      public void setResourceId(int resourceId) {
-        this.resourceId = resourceId;
-      }
-
-//      public String getResourceNo() {
-//        return resourceNo;
-//      }
-//
-//      public void setResourceNo(String resourceNo) {
-//        this.resourceNo = resourceNo;
-//      }
-    }
-    private AlarmStormInfo alarmStormInfo;
-    private long happenTime;
-    private String extraContent;
-
-    public long diffTime(){
-      return System.currentTimeMillis()/1000 - happenTime;
-    }
-
-
-    public long getHappenTime() {
-      return happenTime;
-    }
-
-    public void setHappenTime(long happenTime) {
-      this.happenTime = happenTime;
-    }
-  }
-  private HashMap<AlarmStormRecordItem.AlarmStormInfo,AlarmStormRecordItem>  alarmStormRecordItemHashMap;
-
-  public AlarmStormRecordItem add(AlarmStormRecordItem item){
-    return alarmStormRecordItemHashMap.put(item.getAlarmStormInfo(),item);
+  public AlarmStormRecordItem add(AlarmStormRecordItem item) {
+    return map.put(item.getAlarmStormInfo(), item);
   }
 
-  public AlarmStormRecordItem add(AlarmStormRecordItem.AlarmStormInfo info, long happenTime,String extraContent ){
-    AlarmStormRecordItem item = new AlarmStormRecordItem();
-    item.setAlarmStormInfo(info);
-    item.setHappenTime(happenTime);
-    item.setExtraContent(extraContent);
-    return alarmStormRecordItemHashMap.put(item.getAlarmStormInfo(),item);
+  public AlarmStormRecordItem add(AlarmStormInfo info, long happenTime, String extraContent) {
+    AlarmStormRecordItem item = AlarmStormRecordItem.newBuilder().alarmStormInfo(info).
+            happenTime(happenTime).extraContent(extraContent).build();
+    return map.put(info, item);
   }
 
-  public AlarmStormRecordItem add(String event_type,int resourceId,long happenTime,String extraContent){
-    AlarmStormRecordItem item = new AlarmStormRecordItem();
-    AlarmStormRecordItem.AlarmStormInfo info = null;
-    info.setEvent_type(event_type);
-    info.setResourceId(resourceId);
-    //info.setResourceNo(resourceNo);
-    item.setAlarmStormInfo(info);
-    item.setHappenTime(happenTime);
-    item.setExtraContent(extraContent);
-    return alarmStormRecordItemHashMap.put(info,item);
+  public AlarmStormRecordItem add(String event_type, int resourceId, long happenTime, String extraContent) {
+    AlarmStormInfo info = AlarmStormInfo.newBuilder().event_type(event_type).resourceId(resourceId).build();
+    AlarmStormRecordItem item = AlarmStormRecordItem.newBuilder().alarmStormInfo(info).extraContent(event_type).
+            happenTime(happenTime).build();
+    return map.put(info, item);
   }
-  
-  public long diffCurrentTime(AlarmStormRecordItem.AlarmStormInfo info) {
-    AlarmStormRecordItem a = alarmStormRecordItemHashMap.get(info);
+
+  public long diffCurrentTime(AlarmStormInfo info) {
+    AlarmStormRecordItem a = map.get(info);
     if (a == null) {
       System.out.println("no AlarmStormInfo: " + info + "found:");
       return Long.MIN_VALUE;
@@ -102,8 +32,9 @@ public class AlarmStormRecordMap {
       return a.diffTime();
     }
   }
-  public long diffCurrentTime(long happenTime){
-      return System.currentTimeMillis()/1000 - happenTime;
+
+  public long diffCurrentTime(long happenTime) {
+    return System.currentTimeMillis() / 1000 - happenTime;
   }
 }
 

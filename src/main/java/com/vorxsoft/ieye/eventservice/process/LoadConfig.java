@@ -5,8 +5,7 @@ import com.vorxsoft.ieye.eventservice.config.EventConfig;
 public class LoadConfig {
   private EventConfig eventConfig;
 
-  LoadConfig()
-  {
+  LoadConfig() {
 
   }
 
