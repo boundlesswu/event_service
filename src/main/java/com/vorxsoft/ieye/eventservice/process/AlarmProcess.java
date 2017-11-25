@@ -33,6 +33,14 @@ public class AlarmProcess implements Runnable {
     this.processType = processType;
   }
 
+  public com.vorxsoft.ieye.eventservice.redis.EventRecordMap getEventRecordMap() {
+    return EventRecordMap;
+  }
+
+  public void setEventRecordMap(com.vorxsoft.ieye.eventservice.redis.EventRecordMap eventRecordMap) {
+    EventRecordMap = eventRecordMap;
+  }
+
   enum ProcessType {
     ProcessMonitorType,
     ProcessIaType,
@@ -77,26 +85,12 @@ public class AlarmProcess implements Runnable {
     for (int i = 0; ; i++) {
       System.out.println(name + "运行  :  " + i);
       try {
-        switch (processType) {
-          case ProcessMonitorType:
-            break;
-          case ProcessIaType:
-            break;
-          case ProcessSioType:
-            break;
-          case ProcessServerType:
-            break;
-          case ProcessDeviceType:
-            break;
-          case ProcessAlarmStorm:
-            processAlarmStorm(alarmStormConfig, alarmStormRecordMap);
-            break;
-        }
+        processAlarm(eventConfig,processType);
         Thread.sleep((int) Math.random() * 10);
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
-      } catch (SQLException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
@@ -135,7 +129,7 @@ public class AlarmProcess implements Runnable {
         patterKey = "alarm_server_*";
         break;
       case ProcessDeviceType:
-        patterKey = "alarm_device_*"
+        patterKey = "alarm_device_*";
         break;
       case ProcessAlarmStorm:
       default:
@@ -172,7 +166,7 @@ public class AlarmProcess implements Runnable {
       } else if (processType == ProcessIaType) {
         iaadId = Integer.parseInt(map.get("iaagId"));
         iauId = Integer.parseInt(map.get("iauId"));
-        EventConfig.IaConfigKey iaConfigKey = new EventConfig.IaConfigKey(evenType, resourceId, iaadId, iauId;
+        EventConfig.IaConfigKey iaConfigKey = new EventConfig.IaConfigKey(evenType, resourceId, iaadId, iauId);
         eventInfo = eventConfig.getIaConfig(iaConfigKey);
       } else if (processType == ProcessServerType) {
         machineId = Integer.parseInt(map.get("machineId"));
@@ -192,42 +186,8 @@ public class AlarmProcess implements Runnable {
                 "happenTime" + happenTime + "extraContent" + extraContent +
                 "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
                 "machineId:" + machineId + " deviceId:" + deviceId);
-        //insert into tl_event_src_monitor table todo
-        switch (processType) {
-          case ProcessMonitorType:
-            EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
-                                      sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
-                                      bInsert2srcLog(true).sEventGenus("event_monitor").build();
-            eventRecordMap.add(eventRecord);
-            break;
-          case ProcessIaType:
-            EventRecord eventRecord2 = EventRecord.newBuilder().sEventType(evenType).nSvrID(iaadId).
-                sSvrName(ResUtil.SvrID2SvrName(iaadId)).sHappentime(happenTime).
-                nResID(resourceId).sResName(ResUtil.ResID2ResName(resourceId)).
-                bInsert2srcLog(true).sEventGenus("event_ia").build();
-            eventRecordMap.add(eventRecord2);
-            break;
-          case ProcessSioType:
-            EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_sio").build();
-            eventRecordMap.add(eventRecord3);
-            break;
-          case ProcessServerType:
-            EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
-                sMachineName(ResUtil.MachineID2MachineName(machineId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_server").build();
-            eventRecordMap.add(eventRecord4);
-            break;
-          case ProcessDeviceType:
-            EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
-                sDevName(ResUtil.DevID2DevName(deviceId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_server").build();
-            eventRecordMap.add(eventRecord5);
-            break;
-           default:
-            break;
-        }
+        //no event happen,insert into tl_event_src_monitor table
+        insertSrcLogList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId);
         continue;
       }
       GuardPlan guardPlan = eventInfo.getGuardPlan();
@@ -236,42 +196,8 @@ public class AlarmProcess implements Runnable {
                 "happenTime" + happenTime + "extraContent" + extraContent +
                 "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
                 "machineId:" + machineId + " deviceId:" + deviceId);
-        //insert into tl_event_src_monitor table todo
-        switch (processType) {
-          case ProcessMonitorType:
-            EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_monitor").build();
-            eventRecordMap.add(eventRecord);
-            break;
-          case ProcessIaType:
-            EventRecord eventRecord2 = EventRecord.newBuilder().sEventType(evenType).nSvrID(iaadId).
-                sSvrName(ResUtil.SvrID2SvrName(iaadId)).sHappentime(happenTime).
-                nResID(resourceId).sResName(ResUtil.ResID2ResName(resourceId)).
-                bInsert2srcLog(true).sEventGenus("event_ia").build();
-            eventRecordMap.add(eventRecord2);
-            break;
-          case ProcessSioType:
-            EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_sio").build();
-            eventRecordMap.add(eventRecord3);
-            break;
-          case ProcessServerType:
-            EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
-                sMachineName(ResUtil.MachineID2MachineName(machineId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_server").build();
-            eventRecordMap.add(eventRecord4);
-            break;
-          case ProcessDeviceType:
-            EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
-                sDevName(ResUtil.DevID2DevName(deviceId)).sHappentime(happenTime).
-                bInsert2srcLog(true).sEventGenus("event_server").build();
-            eventRecordMap.add(eventRecord5);
-            break;
-          default:
-            break;
-        }
+        //no event happen,insert into tl_event_src_* table
+        insertSrcLogList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId);
         continue;
       }
       AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
@@ -281,7 +207,8 @@ public class AlarmProcess implements Runnable {
                 "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
                 "machineId:" + machineId + " deviceId:" + deviceId);
         System.out.println("send to event queue");
-        // send to event queue todo
+        // send to event queue
+        insertEvenList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId,eventInfo,extraContent);
       } else {
         Long stom_time = alarmStorm.getEvent_stom();
         if (stom_time == 0) {
@@ -290,19 +217,165 @@ public class AlarmProcess implements Runnable {
                   "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
                   "machineId:" + machineId + " deviceId:" + deviceId);
           System.out.println("send to event queue");
-          // send to event queue todo
+          // send to event queue
+          insertEvenList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId,eventInfo,extraContent);
         } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
           System.out.println("define storm time  <=  :");
-          // send to event queue todo
-          //EventRecordMap.alarmMap2eventMap(map, jedis, Integer.parseInt(sCount));
+          // send to event queue
+          insertEvenList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId,eventInfo,extraContent);
           alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
         } else {
           System.out.println("define storm time  >  :");
-          //insert into tl_event_src_monitor table todo
+          //no event happen,insert into tl_event_src_* table
+          insertSrcLogList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId);
           alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
-          //insert into tl_event_src_monitor table todo
+
         }
       }
+    }
+  }
+
+  public void insertEvenList(ProcessType type,
+                             String evenType,
+                             int resourceId,
+                             String happenTime,
+                             int iaadId,
+                             int machineId,
+                             int deviceId,
+                             EventInfo eventInfo, String extraContent) {
+    switch (type) {
+      case ProcessMonitorType:
+        EventRecord eventRecord = EventRecord.newBuilder().sEventGenus("event_monitor").
+                sEventType(evenType).sEventName(eventInfo.getEvent_name()).
+                sEventDesc(eventInfo.getEvent_desc()).
+                nEventlevel(eventInfo.getEvent_level()).
+                sHappentime(happenTime).
+                sExtraDesc(extraContent).
+                nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).
+                bInsert2srcLog(true).
+                bInsert2log(true).build();
+        if(eventInfo.getEventLinkagelistSize() >  0){
+          eventRecord.setEventLinkage(eventInfo.getEventLinkagelist());
+          eventRecord.setLinkageFlag();
+        }
+        getEventRecordMap().add(eventRecord);
+        break;
+      case ProcessIaType:
+        EventRecord eventRecord2 = EventRecord.newBuilder().sEventGenus("event_ia").
+                sEventType(evenType).sEventName(eventInfo.getEvent_name()).
+                sEventDesc(eventInfo.getEvent_desc()).
+                nEventlevel(eventInfo.getEvent_level()).
+                sHappentime(happenTime).
+                sExtraDesc(extraContent).
+                nSvrID(iaadId).
+                sSvrName(ResUtil.SvrID2SvrName(iaadId)).
+                nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).
+                bInsert2srcLog(true).
+                bInsert2log(true).build();
+        if(eventInfo.getEventLinkagelistSize() >  0){
+          eventRecord2.setEventLinkage(eventInfo.getEventLinkagelist());
+          eventRecord2.setLinkageFlag();
+        }
+        getEventRecordMap().add(eventRecord2);
+        break;
+      case ProcessSioType:
+        EventRecord eventRecord3 = EventRecord.newBuilder().sEventGenus("event_sio").
+                sEventType(evenType).sEventName(eventInfo.getEvent_name()).
+                sEventDesc(eventInfo.getEvent_desc()).
+                nEventlevel(eventInfo.getEvent_level()).
+                sHappentime(happenTime).
+                sExtraDesc(extraContent).
+                nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).
+                bInsert2srcLog(true).
+                bInsert2log(true).build();
+        if(eventInfo.getEventLinkagelistSize() >  0){
+          eventRecord3.setEventLinkage(eventInfo.getEventLinkagelist());
+          eventRecord3.setLinkageFlag();
+        }
+        getEventRecordMap().add(eventRecord3);
+        break;
+      case ProcessServerType:
+        EventRecord eventRecord4 = EventRecord.newBuilder().sEventGenus("event_server").
+                sEventType(evenType).sEventName(eventInfo.getEvent_name()).
+                sEventDesc(eventInfo.getEvent_desc()).
+                nEventlevel(eventInfo.getEvent_level()).
+                sHappentime(happenTime).
+                sExtraDesc(extraContent).
+                nMachineID(machineId).
+                sMachineName(ResUtil.MachineID2MachineName(machineId)).
+                bInsert2srcLog(true).bInsert2log(true).build();
+        if(eventInfo.getEventLinkagelistSize() >  0){
+          eventRecord4.setEventLinkage(eventInfo.getEventLinkagelist());
+          eventRecord4.setLinkageFlag();
+        }
+        getEventRecordMap().add(eventRecord4);
+        break;
+      case ProcessDeviceType:
+        EventRecord eventRecord5 = EventRecord.newBuilder().sEventGenus("event_device").
+                sEventType(evenType).sEventName(eventInfo.getEvent_name()).
+                sEventDesc(eventInfo.getEvent_desc()).
+                nEventlevel(eventInfo.getEvent_level()).
+                sHappentime(happenTime).
+                sExtraDesc(extraContent).
+                nDevID(deviceId).
+                sDevName(ResUtil.DevID2DevName(deviceId)).
+                bInsert2srcLog(true).bInsert2log(true).build();
+        if(eventInfo.getEventLinkagelistSize() >  0){
+          eventRecord5.setEventLinkage(eventInfo.getEventLinkagelist());
+          eventRecord5.setLinkageFlag();
+        }
+        getEventRecordMap().add(eventRecord5);
+        break;
+      default:
+        break;
+    }
+    return;
+  }
+
+  public void insertSrcLogList(ProcessType type,
+                               String evenType,
+                               int resourceId,
+                               String happenTime,
+                               int iaadId,
+                               int machineId,
+                               int deviceId){
+    switch (type) {
+      case ProcessMonitorType:
+        EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_monitor").build();
+        getEventRecordMap().add(eventRecord);
+        break;
+      case ProcessIaType:
+        EventRecord eventRecord2 = EventRecord.newBuilder().sEventType(evenType).nSvrID(iaadId).
+                sSvrName(ResUtil.SvrID2SvrName(iaadId)).sHappentime(happenTime).
+                nResID(resourceId).sResName(ResUtil.ResID2ResName(resourceId)).
+                bInsert2srcLog(true).sEventGenus("event_ia").build();
+        getEventRecordMap().add(eventRecord2);
+        break;
+      case ProcessSioType:
+        EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
+                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_sio").build();
+        getEventRecordMap().add(eventRecord3);
+        break;
+      case ProcessServerType:
+        EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
+                sMachineName(ResUtil.MachineID2MachineName(machineId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_server").build();
+        getEventRecordMap().add(eventRecord4);
+        break;
+      case ProcessDeviceType:
+        EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
+                sDevName(ResUtil.DevID2DevName(deviceId)).sHappentime(happenTime).
+                bInsert2srcLog(true).sEventGenus("event_device").build();
+        getEventRecordMap().add(eventRecord5);
+        break;
+      default:
+        break;
     }
   }
 

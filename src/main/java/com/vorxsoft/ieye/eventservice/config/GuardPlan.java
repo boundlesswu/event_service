@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 public class GuardPlan {
-  private Long guard_plan_id;
+  private int guard_plan_id;
   private String guard_plan_name;
 
   public TimeSchedule getTimeSchedule() {
@@ -69,18 +69,18 @@ public class GuardPlan {
   public enum GuardPlanType{
      Permanent,Temporary;
   }
-  public GuardPlanType Long2GuardPlanType(Long a ){
+  public GuardPlanType Long2GuardPlanType(int a ){
     if(a == 1)
       return GuardPlanType.Permanent;
     else if(a == 2)
       return GuardPlanType.Temporary;
     return GuardPlanType.Permanent;
   }
-  public Long getGuard_plan_id() {
+  public int getGuard_plan_id() {
     return guard_plan_id;
   }
 
-  public void setGuard_plan_id(Long guard_plan_id) {
+  public void setGuard_plan_id(int guard_plan_id) {
     this.guard_plan_id = guard_plan_id;
   }
 

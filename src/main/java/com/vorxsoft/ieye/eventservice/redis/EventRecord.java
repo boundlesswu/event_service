@@ -2,6 +2,9 @@ package com.vorxsoft.ieye.eventservice.redis;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EventRecord {
   public EventRecord() {
     this.sMachineName = "";
@@ -21,10 +24,10 @@ public class EventRecord {
     this.sDevName = "";              //设备名称（可不赋值）
     this.sResName = "";              //资源名称（可不赋值）
     this.sPicpath = "";              //事件图片
-    this.sEventlevel = 0;          //事件级别
+    this.nEventlevel = 0;          //事件级别
     this.nEventlogID = 0;          //事件logID
     this.sExtraDesc = "";         //额外描述
-    this.eventLinkage = new EventLinkage();    //联动信息
+    this.eventLinkage = new ArrayList<>();    //联动信息
   }
 
   private EventRecord(Builder builder) {
@@ -45,7 +48,7 @@ public class EventRecord {
     setsHappentime(builder.sHappentime);
     setsEventDesc(builder.sEventDesc);
     setsPicpath(builder.sPicpath);
-    setsEventlevel(builder.sEventlevel);
+    setnEventlevel(builder.nEventlevel);
     setnEventlogID(builder.nEventlogID);
     setsExtraDesc(builder.sExtraDesc);
     setEventLinkage(builder.eventLinkage);
@@ -140,14 +143,6 @@ public class EventRecord {
     this.sPicpath = sPicpath;
   }
 
-  public int getsEventlevel() {
-    return sEventlevel;
-  }
-
-  public void setsEventlevel(int sEventlevel) {
-    this.sEventlevel = sEventlevel;
-  }
-
   public int getnEventlogID() {
     return nEventlogID;
   }
@@ -201,10 +196,10 @@ public class EventRecord {
   private String sHappentime;           //事件时间
   private String sEventDesc;          //事件描述
   private String sPicpath;              //事件图片
-  private int sEventlevel;          //事件级别
+  private int nEventlevel;          //事件级别
   private int nEventlogID;          //事件logID
   private String sExtraDesc;         //额外描述
-  private EventLinkage eventLinkage;
+  private List<EventLinkage> eventLinkage;
 
   boolean bSend2mq = false;
   boolean bSend2cms = false;
@@ -252,13 +247,6 @@ public class EventRecord {
     this.sSvrName = sSvrName;
   }
 
-  public EventLinkage getEventLinkage() {
-    return eventLinkage;
-  }
-
-  public void setEventLinkage(EventLinkage eventLinkage) {
-    this.eventLinkage = eventLinkage;
-  }
 
   public boolean isbSend2mq() {
     return bSend2mq;
@@ -300,6 +288,22 @@ public class EventRecord {
     this.bInsert2srcLog = bInsert2srcLog;
   }
 
+  public int getnEventlevel() {
+    return nEventlevel;
+  }
+
+  public void setnEventlevel(int nEventlevel) {
+    this.nEventlevel = nEventlevel;
+  }
+
+  public List<EventLinkage> getEventLinkage() {
+    return eventLinkage;
+  }
+
+  public void setEventLinkage(List<EventLinkage> eventLinkage) {
+    this.eventLinkage = eventLinkage;
+  }
+
   public static final class Builder {
     private String sResNo;
     private String sDevNo;
@@ -317,10 +321,11 @@ public class EventRecord {
     private String sResName;
     private int nDevID;
     private String sPicpath;
+    private int nEventlevel;
     private int sEventlevel;
     private int nEventlogID;
     private String sExtraDesc;
-    private EventLinkage eventLinkage;
+    private List<EventLinkage> eventLinkage;
     private boolean bSend2mq;
     private boolean bSend2cms;
     private boolean bSend2blg;
@@ -411,6 +416,11 @@ public class EventRecord {
       return this;
     }
 
+    public Builder nEventlevel(int val) {
+      nEventlevel = val;
+      return this;
+    }
+
     public Builder sEventlevel(int val) {
       sEventlevel = val;
       return this;
@@ -426,7 +436,7 @@ public class EventRecord {
       return this;
     }
 
-    public Builder eventLinkage(EventLinkage val) {
+    public Builder eventLinkage(List<EventLinkage> val) {
       eventLinkage = val;
       return this;
     }
@@ -464,5 +474,10 @@ public class EventRecord {
       nResID = val;
       return this;
     }
+  }
+  public void setLinkageFlag(){
+    setbSend2blg(true);
+    setbSend2cms(true);
+    setbSend2mq(true);
   }
 }

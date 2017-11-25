@@ -1,8 +1,8 @@
 package com.vorxsoft.ieye.eventservice.linkage;
 
 public class EventLinkage {
-  private Long linkage_id;
-  private Long event_id;
+  private int linkage_id;
+  private int event_id;
   private String linkage_type;
   private String arg1;
   private String arg2;
@@ -14,8 +14,8 @@ public class EventLinkage {
   private String arg8;
 
   public EventLinkage() {
-    this.linkage_id = 0L;
-    this.event_id = 0L;
+    this.linkage_id = 0;
+    this.event_id = 0;
     this.linkage_type = "";
     this.arg1 = "";
     this.arg2 = "";
@@ -45,19 +45,20 @@ public class EventLinkage {
     return new Builder();
   }
 
-  public Long getLinkage_id() {
+
+  public int getLinkage_id() {
     return linkage_id;
   }
 
-  public void setLinkage_id(Long linkage_id) {
+  public void setLinkage_id(int linkage_id) {
     this.linkage_id = linkage_id;
   }
 
-  public Long getEvent_id() {
+  public int getEvent_id() {
     return event_id;
   }
 
-  public void setEvent_id(Long event_id) {
+  public void setEvent_id(int event_id) {
     this.event_id = event_id;
   }
 
@@ -134,8 +135,8 @@ public class EventLinkage {
   }
 
   public static final class Builder {
-    private Long linkage_id;
-    private Long event_id;
+    private int linkage_id;
+    private int event_id;
     private String linkage_type;
     private String arg1;
     private String arg2;
@@ -146,15 +147,15 @@ public class EventLinkage {
     private String arg7;
     private String arg8;
 
-    public Builder() {
+    private Builder() {
     }
 
-    public Builder linkage_id(Long val) {
+    public Builder linkage_id(int val) {
       linkage_id = val;
       return this;
     }
 
-    public Builder event_id(Long val) {
+    public Builder event_id(int val) {
       event_id = val;
       return this;
     }

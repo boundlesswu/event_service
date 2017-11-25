@@ -6,165 +6,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class EventConfig {
-
-
-  public static class  MonitorConfigKey {
-    private String event_type;
-    private long res_id;
-
-    MonitorConfigKey(){
-
-    }
-    public MonitorConfigKey(String event_type,long res_id ){
-      this.event_type = event_type;
-      this.res_id = res_id;
-    }
-    public String getEvent_type() {
-      return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-      this.event_type = event_type;
-    }
-
-    public long getRes_id() {
-      return res_id;
-    }
-
-    public void setRes_id(long res_id) {
-      this.res_id = res_id;
-    }
-  }
-  public static class SioConfigKey{
-    private String event_type;
-    private long res_id;
-    SioConfigKey(){}
-    public SioConfigKey(String type,long res_id){
-      this.event_type = type;
-      this.res_id = res_id;
-    }
-    public String getEvent_type() {
-      return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-      this.event_type = event_type;
-    }
-
-    public long getRes_id() {
-      return res_id;
-    }
-
-    public void setRes_id(long res_id) {
-      this.res_id = res_id;
-    }
-  }
-  public static class  IaConfigKey {
-    private String event_type;
-    private long res_id;
-    private long iaagId;
-    private long iaag_chn_id;
-
-    public IaConfigKey() {
-    }
-    public IaConfigKey(String event_type, long res_id, long iaagId, long iaag_chn_id) {
-      this.event_type = event_type;
-      this.res_id = res_id;
-      this.iaagId = iaagId;
-      this.iaag_chn_id = iaag_chn_id;
-    }
-    public String getEvent_type() {
-      return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-      this.event_type = event_type;
-    }
-
-    public long getRes_id() {
-      return res_id;
-    }
-
-    public void setRes_id(long res_id) {
-      this.res_id = res_id;
-    }
-
-    public long getIaagId() {
-      return iaagId;
-    }
-
-    public void setIaagId(long iaagId) {
-      this.iaagId = iaagId;
-    }
-
-    public long getIaag_chn_id() {
-      return iaag_chn_id;
-    }
-
-    public void setIaag_chn_id(long iaag_chn_id) {
-      this.iaag_chn_id = iaag_chn_id;
-    }
-  }
-  public static class ServerConfigKey{
-    private String event_type;
-    private long machine_id=0;
-
-    public ServerConfigKey() {
-    }
-
-    public ServerConfigKey(String event_type, long machine_id) {
-      this.event_type = event_type;
-      this.machine_id = machine_id;
-    }
-
-    public String getEvent_type() {
-      return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-      this.event_type = event_type;
-    }
-
-    public long getMachine_id() {
-      return machine_id;
-    }
-
-    public void setMachine_id(long machine_id) {
-      this.machine_id = machine_id;
-    }
-  }
-  public static class DeviceConfigKey {
-    private String event_type;
-    private long dev_id;
-
-    public DeviceConfigKey() {
-    }
-
-    public DeviceConfigKey(String event_type, long dev_id) {
-      this.event_type = event_type;
-      this.dev_id = dev_id;
-    }
-
-    public String getEvent_type() {
-      return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-      this.event_type = event_type;
-    }
-
-    public long getDev_id() {
-      return dev_id;
-    }
-
-    public void setDev_id(long dev_id) {
-      this.dev_id = dev_id;
-    }
-  }
-
   private HashMap<Long,EventInfo> monitorConfigList;
   private HashMap<Long,EventInfo> iaConfigList;
   private HashMap<Long,EventInfo> sioConfigList;
@@ -211,23 +57,23 @@ public class EventConfig {
     disListNum = ret.getInt("totalCount");
     int num =  listNum + disListNum;
     if( num <= 0) return;
-    Long event_id;
+    int event_id;
     String event_no;
     String event_genus;
     String event_type;
     String event_name;
     String event_desc;
-    Long enable_state=1L;
-    Long event_level;
-    Long auto_release_interval;
+    int enable_state=1;
+    int event_level;
+    int auto_release_interval;
     GuardPlan guardPlan = null;
-    Long guard_plan_id;
-    long res_id;
-    long machine_id;
-    long dev_id;
-    long sourceId=0;
-    long iaagId=0;
-    long iaag_chn_id=0;
+    int guard_plan_id;
+    int res_id;
+    int machine_id;
+    int dev_id;
+    int sourceId=0;
+    int iaagId=0;
+    int iaag_chn_id=0;
     EventLinkage eventLinkage;
     MonitorConfigKey monitorConfigKey =  new MonitorConfigKey();
     IaConfigKey iaConfigKey = new IaConfigKey();
@@ -241,15 +87,15 @@ public class EventConfig {
     ret = pstmt.executeQuery(sql);
     int i = 0;
     while(ret.next()){
-      event_id = ret.getLong("event_id");
+      event_id = ret.getInt("event_id");
       event_no = ret.getString("event_no");
       event_genus = ret.getString("event_genus");
       event_type = ret.getString("event_type");
       event_name = ret.getString("event_name");
       event_desc = ret.getString("event_desc");
-      event_level = ret.getLong("event_level");
-      auto_release_interval = ret.getLong("auto_release_interval");
-      guard_plan_id = ret.getLong("guard_plan_id;");
+      event_level = ret.getInt("event_level");
+      auto_release_interval = ret.getInt("auto_release_interval");
+      guard_plan_id = ret.getInt("guard_plan_id;");
       String sql2 = "SELECT guard_plan_name,time_schedule,guard_plan_type,start_time,end_time " +
           "FROM ti_guard_plan WHERE guard_plan_id = ?";
       PreparedStatement pstmt2 = conn.prepareStatement(sql2);
@@ -257,7 +103,7 @@ public class EventConfig {
       ResultSet ret2 = pstmt2.executeQuery(sql2);
       guardPlan.setGuard_plan_id(guard_plan_id);
       guardPlan.setGuard_plan_name(ret2.getString("guard_plan_name"));
-      guardPlan.setGuard_plan_type(guardPlan.Long2GuardPlanType(ret2.getLong("guard_plan_type")));
+      guardPlan.setGuard_plan_type(guardPlan.Long2GuardPlanType(ret2.getInt("guard_plan_type")));
       guardPlan.setTimeSchedule(ret2.getString("time_schedule"));
       guardPlan.setStart_time(ret2.getTimestamp("start_time"));
       guardPlan.setEnd_time(ret2.getTimestamp("end_time"));
@@ -269,7 +115,7 @@ public class EventConfig {
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("res_id");
-        res_id = ret2.getLong("res_id");
+        res_id = ret2.getInt("res_id");
         ret2.close();
         pstmt2.close();
         monitorConfigKey.setEvent_type(event_type);
@@ -280,7 +126,7 @@ public class EventConfig {
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("res_id");
-        res_id = ret2.getLong("res_id");
+        res_id = ret2.getInt("res_id");
         ret2.close();
         pstmt2.close();
         sioConfigKey.setEvent_type(event_type);
@@ -291,9 +137,9 @@ public class EventConfig {
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("res_id");
-        res_id = ret2.getLong("res_id");
-        iaag_chn_id = ret2.getLong("iaag_chn_id");
-        iaagId = ret2.getLong("svr_id");
+        res_id = ret2.getInt("res_id");
+        iaag_chn_id = ret2.getInt("iaag_chn_id");
+        iaagId = ret2.getInt("svr_id");
         ret2.close();
         pstmt2.close();
         iaConfigKey.setEvent_type(event_type);
@@ -306,7 +152,7 @@ public class EventConfig {
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("machine_id");
-        machine_id = ret2.getLong("machine_id");
+        machine_id = ret2.getInt("machine_id");
         ret2.close();
         pstmt2.close();
         serverConfigKey.setEvent_type(event_type);
@@ -317,7 +163,7 @@ public class EventConfig {
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("device_id");
-        dev_id = ret2.getLong("device_id");
+        dev_id = ret2.getInt("device_id");
         ret2.close();
         pstmt2.close();
         deviceConfigKey.setEvent_type(event_type);
@@ -347,9 +193,9 @@ public class EventConfig {
       pstmt2.setString(1, String.valueOf(event_id));
       ret2 = pstmt2.executeQuery(sql2);
       EventLinkage b = new EventLinkage();
-      EventLinkage[] c = new EventLinkage[0];
+      List<EventLinkage> c = new ArrayList();
       for (int j = 0; ret2.next() ; j++) {
-        Long linkage_id;
+        int linkage_id;
         String linkage_type;
         String arg1;
         String arg2;
@@ -359,7 +205,7 @@ public class EventConfig {
         String arg6;
         String arg7;
         String arg8;
-        linkage_id = ret2.getLong("linkage_id");
+        linkage_id = ret2.getInt("linkage_id");
         linkage_type = ret2.getString("linkage_type");
         arg1 = ret2.getString("arg1");
         arg2 = ret2.getString("arg2");
@@ -380,23 +226,23 @@ public class EventConfig {
         b.setArg6(arg6);
         b.setArg7(arg7);
         b.setArg8(arg8);
-        c[j] = b;
+        c.add(b);
       }
       a.setEventLinkagelist(c);
       if(event_genus.equals( "event_monitor") ){
-        monitorConfigList.put(event_id,a);
+        monitorConfigList.put((long) event_id,a);
         monitorConfigList2.put(monitorConfigKey,a);
       }else if(event_genus .equals("event_sio") ){
-        sioConfigList.put(event_id,a);
+        sioConfigList.put((long) event_id,a);
         sioConfigList2.put(sioConfigKey,a);
       }else if(event_genus .equals("event_ia") ){
-        iaConfigList.put(event_id,a);
+        iaConfigList.put((long) event_id,a);
         iaConfigList2.put(iaConfigKey,a);
       }else if(event_genus .equals("event_server") ){
-        serverConfigList.put(event_id,a);
+        serverConfigList.put((long) event_id,a);
         serverConfigList2.put(serverConfigKey,a);
       }else if(event_genus .equals("event_device") ){
-        deviceConfigList.put(event_id,a);
+        deviceConfigList.put((long) event_id,a);
         deviceConfigList2.put(deviceConfigKey,a);
       }else{
         System.out.println("error event_genus :"+ event_genus);
