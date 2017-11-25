@@ -249,6 +249,7 @@ public class AlarmProcess implements Runnable {
                 sEventType(evenType).sEventName(eventInfo.getEvent_name()).
                 sEventDesc(eventInfo.getEvent_desc()).
                 nEventlevel(eventInfo.getEvent_level()).
+                nAutoReleaseInterval(eventInfo.getAuto_release_interval()).
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nResID(resourceId).
@@ -266,6 +267,7 @@ public class AlarmProcess implements Runnable {
                 sEventType(evenType).sEventName(eventInfo.getEvent_name()).
                 sEventDesc(eventInfo.getEvent_desc()).
                 nEventlevel(eventInfo.getEvent_level()).
+                nAutoReleaseInterval(eventInfo.getAuto_release_interval()).
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nSvrID(iaadId).
@@ -285,6 +287,7 @@ public class AlarmProcess implements Runnable {
                 sEventType(evenType).sEventName(eventInfo.getEvent_name()).
                 sEventDesc(eventInfo.getEvent_desc()).
                 nEventlevel(eventInfo.getEvent_level()).
+                nAutoReleaseInterval(eventInfo.getAuto_release_interval()).
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nResID(resourceId).
@@ -302,6 +305,7 @@ public class AlarmProcess implements Runnable {
                 sEventType(evenType).sEventName(eventInfo.getEvent_name()).
                 sEventDesc(eventInfo.getEvent_desc()).
                 nEventlevel(eventInfo.getEvent_level()).
+                nAutoReleaseInterval(eventInfo.getAuto_release_interval()).
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nMachineID(machineId).
@@ -318,6 +322,7 @@ public class AlarmProcess implements Runnable {
                 sEventType(evenType).sEventName(eventInfo.getEvent_name()).
                 sEventDesc(eventInfo.getEvent_desc()).
                 nEventlevel(eventInfo.getEvent_level()).
+                nAutoReleaseInterval(eventInfo.getAuto_release_interval()).
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nDevID(deviceId).
@@ -378,8 +383,6 @@ public class AlarmProcess implements Runnable {
         break;
     }
   }
-
-
 }
 
 

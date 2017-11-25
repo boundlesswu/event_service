@@ -28,6 +28,7 @@ public class EventRecord {
     this.nEventlogID = 0;          //事件logID
     this.sExtraDesc = "";         //额外描述
     this.eventLinkage = new ArrayList<>();    //联动信息
+    this.nAutoReleaseInterval = 0;
   }
 
   private EventRecord(Builder builder) {
@@ -52,6 +53,7 @@ public class EventRecord {
     setnEventlogID(builder.nEventlogID);
     setsExtraDesc(builder.sExtraDesc);
     setEventLinkage(builder.eventLinkage);
+    setnAutoReleaseInterval(builder.nAutoReleaseInterval);
     setbSend2mq(builder.bSend2mq);
     setbSend2cms(builder.bSend2cms);
     setbSend2blg(builder.bSend2blg);
@@ -200,12 +202,13 @@ public class EventRecord {
   private int nEventlogID;          //事件logID
   private String sExtraDesc;         //额外描述
   private List<EventLinkage> eventLinkage;
+  private int nAutoReleaseInterval;
 
-  boolean bSend2mq = false;
-  boolean bSend2cms = false;
-  boolean bSend2blg = false;
-  boolean bInsert2log = false;
-  boolean bInsert2srcLog = false;
+  private boolean bSend2mq = false;
+  private boolean bSend2cms = false;
+  private boolean bSend2blg = false;
+  private boolean bInsert2log = false;
+  private boolean bInsert2srcLog = false;
 
   public int getnResID() {
     return nResID;
@@ -304,6 +307,14 @@ public class EventRecord {
     this.eventLinkage = eventLinkage;
   }
 
+  public int getnAutoReleaseInterval() {
+    return nAutoReleaseInterval;
+  }
+
+  public void setnAutoReleaseInterval(int nAutoReleaseInterval) {
+    this.nAutoReleaseInterval = nAutoReleaseInterval;
+  }
+
   public static final class Builder {
     private String sResNo;
     private String sDevNo;
@@ -322,10 +333,10 @@ public class EventRecord {
     private int nDevID;
     private String sPicpath;
     private int nEventlevel;
-    private int sEventlevel;
     private int nEventlogID;
     private String sExtraDesc;
     private List<EventLinkage> eventLinkage;
+    private int nAutoReleaseInterval;
     private boolean bSend2mq;
     private boolean bSend2cms;
     private boolean bSend2blg;
@@ -421,11 +432,6 @@ public class EventRecord {
       return this;
     }
 
-    public Builder sEventlevel(int val) {
-      sEventlevel = val;
-      return this;
-    }
-
     public Builder nEventlogID(int val) {
       nEventlogID = val;
       return this;
@@ -438,6 +444,11 @@ public class EventRecord {
 
     public Builder eventLinkage(List<EventLinkage> val) {
       eventLinkage = val;
+      return this;
+    }
+
+    public Builder nAutoReleaseInterval(int val) {
+      nAutoReleaseInterval = val;
       return this;
     }
 
