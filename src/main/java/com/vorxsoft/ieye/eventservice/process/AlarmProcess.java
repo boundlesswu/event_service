@@ -157,24 +157,24 @@ public class AlarmProcess implements Runnable {
       extraContent = map.get("extraContent");
       if (processType == ProcessMonitorType) {
         resourceId = Integer.parseInt(map.get("resourceId"));
-        EventConfig.MonitorConfigKey monitorConfigKey = new EventConfig.MonitorConfigKey(evenType, resourceId);
+        MonitorConfigKey monitorConfigKey = new MonitorConfigKey(evenType, resourceId);
         eventInfo = eventConfig.getMonitorConfig(monitorConfigKey);
       } else if (processType == ProcessSioType) {
         resourceId = Integer.parseInt(map.get("resourceId"));
-        EventConfig.SioConfigKey sioConfigKey = new EventConfig.SioConfigKey(evenType, resourceId);
+        SioConfigKey sioConfigKey = new SioConfigKey(evenType, resourceId);
         eventInfo = eventConfig.getSioConfig(sioConfigKey);
       } else if (processType == ProcessIaType) {
         iaadId = Integer.parseInt(map.get("iaagId"));
         iauId = Integer.parseInt(map.get("iauId"));
-        EventConfig.IaConfigKey iaConfigKey = new EventConfig.IaConfigKey(evenType, resourceId, iaadId, iauId);
+        IaConfigKey iaConfigKey = new IaConfigKey(evenType, resourceId, iaadId, iauId);
         eventInfo = eventConfig.getIaConfig(iaConfigKey);
       } else if (processType == ProcessServerType) {
         machineId = Integer.parseInt(map.get("machineId"));
-        EventConfig.ServerConfigKey serverConfigKey = new EventConfig.ServerConfigKey(evenType, machineId);
+        ServerConfigKey serverConfigKey = new ServerConfigKey(evenType, machineId);
         eventInfo = eventConfig.getServerConfig(serverConfigKey);
       } else if (processType == ProcessDeviceType) {
         deviceId = Integer.parseInt(map.get("deviceId"));
-        EventConfig.DeviceConfigKey deviceConfigKey = new EventConfig.DeviceConfigKey(evenType, deviceId);
+        DeviceConfigKey deviceConfigKey = new DeviceConfigKey(evenType, deviceId);
         eventInfo = eventConfig.getDeviceConfig(deviceConfigKey);
       } else {
         System.out.println("wrong processType");
