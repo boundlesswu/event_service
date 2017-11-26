@@ -121,6 +121,7 @@ public class AlarmProcess implements Runnable {
       try {
         processAlarm(processType);
         Thread.sleep((int) Math.random() * 10);
+        processEvent();
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -515,6 +516,7 @@ public class AlarmProcess implements Runnable {
       if(record.isbSend2cms()){
 
       }
+      it.remove();
     }
   }
 
