@@ -7,6 +7,7 @@ import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import redis.clients.jedis.Jedis;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,10 +21,41 @@ import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 public class AlarmProcess implements Runnable {
   private String name;
   private EventConfig eventConfig;
+
+
+  public AlarmStormConfig getAlarmStormConfig() {
+    return alarmStormConfig;
+  }
+
+  public void setAlarmStormConfig(AlarmStormConfig alarmStormConfig) {
+    this.alarmStormConfig = alarmStormConfig;
+  }
+
+  public AlarmStormRecordMap getAlarmStormRecordMap() {
+    return alarmStormRecordMap;
+  }
+
+  public void setAlarmStormRecordMap(AlarmStormRecordMap alarmStormRecordMap) {
+    this.alarmStormRecordMap = alarmStormRecordMap;
+  }
+
+  public Jedis getJedis() {
+    return jedis;
+  }
+
+  public void setJedis(Jedis jedis) {
+    this.jedis = jedis;
+  }
+
   private AlarmStormConfig alarmStormConfig;
   private AlarmStormRecordMap alarmStormRecordMap;
-  private EventRecordMap eventRecordMap;
   private Jedis jedis;
+  private ProcessType processType;
+  private EventRecordMap eventRecordMap;
+
+  public int init(){
+    return 0;
+  }
 
   public ProcessType getProcessType() {
     return processType;
@@ -34,11 +66,11 @@ public class AlarmProcess implements Runnable {
   }
 
   public com.vorxsoft.ieye.eventservice.redis.EventRecordMap getEventRecordMap() {
-    return EventRecordMap;
+    return eventRecordMap;
   }
 
-  public void setEventRecordMap(com.vorxsoft.ieye.eventservice.redis.EventRecordMap eventRecordMap) {
-    EventRecordMap = eventRecordMap;
+  public void setEventRecordMap(com.vorxsoft.ieye.eventservice.redis.EventRecordMap map) {
+    eventRecordMap = map;
   }
 
   enum ProcessType {
@@ -50,8 +82,7 @@ public class AlarmProcess implements Runnable {
     ProcessAlarmStorm;
   }
 
-  private ProcessType processType;
-  private EventRecordMap EventRecordMap;
+
 
   public String getName() {
     return name;
@@ -69,10 +100,10 @@ public class AlarmProcess implements Runnable {
     this.eventConfig = eventConfig;
   }
 
-  AlarmProcess(String name, ProcessType type, EventRecordMap EventRecordMap) {
+  AlarmProcess(String name, ProcessType type, EventRecordMap map) {
     this.name = name;
     this.processType = type;
-    this.EventRecordMap = EventRecordMap;
+    this.eventRecordMap = map;
   }
 
   public AlarmProcess(String name) {
@@ -85,7 +116,7 @@ public class AlarmProcess implements Runnable {
     for (int i = 0; ; i++) {
       System.out.println(name + "运行  :  " + i);
       try {
-        processAlarm(eventConfig,processType);
+        processAlarm(processType);
         Thread.sleep((int) Math.random() * 10);
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
@@ -113,7 +144,7 @@ public class AlarmProcess implements Runnable {
     return re_time;
   }
 
-  public void processAlarm(EventConfig eventConfig, ProcessType processType) throws Exception {
+  public void processAlarm(ProcessType processType) throws Exception {
     String patterKey = "";
     switch (processType) {
       case ProcessMonitorType:
@@ -383,6 +414,15 @@ public class AlarmProcess implements Runnable {
         break;
     }
   }
+
+
+
+  public void insertSrcLog2db(Connection conn){
+
+  }
+  public void insertLog2db(Connection conn){ }
+  public void insertAllLog2db(Connection conn){}
+
 }
 
 
