@@ -20,7 +20,7 @@ public abstract class EventSrc {
 
 
 
-  abstract boolean insert2db(Connection conn) throws SQLException;
+  abstract public boolean insert2db(Connection conn) throws SQLException;
 
   public EventSrc() {
   }
@@ -48,4 +48,5 @@ public abstract class EventSrc {
   public void setsEventType(String sEventType) {
     this.sEventType = sEventType;
   }
+
 }

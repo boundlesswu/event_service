@@ -69,7 +69,7 @@ public class EventSrcIA extends EventSrc {
   private String nResName = "";
 
   @Override
-  boolean insert2db(Connection conn) throws SQLException {
+  public boolean insert2db(Connection conn) throws SQLException {
     boolean ret = false;
     String sql = "INSERT INTO tl_event_src_ia(event_log_id,event_type,svr_id," +
         "svr_name,res_id,res_name,happen_time) VALUES (?,?,?,?,?,?,?)";

@@ -38,7 +38,7 @@ public class EventSrcDev extends EventSrc{
   }
 
   @Override
-  boolean insert2db(Connection conn) throws SQLException {
+  public boolean insert2db(Connection conn) throws SQLException {
     boolean ret = false;
     String sql = "INSERT INTO tl_event_src_dev(event_log_id,event_type,dev_id,dev_name,happen_time) VALUES (?,?,?,?,?)";
     PreparedStatement pstmt = conn.prepareStatement(sql);

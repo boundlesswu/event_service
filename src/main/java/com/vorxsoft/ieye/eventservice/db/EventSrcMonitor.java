@@ -16,7 +16,7 @@ public class EventSrcMonitor extends EventSrc {
   }
 
   @Override
-  boolean insert2db(Connection conn) throws SQLException {
+  public boolean insert2db(Connection conn) throws SQLException {
     boolean ret = false;
     String sql = "INSERT INTO tl_event_src_monitor(event_log_id,event_type,res_id,res_name,happen_time) VALUES (?,?,?,?,?)";
     PreparedStatement pstmt = conn.prepareStatement(sql);

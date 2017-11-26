@@ -1,14 +1,17 @@
 package com.vorxsoft.ieye.eventservice.process;
 
 import com.vorxsoft.ieye.eventservice.config.*;
+import com.vorxsoft.ieye.eventservice.db.*;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
+import com.vorxsoft.ieye.eventservice.util.TimeUtil;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +24,12 @@ import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 public class AlarmProcess implements Runnable {
   private String name;
   private EventConfig eventConfig;
+  private AlarmStormConfig alarmStormConfig;
+  private AlarmStormRecordMap alarmStormRecordMap;
+  private Jedis jedis;
+  private ProcessType processType;
+  private EventRecordMap eventRecordMap;
+  private Connection conn;
 
 
   public AlarmStormConfig getAlarmStormConfig() {
@@ -47,11 +56,6 @@ public class AlarmProcess implements Runnable {
     this.jedis = jedis;
   }
 
-  private AlarmStormConfig alarmStormConfig;
-  private AlarmStormRecordMap alarmStormRecordMap;
-  private Jedis jedis;
-  private ProcessType processType;
-  private EventRecordMap eventRecordMap;
 
   public int init(){
     return 0;
@@ -79,7 +83,6 @@ public class AlarmProcess implements Runnable {
     ProcessSioType,
     ProcessServerType,
     ProcessDeviceType,
-    ProcessAlarmStorm;
   }
 
 
@@ -162,7 +165,6 @@ public class AlarmProcess implements Runnable {
       case ProcessDeviceType:
         patterKey = "alarm_device_*";
         break;
-      case ProcessAlarmStorm:
       default:
         System.out.println("wrong processType");
         return;
@@ -415,13 +417,113 @@ public class AlarmProcess implements Runnable {
     }
   }
 
+  public void processEvent() throws SQLException {
+    int LogId = 0;
+    Iterator<EventRecord>  it = getEventRecordMap().getEventRecords().iterator();
+    while(it.hasNext()){
+      EventRecord record = it.next();
+      if (record.isbInsert2log()) {
+        EventLog eventLog = new EventLog().newBuilder().sEventGenus(record.getsEventGenus()).
+            sEventType(record.getsEventType()).sEventName(record.getsEventName()).
+            sEventDesc(record.getsEventDesc()).nEventlevel(record.getnEventlevel()).
+            tHappenTime(TimeUtil.string2timestamp(record.getsHappentime())).
+            sExtraDesc(record.getsExtraDesc()).build();
+        LogId = eventLog.insert2db(conn);
+        if (LogId <= 0) {
+          System.out.println("insert event  log error");
+        }
+      }
+      switch (processType) {
+        case ProcessMonitorType:
+          if (record.isbInsert2srcLog()) {
+            EventSrcMonitor eventSrcMonitor = EventSrcMonitor.newBuilder().
+                                              nResID(record.getnResID()).
+                                              sResName(record.getsResName()).build();
+            eventSrcMonitor.setnEventLogId(LogId);
+            eventSrcMonitor.setsEventType(record.getsEventType());
+            eventSrcMonitor.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
+            if (!eventSrcMonitor.insert2db(conn)) {
+              System.out.println("insert event  src monitor log error");
+            }
+          }
+          break;
+        case ProcessIaType:
+          if (record.isbInsert2srcLog()) {
+            EventSrcIA eventSrcIA = EventSrcIA.newBuilder().nSvrID(record.getnSvrID()).
+                                                            sSvrName(record.getsSvrName()).
+                                                            nResID(record.getnResID()).
+                                                            sResName(record.getsResName()).build();
+            eventSrcIA.setnEventLogId(LogId);
+            eventSrcIA.setsEventType(record.getsEventType());
+            eventSrcIA.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
+            if (!eventSrcIA.insert2db(conn)) {
+              System.out.println("insert event  src ia log error");
+            }
+          }
+          break;
+        case ProcessSioType:
+          if (record.isbInsert2srcLog()) {
+            EventSrcSio eventSrcSio = EventSrcSio.newBuilder().
+                                                  nResID(record.getnResID()).
+                                                  sResName(record.getsResName()).build();
+            eventSrcSio.setnEventLogId(LogId);
+            eventSrcSio.setsEventType(record.getsEventType());
+            eventSrcSio.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
+            if (!eventSrcSio.insert2db(conn)) {
+              System.out.println("insert event  src sio log error");
+            }
+          }
+          break;
+        case ProcessServerType:
+          if (record.isbInsert2srcLog()) {
+            EventSrcMachine eventSrcMachine = EventSrcMachine.newBuilder().
+                                                              nMachineID(record.getnMachineID()).
+                                                              sMachineName(record.getsMachineName()).build();
+            eventSrcMachine.setnEventLogId(LogId);
+            eventSrcMachine.setsEventType(record.getsEventType());
+            eventSrcMachine.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
+            if (!eventSrcMachine.insert2db(conn)) {
+              System.out.println("insert event  src sio log error");
+            }
+          }
+          break;
+        case ProcessDeviceType:
+          if (record.isbInsert2srcLog()) {
+            EventSrcDev eventSrcDev = EventSrcDev.newBuilder().
+                                                  nDevID(record.getnDevID()).
+                                                  sDevName(record.getsDevName()).build();
+            eventSrcDev.setnEventLogId(LogId);
+            eventSrcDev.setsEventType(record.getsEventType());
+            eventSrcDev.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
+            if (!eventSrcDev.insert2db(conn)) {
+              System.out.println("insert event  src sio log error");
+            }
+          }
+          break;
+        default:
+          break;
+      }
+      //send to blg
+      if(record.isbSend2blg()){
 
+      }
+      //send to mq
+      if(record.isbSend2mq()){
+
+      }
+      //send to cms
+      if(record.isbSend2cms()){
+
+      }
+    }
+  }
 
   public void insertSrcLog2db(Connection conn){
 
   }
   public void insertLog2db(Connection conn){ }
   public void insertAllLog2db(Connection conn){}
+
 
 }
 
