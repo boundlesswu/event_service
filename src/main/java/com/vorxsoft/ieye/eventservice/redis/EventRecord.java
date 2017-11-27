@@ -1,6 +1,7 @@
 package com.vorxsoft.ieye.eventservice.redis;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
+import com.vorxsoft.ieye.proto.ReportEventRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -490,5 +491,37 @@ public class EventRecord {
     setbSend2blg(true);
     setbSend2cms(true);
     setbSend2mq(true);
+  }
+  public ReportEventRequest.Events covert2Events(int logId){
+    ReportEventRequest.Events reportEventRequest = ReportEventRequest.Events.newBuilder().
+                                                   setSResNo(getsResNo()).
+                                                   setSDevNo(getsDevNo()).
+                                                   setSEventName(getsEventName()).
+                                                   setSEventType(getsEventType()).
+                                                   setSHappentime(getsHappentime()).
+                                                   setNEventID(getnEventID()).
+                                                   setSDevName(getsDevName()).
+                                                   setSResName(getsResName()).
+                                                   setSPicpath(getsPicpath()).
+                                                   setNEventlevel(getnEventlevel()).
+                                                   setNEventlogID(logId).
+                                                   setNSvrID(getnSvrID()).build();
+    return reportEventRequest;
+  }
+  public ReportEventRequest.Events covert2Events(){
+    ReportEventRequest.Events reportEventRequest = ReportEventRequest.Events.newBuilder().
+            setSResNo(getsResNo()).
+            setSDevNo(getsDevNo()).
+            setSEventName(getsEventName()).
+            setSEventType(getsEventType()).
+            setSHappentime(getsHappentime()).
+            setNEventID(getnEventID()).
+            setSDevName(getsDevName()).
+            setSResName(getsResName()).
+            setSPicpath(getsPicpath()).
+            setNEventlevel(getnEventlevel()).
+            setNEventlogID(getnEventlogID()).
+            setNSvrID(getnSvrID()).build();
+    return reportEventRequest;
   }
 }

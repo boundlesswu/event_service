@@ -433,6 +433,7 @@ public class AlarmProcess implements Runnable {
         if (LogId <= 0) {
           System.out.println("insert event  log error");
         }
+        it.next().setnEventlogID(LogId);
       }
       switch (processType) {
         case ProcessMonitorType:
@@ -516,8 +517,9 @@ public class AlarmProcess implements Runnable {
       if(record.isbSend2cms()){
 
       }
-      it.remove();
+      //it.remove();
     }
+    getEventRecordMap().convert2ReportEventRequest();
   }
 
   public void insertSrcLog2db(Connection conn){
