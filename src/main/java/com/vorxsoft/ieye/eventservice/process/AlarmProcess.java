@@ -8,6 +8,7 @@ import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
 import redis.clients.jedis.Jedis;
+import sun.rmi.runtime.Log;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -434,6 +435,7 @@ public class AlarmProcess implements Runnable {
           System.out.println("insert event  log error");
         }
         it.next().setnEventlogID(LogId);
+        record.setnEventlogID(LogId);
       }
       switch (processType) {
         case ProcessMonitorType:
@@ -520,6 +522,7 @@ public class AlarmProcess implements Runnable {
       //it.remove();
     }
     getEventRecordMap().convert2ReportEventRequest();
+    getEventRecordMap().convert2ReportLinkageRequest();
   }
 
   public void insertSrcLog2db(Connection conn){

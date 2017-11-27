@@ -1,5 +1,7 @@
 package com.vorxsoft.ieye.eventservice.linkage;
 
+import com.vorxsoft.ieye.proto.Linkage;
+
 public class EventLinkage {
   private int linkage_id;
   private int event_id;
@@ -208,5 +210,35 @@ public class EventLinkage {
     public EventLinkage build() {
       return new EventLinkage(this);
     }
+  }
+  //public com.vorxsoft.ieye.proto.Linkage
+  public Linkage convert2lingage(){
+    Linkage linkage = Linkage.newBuilder().setNLinkageID(getLinkage_id()).
+                      setNEventID(getEvent_id()).setSLinkageType(getLinkage_type()).build();
+    if(arg1 == null || arg1.length() <= 0){
+      linkage.getSArgsList().add(arg1);
+    }
+    if(arg2 == null || arg2.length() <= 0){
+      linkage.getSArgsList().add(arg2);
+    }
+    if(arg3 == null || arg3.length() <= 0){
+      linkage.getSArgsList().add(arg3);
+    }
+    if(arg4 == null || arg4.length() <= 0){
+      linkage.getSArgsList().add(arg4);
+    }
+    if(arg5 == null || arg5.length() <= 0){
+      linkage.getSArgsList().add(arg5);
+    }
+    if(arg6 == null || arg6.length() <= 0){
+      linkage.getSArgsList().add(arg6);
+    }
+    if(arg7 == null || arg7.length() <= 0){
+      linkage.getSArgsList().add(arg7);
+    }
+    if(arg8 == null || arg8.length() <= 0){
+      linkage.getSArgsList().add(arg8);
+    }
+    return linkage;
   }
 }

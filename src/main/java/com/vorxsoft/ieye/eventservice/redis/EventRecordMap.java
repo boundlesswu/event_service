@@ -2,7 +2,10 @@ package com.vorxsoft.ieye.eventservice.redis;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
+import com.vorxsoft.ieye.proto.EventWithLinkage;
+import com.vorxsoft.ieye.proto.Events;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
+import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +36,7 @@ public class EventRecordMap {
     while(it.hasNext()) {
       EventRecord record = it.next();
       if(record.isbSend2cms()){
-        ReportEventRequest.Events  event = record.covert2Events();
+        Events  event = record.covert2Events();
         req.getEventsList().add(event);
       }
     }
@@ -46,11 +49,23 @@ public class EventRecordMap {
     while(it.hasNext()) {
       EventRecord record = it.next();
       if(record.isbSend2mq()){
-        ReportEventRequest.Events  event = record.covert2Events();
+        Events event = record.covert2Events();
         req.getEventsList().add(event);
       }
     }
     return JsonFormat.printer().print(req.getDefaultInstanceForType());
   }
 
+  public ReportLinkageRequest convert2ReportLinkageRequest(){
+    ReportLinkageRequest req = ReportLinkageRequest.newBuilder().setSBusinessID("00000000").build();
+    Iterator<EventRecord> it = getEventRecords().iterator();
+    while(it.hasNext()) {
+      EventRecord record = it.next();
+      if(record.isbSend2blg()){
+        EventWithLinkage eventWithLinkage = record.covert2EventWithLinkage();
+        req.getEventWithLinkagesList().add(eventWithLinkage);
+      }
+    }
+    return req;
+  }
 }
