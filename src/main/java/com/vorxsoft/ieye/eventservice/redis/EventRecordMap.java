@@ -53,7 +53,7 @@ public class EventRecordMap {
         req.getEventsList().add(event);
       }
     }
-    return JsonFormat.printer().print(req.getDefaultInstanceForType());
+    return JsonFormat.printer().print(req.toBuilder());
   }
 
   public ReportLinkageRequest convert2ReportLinkageRequest(){

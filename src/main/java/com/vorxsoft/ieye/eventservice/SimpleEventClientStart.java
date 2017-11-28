@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.vorxsoft.ieye.proto.VSEventType.VSEventTypeDigitalIOCommon;
+//import static com.vorxsoft.ieye.proto.VSEventType.VSEventTypeDigitalIOCommon;
 
 /**
  * Created by Administrator on 2017/8/4 0004.
@@ -54,12 +54,12 @@ public class SimpleEventClientStart {
 
 
         do{
-            VSAlarmResponse reply =  stub.sentAlarm(VSAlarmRequest.newBuilder().
-                                                                   setResourceId(0).
-                                                                   setEvenType(VSEventTypeDigitalIOCommon).
-                                                                   setResourceNo(randomString()).
-                                                                   setHappenTime(getDateTimeNs()).build());
-            System.out.println("reponse is " + reply);
+//            VSAlarmResponse reply =  stub.sentAlarm(VSAlarmRequest.newBuilder().
+//                                                                   setResourceId(0).
+//                                                                   setEvenType(VSEventTypeDigitalIOCommon).
+//                                                                   setResourceNo(randomString()).
+//                                                                   setHappenTime(getDateTimeNs()).build());
+//            System.out.println("reponse is " + reply);
             try {
                 TimeUnit.MILLISECONDS.sleep(10);
             }catch (InterruptedException e){

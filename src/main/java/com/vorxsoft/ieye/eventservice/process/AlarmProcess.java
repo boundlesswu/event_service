@@ -1,15 +1,22 @@
 package com.vorxsoft.ieye.eventservice.process;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
+import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
+import com.vorxsoft.ieye.eventservice.mq.Publisher;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
+import com.vorxsoft.ieye.proto.ReportEventRequest;
+import com.vorxsoft.ieye.proto.ReportLinkageRequest;
+import com.vorxsoft.ieye.proto.VsIeyeProtoGrpc;
 import redis.clients.jedis.Jedis;
 import sun.rmi.runtime.Log;
 
+import javax.jms.JMSException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -31,6 +38,8 @@ public class AlarmProcess implements Runnable {
   private ProcessType processType;
   private EventRecordMap eventRecordMap;
   private Connection conn;
+  VsIeyeClient vsIeyeClient;
+  Publisher publisher;
 
 
   public AlarmStormConfig getAlarmStormConfig() {
@@ -419,7 +428,7 @@ public class AlarmProcess implements Runnable {
     }
   }
 
-  public void processEvent() throws SQLException {
+  public void processEvent() throws SQLException, InvalidProtocolBufferException, JMSException {
     int LogId = 0;
     Iterator<EventRecord>  it = getEventRecordMap().getEventRecords().iterator();
     while(it.hasNext()){
@@ -521,15 +530,16 @@ public class AlarmProcess implements Runnable {
       }
       //it.remove();
     }
-    getEventRecordMap().convert2ReportEventRequest();
-    getEventRecordMap().convert2ReportLinkageRequest();
+    ReportEventRequest eventRequest = getEventRecordMap().convert2ReportEventRequest();
+    if( eventRequest != null || !eventRequest.isInitialized()){
+      vsIeyeClient.reportEvent(eventRequest);
+    }
+    ReportLinkageRequest linkageReq = getEventRecordMap().convert2ReportLinkageRequest();
+    if((linkageReq != null) || !linkageReq.isInitialized()){
+      vsIeyeClient.reportLinkage(linkageReq);
+    }
+    publisher.publishMsg(getEventRecordMap().convert2jsonString());
   }
-
-  public void insertSrcLog2db(Connection conn){
-
-  }
-  public void insertLog2db(Connection conn){ }
-  public void insertAllLog2db(Connection conn){}
 
 
 }
