@@ -107,13 +107,18 @@
         </dependency>
         <dependency>
             <groupId>com.vorxsoft.ieye</groupId>
-            <artifactId>microservice</artifactId>
+            <artifactId>micro_service</artifactId>
             <version>4.0.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.28</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.protobuf-java-format</groupId>
+            <artifactId>protobuf-java-format</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
 </project>
