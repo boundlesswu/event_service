@@ -54,40 +54,104 @@ public class EventConfig {
     this.disListNum = disListNum;
   }
 
+  public void clearMonitorConfigConfigListbyKey(HashMap<MonitorConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearIaConfigConfigListbyKey(HashMap<IaConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearSioConfigConfigListbyKey(HashMap<SioConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearServerConfigConfigListbyKey(HashMap<ServerConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearDeviceConfigConfigListbyKey(HashMap<DeviceConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearConfigList(HashMap<Long,EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
   public void clearConfig(){
 
+    clearConfigList(monitorConfigList);
+    clearConfigList(iaConfigList);
+    clearConfigList(sioConfigList);
+    clearConfigList(serverConfigList);
+    clearConfigList(deviceConfigList);
 
-    Iterator iter = monitorConfigList.entrySet().iterator();
-    while (iter.hasNext()) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      Object key = entry.getKey();
-      Object val = entry.getValue();
-      EventInfo eventInfo = (EventInfo) val;
-      //eventInfo.getGuardPlan().clear();
-      //eventInfo.getEventLinkagelist().clear();
-      eventInfo.clear();
-      monitorConfigList.remove(key);
-    }
-    monitorConfigList.clear();
-
-    Iterator iter2 = monitorConfigList2.entrySet().iterator();
-    while (iter.hasNext()) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      Object key = entry.getKey();
-      Object val = entry.getValue();
-      EventInfo eventInfo = (EventInfo) val;
-      eventInfo.getGuardPlan().clear();
-      eventInfo.getEventLinkagelist().clear();
-      eventInfo.clear();
-      monitorConfigList2.remove(key);
-    }
-    monitorConfigList2.clear();
+    clearMonitorConfigConfigListbyKey(monitorConfigList2);
+    clearIaConfigConfigListbyKey(iaConfigList2);
+    clearSioConfigConfigListbyKey(sioConfigList2);
+    clearServerConfigConfigListbyKey(serverConfigList2);
+    clearDeviceConfigConfigListbyKey(deviceConfigList2);
 
   }
 
   public void reLoadConfig(Connection conn) throws SQLException {
     clearConfig();
     loadConfig(conn);
+
   }
 
   public void loadConfig(Connection conn) throws SQLException {
