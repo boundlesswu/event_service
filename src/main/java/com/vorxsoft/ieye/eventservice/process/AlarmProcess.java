@@ -118,11 +118,40 @@ public class AlarmProcess implements Runnable {
   public AlarmProcess(String name) {
     this.name = name;
   }
+  class AAA {
+    private ReloadRequest req;
+    private String  keyStr;
 
-  public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
+    public AAA() {
+    }
+
+    public AAA(ReloadRequest req, String keyStr) {
+      this.req = req;
+      this.keyStr = keyStr;
+    }
+
+    public ReloadRequest getReq() {
+      return req;
+    }
+
+    public void setReq(ReloadRequest req) {
+      this.req = req;
+    }
+
+
+    public String getKeyStr() {
+      return keyStr;
+    }
+
+    public void setKeyStr(String keyStr) {
+      this.keyStr = keyStr;
+    }
+  }
+  public List<AAA> getReloadRequest()  {
     Set<String> set = jedis.keys("reload_config_req*");
     Iterator<String> it = set.iterator();
-    List<ReloadRequest> reloadRequestList = new ArrayList<>();
+
+    List<AAA> reloadRequestList = new ArrayList<>();
     while (it.hasNext()){
       String keyStr = it.next();
       String a = jedis.hget(keyStr,name);
@@ -131,7 +160,7 @@ public class AlarmProcess implements Runnable {
         ReloadRequest.Builder builder =ReloadRequest.newBuilder();
         JsonFormat.merge(b, builder);
         ReloadRequest req = builder.build();
-        reloadRequestList.add(req);
+        reloadRequestList.add(new AAA(req,keyStr));
       }else{
         System.out.println("name:"+ name +"has read config: "+a);
       }
@@ -139,11 +168,13 @@ public class AlarmProcess implements Runnable {
     return reloadRequestList;
   }
 
-  public void updateConfig() throws JsonFormat.ParseException {
-    List<ReloadRequest> reqList = getReloadRequest();
+  public void updateConfig() throws SQLException {
+    List<AAA> reqList = getReloadRequest();
     for (int i = 0; i < reqList.size(); i++) {
-      ReloadRequest req = reqList.get(i);
+      ReloadRequest req = reqList.get(i).getReq();
       System.out.println("config reload req:"+req);
+      getEventConfig().reLoadConfig(conn);
+      getJedis().hset(reqList.get(i).getKeyStr(),"name",getName());
     }
   }
   @Override
