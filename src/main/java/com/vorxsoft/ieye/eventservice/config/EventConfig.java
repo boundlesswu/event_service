@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.*;
 
 public class EventConfig {
   private HashMap<Long,EventInfo> monitorConfigList;
@@ -14,12 +14,25 @@ public class EventConfig {
   private HashMap<Long,EventInfo> sioConfigList;
   private HashMap<Long,EventInfo> serverConfigList;
   private HashMap<Long,EventInfo> deviceConfigList;
-  //private HashMap<Long,EventInfo> eventConfigList;
-  private HashMap<Long,AlarmStorm> alarmStormConfigList;
 
+  private HashMap<MonitorConfigKey,EventInfo> monitorConfigList2;
+  private HashMap<IaConfigKey,EventInfo> iaConfigList2;
+  private HashMap<SioConfigKey,EventInfo> sioConfigList2;
+  private HashMap<ServerConfigKey,EventInfo> serverConfigList2;
+  private HashMap<DeviceConfigKey,EventInfo> deviceConfigList2;
 
   private int listNum;
   private int disListNum;
+
+  public Long getFreshTime() {
+    return freshTime;
+  }
+
+  public void setFreshTime(Long freshTime) {
+    this.freshTime = freshTime;
+  }
+
+  Long freshTime =0L;
 
 
   public int getListNum() {
@@ -41,6 +54,106 @@ public class EventConfig {
     this.disListNum = disListNum;
   }
 
+  public void clearMonitorConfigConfigListbyKey(HashMap<MonitorConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearIaConfigConfigListbyKey(HashMap<IaConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearSioConfigConfigListbyKey(HashMap<SioConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearServerConfigConfigListbyKey(HashMap<ServerConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearDeviceConfigConfigListbyKey(HashMap<DeviceConfigKey, EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearConfigList(HashMap<Long,EventInfo> list){
+    Iterator iter = list.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.clear();
+      list.remove(key);
+    }
+    list.clear();
+  }
+
+  public void clearConfig(){
+
+    clearConfigList(monitorConfigList);
+    clearConfigList(iaConfigList);
+    clearConfigList(sioConfigList);
+    clearConfigList(serverConfigList);
+    clearConfigList(deviceConfigList);
+
+    clearMonitorConfigConfigListbyKey(monitorConfigList2);
+    clearIaConfigConfigListbyKey(iaConfigList2);
+    clearSioConfigConfigListbyKey(sioConfigList2);
+    clearServerConfigConfigListbyKey(serverConfigList2);
+    clearDeviceConfigConfigListbyKey(deviceConfigList2);
+
+  }
+
+  public void reLoadConfig(Connection conn) throws SQLException {
+    clearConfig();
+    loadConfig(conn);
+
+  }
+
   public void loadConfig(Connection conn) throws SQLException {
     String sql="SELECT  COUNT(*) FROM ti_event WHERE enable_state = 1";
     PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -52,21 +165,29 @@ public class EventConfig {
     disListNum = ret.getInt("totalCount");
     int num =  listNum + disListNum;
     if( num <= 0) return;
-    Long event_id;
+    int event_id;
     String event_no;
     String event_genus;
     String event_type;
     String event_name;
     String event_desc;
-    Long enable_state=1L;
-    Long event_level;
-    Long auto_release_interval;
+    int enable_state=1;
+    int event_level;
+    int auto_release_interval;
     GuardPlan guardPlan = null;
-    Long guard_plan_id;
+    int guard_plan_id;
+    int res_id;
+    int machine_id;
+    int dev_id;
     int sourceId=0;
     int iaagId=0;
     int iaag_chn_id=0;
     EventLinkage eventLinkage;
+    MonitorConfigKey monitorConfigKey =  new MonitorConfigKey();
+    IaConfigKey iaConfigKey = new IaConfigKey();
+    SioConfigKey sioConfigKey =  new SioConfigKey();
+    ServerConfigKey serverConfigKey = new ServerConfigKey();
+    DeviceConfigKey deviceConfigKey = new DeviceConfigKey();
     sql = "SELECT event_id,event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,guard_plan_id " +
         "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
         " where ti_event.enable_state = 1";
@@ -74,15 +195,15 @@ public class EventConfig {
     ret = pstmt.executeQuery(sql);
     int i = 0;
     while(ret.next()){
-      event_id = ret.getLong("event_id");
+      event_id = ret.getInt("event_id");
       event_no = ret.getString("event_no");
       event_genus = ret.getString("event_genus");
       event_type = ret.getString("event_type");
       event_name = ret.getString("event_name");
       event_desc = ret.getString("event_desc");
-      event_level = ret.getLong("event_level");
-      auto_release_interval = ret.getLong("auto_release_interval");
-      guard_plan_id = ret.getLong("guard_plan_id;");
+      event_level = ret.getInt("event_level");
+      auto_release_interval = ret.getInt("auto_release_interval");
+      guard_plan_id = ret.getInt("guard_plan_id;");
       String sql2 = "SELECT guard_plan_name,time_schedule,guard_plan_type,start_time,end_time " +
           "FROM ti_guard_plan WHERE guard_plan_id = ?";
       PreparedStatement pstmt2 = conn.prepareStatement(sql2);
@@ -90,8 +211,8 @@ public class EventConfig {
       ResultSet ret2 = pstmt2.executeQuery(sql2);
       guardPlan.setGuard_plan_id(guard_plan_id);
       guardPlan.setGuard_plan_name(ret2.getString("guard_plan_name"));
-      guardPlan.setGuard_plan_type(guardPlan.Long2GuardPlanType(ret2.getLong("guard_plan_type")));
-      guardPlan.setTime_schedule(ret2.getString("time_schedule"));
+      guardPlan.setGuard_plan_type(guardPlan.Long2GuardPlanType(ret2.getInt("guard_plan_type")));
+      guardPlan.setTimeSchedule(ret2.getString("time_schedule"));
       guardPlan.setStart_time(ret2.getTimestamp("start_time"));
       guardPlan.setEnd_time(ret2.getTimestamp("end_time"));
       ret2.close();
@@ -102,42 +223,59 @@ public class EventConfig {
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("res_id");
+        res_id = ret2.getInt("res_id");
         ret2.close();
         pstmt2.close();
+        monitorConfigKey.setEvent_type(event_type);
+        monitorConfigKey.setRes_id(res_id);
       }else if(event_genus .equals("event_sio") ){
         sql2 ="SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
         pstmt2 = conn.prepareStatement(sql2);
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("res_id");
+        res_id = ret2.getInt("res_id");
         ret2.close();
         pstmt2.close();
+        sioConfigKey.setEvent_type(event_type);
+        sioConfigKey.setRes_id(res_id);
       }else if(event_genus .equals("event_ ia") ){
         sql2 ="SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
         pstmt2 = conn.prepareStatement(sql2);
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("res_id");
+        res_id = ret2.getInt("res_id");
         iaag_chn_id = ret2.getInt("iaag_chn_id");
         iaagId = ret2.getInt("svr_id");
         ret2.close();
         pstmt2.close();
+        iaConfigKey.setEvent_type(event_type);
+        iaConfigKey.setIaag_chn_id(iaag_chn_id);
+        iaConfigKey.setIaagId(iaagId);
+        iaConfigKey.setRes_id(res_id);
       }else if(event_genus .equals("event_server") ){
         sql2 ="SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
         pstmt2 = conn.prepareStatement(sql2);
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("machine_id");
+        machine_id = ret2.getInt("machine_id");
         ret2.close();
         pstmt2.close();
+        serverConfigKey.setEvent_type(event_type);
+        serverConfigKey.setMachine_id(machine_id);
       }else if(event_genus .equals("event_device") ){
         sql2 ="SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
         pstmt2 = conn.prepareStatement(sql2);
         pstmt2.setString(1, String.valueOf(event_id));
         ret2 = pstmt2.executeQuery(sql2);
         sourceId = ret2.getInt("device_id");
+        dev_id = ret2.getInt("device_id");
         ret2.close();
         pstmt2.close();
+        deviceConfigKey.setEvent_type(event_type);
+        deviceConfigKey.setDev_id(dev_id);
       }else{
         System.out.println("error event_genus :"+ event_genus);
         continue;
@@ -155,6 +293,7 @@ public class EventConfig {
       a.setIaag_chn_id(iaag_chn_id);
       a.setIaagId(iaagId);
       a.setSourceId(sourceId);
+      a.setAuto_release_interval(auto_release_interval);
       //linage todo
       sql2 ="SELECT linkage_id,linkage_type,arg1,arg2, arg3,arg4,arg5,arg6,arg7,arg8 " +
           "FROM ti_event_linkage WHERE event_id = ?";
@@ -162,9 +301,9 @@ public class EventConfig {
       pstmt2.setString(1, String.valueOf(event_id));
       ret2 = pstmt2.executeQuery(sql2);
       EventLinkage b = new EventLinkage();
-      EventLinkage[] c = new EventLinkage[0];
+      List<EventLinkage> c = new ArrayList();
       for (int j = 0; ret2.next() ; j++) {
-        Long linkage_id;
+        int linkage_id;
         String linkage_type;
         String arg1;
         String arg2;
@@ -174,7 +313,7 @@ public class EventConfig {
         String arg6;
         String arg7;
         String arg8;
-        linkage_id = ret2.getLong("linkage_id");
+        linkage_id = ret2.getInt("linkage_id");
         linkage_type = ret2.getString("linkage_type");
         arg1 = ret2.getString("arg1");
         arg2 = ret2.getString("arg2");
@@ -195,19 +334,24 @@ public class EventConfig {
         b.setArg6(arg6);
         b.setArg7(arg7);
         b.setArg8(arg8);
-        c[j] = b;
+        c.add(b);
       }
       a.setEventLinkagelist(c);
       if(event_genus.equals( "event_monitor") ){
-        monitorConfigList.put(event_id,a);
+        monitorConfigList.put((long) event_id,a);
+        monitorConfigList2.put(monitorConfigKey,a);
       }else if(event_genus .equals("event_sio") ){
-        sioConfigList.put(event_id,a);
-      }else if(event_genus .equals("event_ ia") ){
-        iaConfigList.put(event_id,a);
+        sioConfigList.put((long) event_id,a);
+        sioConfigList2.put(sioConfigKey,a);
+      }else if(event_genus .equals("event_ia") ){
+        iaConfigList.put((long) event_id,a);
+        iaConfigList2.put(iaConfigKey,a);
       }else if(event_genus .equals("event_server") ){
-        serverConfigList.put(event_id,a);
+        serverConfigList.put((long) event_id,a);
+        serverConfigList2.put(serverConfigKey,a);
       }else if(event_genus .equals("event_device") ){
-        deviceConfigList.put(event_id,a);
+        deviceConfigList.put((long) event_id,a);
+        deviceConfigList2.put(deviceConfigKey,a);
       }else{
         System.out.println("error event_genus :"+ event_genus);
         continue;
@@ -215,27 +359,29 @@ public class EventConfig {
     }
     listNum = monitorConfigList.size()+iaConfigList.size()
         +sioConfigList.size()+serverConfigList.size()+deviceConfigList.size();
+    setFreshTime(System.currentTimeMillis());
   }
 
-//  public void loadAlarmStormConfig(Connection conn) throws SQLException {
-//    String sql="SELECT  storm_id ,event_type,event_stom FROM ti_event_stom";
-//    PreparedStatement pstmt = conn.prepareStatement(sql);
-//    ResultSet ret = pstmt.executeQuery(sql);
-//    Long stom_id = 0L;
-//    String event_type = null;
-//    Long event_stom = 0L;
-//    AlarmStorm a = new AlarmStorm();
-//    while(ret.next()) {
-//      stom_id = ret.getLong("storm_id");
-//      event_type = ret.getString("event_type");
-//      event_stom = ret.getLong("event_stom");
-//      a.setStom_id(stom_id);
-//      a.setEvent_type(event_type);
-//      a.setEvent_stom(event_stom);
-//      alarmStormConfigList.put(stom_id,a);
-//    }
-//    ret.close();
-//    pstmt.close();
-//    return;
-//  }
+  public  EventInfo getMonitorConfig(MonitorConfigKey monitorConfigKey){
+    return this.monitorConfigList2.get(monitorConfigKey);
+  }
+  public  EventInfo getSioConfig(SioConfigKey sioConfigKey){
+    return this.sioConfigList2.get(sioConfigKey);
+  }
+
+  public  EventInfo getIaConfig(IaConfigKey iaConfigKey){
+    return this.iaConfigList2.get(iaConfigKey);
+  }
+
+  public  EventInfo getServerConfig(ServerConfigKey serverConfigKey){
+    return this.serverConfigList2.get(serverConfigKey);
+  }
+
+  public  EventInfo getDeviceConfig(DeviceConfigKey deviceConfigKey){
+    return this.deviceConfigList2.get(deviceConfigKey);
+  }
+
+
+
+
 }

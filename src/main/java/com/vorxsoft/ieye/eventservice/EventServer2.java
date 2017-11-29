@@ -1,16 +1,26 @@
 package com.vorxsoft.ieye.eventservice;
 
-import com.vorxsoft.ieye.proto.VSEventRequest;
-import com.vorxsoft.ieye.proto.VSEventResponse;
-import com.vorxsoft.ieye.proto.VSEventServiceGrpc;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
+import com.vorxsoft.ieye.proto.*;
+import io.grpc.stub.StreamObserver;
+import redis.clients.jedis.Jedis;
 
-public class EventServer2 extends VSEventServiceGrpc.VSEventServiceImplBase{
+public class EventServer2 extends VsIeyeProtoGrpc.VsIeyeProtoImplBase{
+  private Jedis jedis ;
+
+  EventServer2(String ip,int port)  {
+    jedis  = new  Jedis(ip, port);
+  }
   @Override
-  public void sentEvent(VSEventRequest req, io.grpc.stub.StreamObserver<com.vorxsoft.ieye.proto.VSEventResponse> response){
-    System.out.println("receive : " +  req);
-    VSEventResponse reply = com.vorxsoft.ieye.proto.VSEventResponse.newBuilder().setEventId(112).setResult(true).build();
-    response.onNext(reply);
-    response.onCompleted();
+  public void reload (ReloadRequest req, StreamObserver<DefaultReply> reply){
+    System.out.println("receiver" +  req);
+    try {
+      String s = JsonFormat.printer().print(req.toBuilder());
+      jedis.hset("reload_config_req"+String.valueOf(System.currentTimeMillis()),"req",s);
+    } catch (InvalidProtocolBufferException e) {
+      e.printStackTrace();
+    }
   }
 
 }

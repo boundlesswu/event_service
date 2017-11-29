@@ -286,7 +286,7 @@ public class EventServerStart implements WatchCallerInterface {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer().bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
              .addService(new EventServer(mqIP,mqPort).bindService())
-             .addService(new EventServer2().bindService())
+             .addService(new EventServer2(mqIP,mqPort).bindService())
              .build();
     server.start();
 
