@@ -14,6 +14,15 @@ import java.util.List;
 public class GuardPlan {
   private int guard_plan_id;
   private String guard_plan_name;
+  private TimeSchedule timeSchedule = new TimeSchedule();
+  private String time_schedule;
+  private GuardPlanType guard_plan_type;
+  private java.sql.Timestamp start_time;
+  private java.sql.Timestamp end_time;
+
+  public void clear(){
+    timeSchedule = null;
+  }
 
   public TimeSchedule getTimeSchedule() {
     return timeSchedule;
@@ -61,11 +70,6 @@ public class GuardPlan {
     return null;
   }
 
-  private TimeSchedule timeSchedule = new TimeSchedule();
-  private String time_schedule;
-  private GuardPlanType guard_plan_type;
-  private java.sql.Timestamp start_time;
-  private java.sql.Timestamp end_time;
   public enum GuardPlanType{
      Permanent,Temporary;
   }

@@ -8,8 +8,8 @@
     <artifactId>event_service</artifactId>
     <version>4.0.1.2</version>
     <properties>
-        <grpc.version>1.4.0</grpc.version>
-    </properties>
+    <grpc.version>1.4.0</grpc.version>
+</properties>
     <build>
         <plugins>
             <plugin>

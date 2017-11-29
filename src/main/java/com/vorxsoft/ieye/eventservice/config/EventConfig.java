@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class EventConfig {
   private HashMap<Long,EventInfo> monitorConfigList;
@@ -25,6 +23,16 @@ public class EventConfig {
 
   private int listNum;
   private int disListNum;
+
+  public Long getFreshTime() {
+    return freshTime;
+  }
+
+  public void setFreshTime(Long freshTime) {
+    this.freshTime = freshTime;
+  }
+
+  Long freshTime =0L;
 
 
   public int getListNum() {
@@ -44,6 +52,42 @@ public class EventConfig {
 
   public void setDisListNum(int disListNum) {
     this.disListNum = disListNum;
+  }
+
+  public void clearConfig(){
+
+
+    Iterator iter = monitorConfigList.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.getGuardPlan().clear();
+      eventInfo.getEventLinkagelist().clear();
+      eventInfo.clear();
+      monitorConfigList.remove(key);
+    }
+    monitorConfigList.clear();
+
+    Iterator iter2 = monitorConfigList2.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      eventInfo.getGuardPlan().clear();
+      eventInfo.getEventLinkagelist().clear();
+      eventInfo.clear();
+      monitorConfigList2.remove(key);
+    }
+    monitorConfigList2.clear();
+
+  }
+
+  public void reLoadConfig(Connection conn) throws SQLException {
+    clearConfig();
+    loadConfig(conn);
   }
 
   public void loadConfig(Connection conn) throws SQLException {
@@ -251,6 +295,7 @@ public class EventConfig {
     }
     listNum = monitorConfigList.size()+iaConfigList.size()
         +sioConfigList.size()+serverConfigList.size()+deviceConfigList.size();
+    setFreshTime(System.currentTimeMillis());
   }
 
   public  EventInfo getMonitorConfig(MonitorConfigKey monitorConfigKey){

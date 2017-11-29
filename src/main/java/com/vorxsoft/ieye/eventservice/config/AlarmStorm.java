@@ -1,38 +1,79 @@
 package com.vorxsoft.ieye.eventservice.config;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 public class AlarmStorm {
-  private Long stom_id;
-  private String event_type;
-  private Long event_stom;
+  private int stomId;
+  private String eventType;
+  private int eventStom;
 
-
-  public Long getStom_id() {
-    return stom_id;
+  public AlarmStorm() {
   }
 
-  public void setStom_id(Long stom_id) {
-    this.stom_id = stom_id;
+  public AlarmStorm(int stomId, String eventType, int eventStom) {
+    this.stomId = stomId;
+    this.eventType = eventType;
+    this.eventStom = eventStom;
   }
 
-  public String getEvent_type() {
-    return event_type;
+  private AlarmStorm(Builder builder) {
+    setStomId(builder.stomId);
+    setEventType(builder.eventType);
+    setEventStom(builder.eventStom);
   }
 
-  public void setEvent_type(String event_type) {
-    this.event_type = event_type;
-  }
-
-  public Long getEvent_stom() {
-    return event_stom;
-  }
-
-  public void setEvent_stom(Long event_stom) {
-    this.event_stom = event_stom;
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
 
+  public int getStomId() {
+    return stomId;
+  }
+
+  public void setStomId(int stomId) {
+    this.stomId = stomId;
+  }
+
+  public String getEventType() {
+    return eventType;
+  }
+
+  public void setEventType(String eventType) {
+    this.eventType = eventType;
+  }
+
+  public int getEventStom() {
+    return eventStom;
+  }
+
+  public void setEventStom(int eventStom) {
+    this.eventStom = eventStom;
+  }
+
+  public static final class Builder {
+    private int stomId;
+    private String eventType;
+    private int eventStom;
+
+    private Builder() {
+    }
+
+    public Builder stomId(int val) {
+      stomId = val;
+      return this;
+    }
+
+    public Builder eventType(String val) {
+      eventType = val;
+      return this;
+    }
+
+    public Builder eventStom(int val) {
+      eventStom = val;
+      return this;
+    }
+
+    public AlarmStorm build() {
+      return new AlarmStorm(this);
+    }
+  }
 }

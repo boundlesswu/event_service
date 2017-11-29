@@ -1,6 +1,7 @@
 package com.vorxsoft.ieye.eventservice.process;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
@@ -10,22 +11,17 @@ import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
+import com.vorxsoft.ieye.proto.ReloadRequest;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
-import com.vorxsoft.ieye.proto.VsIeyeProtoGrpc;
 import redis.clients.jedis.Jedis;
-import sun.rmi.runtime.Log;
 
 import javax.jms.JMSException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 
@@ -123,15 +119,43 @@ public class AlarmProcess implements Runnable {
     this.name = name;
   }
 
+  public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
+    Set<String> set = jedis.keys("reload_config_req*");
+    Iterator<String> it = set.iterator();
+    List<ReloadRequest> reloadRequestList = new ArrayList<>();
+    while (it.hasNext()){
+      String keyStr = it.next();
+      String a = jedis.hget(keyStr,name);
+      if(a == null || a.length() == 0){
+        String b = jedis.hget(keyStr,"req");
+        ReloadRequest.Builder builder =ReloadRequest.newBuilder();
+        JsonFormat.merge(b, builder);
+        ReloadRequest req = builder.build();
+        reloadRequestList.add(req);
+      }else{
+        System.out.println("name:"+ name +"has read config: "+a);
+      }
+    }
+    return reloadRequestList;
+  }
 
+  public void updateConfig() throws JsonFormat.ParseException {
+    List<ReloadRequest> reqList = getReloadRequest();
+    for (int i = 0; i < reqList.size(); i++) {
+      ReloadRequest req = reqList.get(i);
+      System.out.println("config reload req:"+req);
+    }
+  }
   @Override
   public void run() {
     for (int i = 0; ; i++) {
       System.out.println(name + "运行  :  " + i);
       try {
-        processAlarm(processType);
+        processAlarm();
         Thread.sleep((int) Math.random() * 10);
         processEvent();
+        Thread.sleep((int) Math.random() * 10);
+        updateConfig();
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -158,7 +182,7 @@ public class AlarmProcess implements Runnable {
     return re_time;
   }
 
-  public void processAlarm(ProcessType processType) throws Exception {
+  public void processAlarm() throws Exception {
     String patterKey = "";
     switch (processType) {
       case ProcessMonitorType:
@@ -254,7 +278,7 @@ public class AlarmProcess implements Runnable {
         // send to event queue
         insertEvenList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId,eventInfo,extraContent);
       } else {
-        Long stom_time = alarmStorm.getEvent_stom();
+        int stom_time = alarmStorm.getEventStom();
         if (stom_time == 0) {
           System.out.println("storm time == 0 no alarm storm config of event_type:" + evenType +
                   "happenTime" + happenTime + "extraContent" + extraContent +

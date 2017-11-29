@@ -2,6 +2,7 @@ package com.vorxsoft.ieye.eventservice.config;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventInfo {
@@ -15,7 +16,7 @@ public class EventInfo {
   private int enable_state;
   private int event_level;
   private int auto_release_interval;
-  private GuardPlan guardPlan=null;
+  private GuardPlan guardPlan=new GuardPlan();
   private int res_id=0;
   private int dev_id=0;
   private int machine_id=0;
@@ -23,7 +24,7 @@ public class EventInfo {
   private int sourceId=0;
   private int iaagId=0;
   private int iaag_chn_id=0;
-  List<EventLinkage> eventLinkagelist;
+  List<EventLinkage> eventLinkagelist = new ArrayList<>();
 
   public EventInfo() {
   }
@@ -47,6 +48,11 @@ public class EventInfo {
     setIaagId(builder.iaagId);
     setIaag_chn_id(builder.iaag_chn_id);
     setEventLinkagelist(builder.eventLinkagelist);
+  }
+
+  public void clear(){
+    guardPlan = null;
+    eventLinkagelist = null;
   }
 
   public static Builder newBuilder() {

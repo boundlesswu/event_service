@@ -8,25 +8,36 @@ import java.util.HashMap;
 
 public class AlarmStormConfig {
   private HashMap<String,AlarmStorm> alarmStormConfigList;
+
+  public Long getFreshTime() {
+    return FreshTime;
+  }
+
+  public void setFreshTime(Long freshTime) {
+    FreshTime = freshTime;
+  }
+
+  private Long FreshTime = 0L;
   public void loadAlarmStormConfig(Connection conn) throws SQLException {
     String sql="SELECT  storm_id ,event_type,event_stom FROM ti_event_stom";
     PreparedStatement pstmt = conn.prepareStatement(sql);
     ResultSet ret = pstmt.executeQuery(sql);
-    Long stom_id = 0L;
+    int stom_id = 0;
     String event_type = null;
-    Long event_stom = 0L;
+    int event_stom = 0;
     AlarmStorm a = new AlarmStorm();
     while(ret.next()) {
-      stom_id = ret.getLong("storm_id");
+      stom_id = ret.getInt("storm_id");
       event_type = ret.getString("event_type");
-      event_stom = ret.getLong("event_stom");
-      a.setStom_id(stom_id);
-      a.setEvent_type(event_type);
-      a.setEvent_stom(event_stom);
+      event_stom = ret.getInt("event_stom");
+      a.setStomId(stom_id);
+      a.setEventType(event_type);
+      a.setEventStom(event_stom);
       alarmStormConfigList.put(event_type,a);
     }
     ret.close();
     pstmt.close();
+    setFreshTime(System.currentTimeMillis());
     return;
   }
   public AlarmStorm getAlarmStorm(String type){

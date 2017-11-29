@@ -13,7 +13,7 @@ import static com.vorxsoft.ieye.proto.VSEventGenus.*;
  * Created by Administrator on 2017/8/3 0003.
  */
 
-public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase{
+public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
 
   private Jedis jedis ;
   private long count;
