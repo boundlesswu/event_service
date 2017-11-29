@@ -51,7 +51,11 @@ public class EventInfo {
   }
 
   public void clear(){
+    if(getGuardPlan()!=null)
+      getGuardPlan().clear();
     guardPlan = null;
+    if(getEventLinkagelist()!=null)
+      eventLinkagelist.clear();
     eventLinkagelist = null;
   }
 

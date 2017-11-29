@@ -63,8 +63,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.getGuardPlan().clear();
-      eventInfo.getEventLinkagelist().clear();
+      //eventInfo.getGuardPlan().clear();
+      //eventInfo.getEventLinkagelist().clear();
       eventInfo.clear();
       monitorConfigList.remove(key);
     }
