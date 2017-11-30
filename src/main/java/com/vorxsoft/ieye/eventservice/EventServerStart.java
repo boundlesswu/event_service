@@ -3,6 +3,7 @@ package com.vorxsoft.ieye.eventservice;
 import com.coreos.jetcd.Watch;
 import com.coreos.jetcd.watch.WatchEvent;
 import com.coreos.jetcd.watch.WatchResponse;
+import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.EventConfig;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
@@ -10,6 +11,7 @@ import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
+import com.vorxsoft.ieye.proto.ReloadRequest;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
 import org.dom4j.Attribute;
@@ -30,6 +32,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
+import static com.vorxsoft.ieye.proto.RELOAD_TYPE.REL_EVENT_INFO;
 
 /**
  * Created by Administrator on 2017/8/3 0003.
@@ -238,6 +241,102 @@ public class EventServerStart implements WatchCallerInterface {
       e.printStackTrace();
     }
   }
+
+  public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
+    Set<String> set = jedis.keys("reload_config_req*");
+    Iterator<String> it = set.iterator();
+
+    List<ReloadRequest> reloadRequestList = new ArrayList<>();
+    while (it.hasNext()){
+      String keyStr = it.next();
+      String a = jedis.hget(keyStr,"req");
+      if(a == null || a.length() == 0){
+        System.out.println("wrong redis hash,and key:"+ keyStr);
+      }else{
+        ReloadRequest.Builder builder =ReloadRequest.newBuilder();
+        JsonFormat.merge(a, builder);
+        ReloadRequest req = builder.build();
+        reloadRequestList.add(req);
+      }
+      jedis.del(keyStr);
+    }
+    return reloadRequestList;
+  }
+
+
+  public void updateConfig() throws SQLException, JsonFormat.ParseException {
+    List<ReloadRequest> reqList = getReloadRequest();
+    for (int i = 0; i < reqList.size(); i++) {
+      ReloadRequest req = reqList.get(i);
+      System.out.println("config reload req:"+req);
+      REL_EVENT_INFO = 5; //事件信息
+      REL_EVENT_GUARD = 6; //事件布防
+      REL_EVENT_CONTACTS = 7; //事件联系人
+      REL_EVENT_STORM = 8; //事件风暴
+      REL_EVENT_LINKAGE = 9; //事件联动
+      OA_ADD = 0; //增
+      OA_MOD = 1; //改
+      OA_DEL = 2; //删
+      switch (req.getLoadType()) {
+        case REL_DEV_INFO:
+          break;
+        case REL_RES_INFO:
+          break;
+        case REL_REC_PLAN:
+          break;
+        case REL_REC_TIME:
+          break;
+        case REL_REC_CAM:
+          break;
+        case REL_EVENT_INFO:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().addEventInfo(req.getIdList(j));
+              }
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateEventInfo(req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteAlarmStorm(req.getIdList(j);
+              }
+              break;
+            case OA_QUR:
+              break;
+            case OA_ON:
+              break;
+            case OA_OFF:
+              break;
+            case OA_OTHER:
+              break;
+            case OA_ALL_ISSUE:
+              break;
+            case UNRECOGNIZED:
+              break;
+          }
+          break;
+        case REL_EVENT_GUARD:
+          break;
+        case REL_EVENT_CONTACTS:
+          break;
+        case REL_EVENT_STORM:
+          break;
+        case REL_EVENT_LINKAGE:
+          break;
+        case UNRECOGNIZED:
+          break;
+      }
+      if(req.getLoadType() == REL_EVENT_INFO){
+
+      }
+      getEventConfig().reLoadConfig(conn);
+    }
+  }
+
   public void dbInit() throws SQLException, ClassNotFoundException {
     dbUrl = "jdbc:"+dbname+"://"+dbAddress;
     System.out.println("db url :" + dbUrl);
@@ -279,7 +378,6 @@ public class EventServerStart implements WatchCallerInterface {
     pstmt.close();
     return a;
   }
-
 
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();

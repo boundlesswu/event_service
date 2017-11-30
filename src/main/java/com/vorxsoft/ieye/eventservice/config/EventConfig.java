@@ -138,6 +138,8 @@ public class EventConfig {
     this.disListNum = disListNum;
   }
 
+
+
   public void clearMonitorConfigConfigListbyKey(HashMap<MonitorConfigKey, EventInfo> list){
     Iterator iter = list.entrySet().iterator();
     while (iter.hasNext()) {
@@ -216,7 +218,7 @@ public class EventConfig {
     list.clear();
   }
 
-  public void clearConfig(){
+  public  void clearConfig(){
 
     clearConfigList(monitorConfigList);
     clearConfigList(iaConfigList);
@@ -243,7 +245,6 @@ public class EventConfig {
 
     alarmStormConfig.clear();
 
-
   }
 
   public void reLoadConfig(Connection conn) throws SQLException {
@@ -251,7 +252,7 @@ public class EventConfig {
     loadConfig(conn);
   }
 
-  public void loadConfig(Connection conn) throws SQLException {
+  public synchronized void loadConfig(Connection conn) throws SQLException {
     String sql="SELECT  COUNT(*) FROM ti_event WHERE enable_state = 1";
     PreparedStatement pstmt = conn.prepareStatement(sql);
     ResultSet ret = pstmt.executeQuery(sql);
@@ -507,5 +508,46 @@ public class EventConfig {
 
   public void setAlarmStormConfig(AlarmStormConfig alarmStormConfig) {
     this.alarmStormConfig = alarmStormConfig;
+  }
+
+  public void addEventInfo(int id){
+
+  }
+
+  public void updateEventInfo(int id){
+
+  }
+  public void deleteEventInfo(int id){
+
+  }
+
+  public void addAlarmStorm(int id){
+
+  }
+
+  public void updateAlarmStorm(int id){
+
+  }
+  public void deleteAlarmStorm(int id){
+
+  }
+
+  public void addGuardPlan(int id){
+
+  }
+  public void updateGuardPlan(int id){
+
+  }
+  public void deleteGuardPlay(int id){
+
+  }
+  public void addLinkage(int id){
+
+  }
+  public void updateLinkage(int id){
+
+  }
+  public void deleteLinkage(int id){
+
   }
 }
