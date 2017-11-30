@@ -14,7 +14,12 @@ public abstract class  GrpcClient {
     this.IP = IP;
     this.PORT = PORT;
   }
-
+  public GrpcClient(String name, String address) {
+    this.name = name;
+    String[] a = address.split(":");
+    this.IP = a[0];
+    this.PORT = Integer.parseInt(a[1]);
+  }
   public String getName() {
     return name;
   }

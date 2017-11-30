@@ -1,10 +1,11 @@
 package com.vorxsoft.ieye.eventservice;
 
 import com.coreos.jetcd.Watch;
-import com.coreos.jetcd.data.KeyValue;
 import com.coreos.jetcd.watch.WatchEvent;
 import com.coreos.jetcd.watch.WatchResponse;
 import com.vorxsoft.ieye.eventservice.config.EventConfig;
+import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
+import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
@@ -28,6 +29,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
+
 /**
  * Created by Administrator on 2017/8/3 0003.
  */
@@ -38,11 +41,38 @@ public class EventServerStart implements WatchCallerInterface {
     System.out.println("watcher response  " + watch.listen());
     for (int i = 0; i < ret.getEvents().size(); i++) {
       WatchEvent a = ret.getEvents().get(i);
+      String key = a.getKeyValue().getKey().toString();
+      String[] akey = key.split("/");
+      String name =akey[1];
+      String address = akey[3];
       switch (a.getEventType()) {
         case PUT:
-          String key = a.getKeyValue().getKey().toString();
+          if(name.equals("server_cms")){
+            //update cms grpc client and  synchronize to process threads
+          }
+          if(name.equals("server_blg")){
+            //update blg grpc client and  synchronize to process threads
+          }
+          if(name.equals("server_log")){
+            //update log grpc client and  synchronize to process threads
+          }
+          if(name.equals("server_iaag")){
+            //update cms grpc client
+          }
           break;
         case DELETE:
+          if(name.equals("server_cms")){
+            //clear cms grpc client and  synchronize to process threads
+          }
+          if(name.equals("server_blg")){
+            //clear blg grpc client and  synchronize to process threads
+          }
+          if(name.equals("server_log")){
+            //clear log grpc client and  synchronize to process threads
+          }
+          if(name.equals("server_iaag")){
+            //clear cms grpc client
+          }
           break;
         case UNRECOGNIZED:
           break;
@@ -53,15 +83,36 @@ public class EventServerStart implements WatchCallerInterface {
 
     }
   }
-  private EventConfig eventConfig;
+
+  public EventConfig getEventConfig() {
+    return eventConfig;
+  }
+
+  public void setEventConfig(EventConfig eventConfig) {
+    this.eventConfig = eventConfig;
+  }
+
   private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);;
   public long count = 0;
-  public Connection conn=null;
-  //public Statement st = null;
+
+  public Connection getConn() {
+    return conn;
+  }
+
+  public void setConn(Connection conn) {
+    this.conn = conn;
+  }
+
+  private EventConfig eventConfig;
+  private String redisName;
+  private String activemqName;
+  private String activemqIp;
+  private int activemqPort;
+  private Connection conn=null;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
-  private static int ttl = 10;
+  private static int ttl = 30;
   private static String dbname;
   private static String dbAddress;
   private static String dbUrl=null;
@@ -72,14 +123,27 @@ public class EventServerStart implements WatchCallerInterface {
   private static String registerCenterName;
   private static String registerCenterAddress = "http://192.168.20.251:2379";
   private static String mqName;
-  private static String mqIP;
-  private static int mqPort;
+  private static String redisIP;
+  private static int redisPort;
   private Jedis jedis;
   private InputStream cfgFile;
   private final  String cfgFileName = "event_service.xml";
   private ScheduledExecutorService getExecutor(){
     return  executor_;
   }
+
+  private VsIeyeClient blgClient;
+
+  public void setBlgClient(VsIeyeClient blgClient) {
+    this.blgClient = blgClient;
+  }
+
+  public void setCmsClient(VsIeyeClient cmsClient) {
+    this.cmsClient = cmsClient;
+  }
+
+  private VsIeyeClient cmsClient;
+  private List<VsIAClient> iaagClients;
 
   public void getConfigPath() throws FileNotFoundException {
     String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
@@ -150,13 +214,21 @@ public class EventServerStart implements WatchCallerInterface {
             else if (lname.equals("address"))
               registerCenterAddress = lvalue;
           }
+          if (tname.equals("redis")) {
+            if (lname.equals("name"))
+              redisName = lvalue;
+            else if (lname.equals("ip"))
+              redisIP = lvalue;
+            else if (lname.equals("port"))
+              redisPort = Integer.parseInt(lvalue);
+          }
           if (tname.equals("mq")) {
             if (lname.equals("name"))
-              mqName = lvalue;
+              activemqName = lvalue;
             else if (lname.equals("ip"))
-              mqIP = lvalue;
+              activemqIp = lvalue;
             else if (lname.equals("port"))
-              mqPort = Integer.parseInt(lvalue);
+              activemqPort = Integer.parseInt(lvalue);
           }
         }
         //System.out.println("=====结束遍历某一本书=====");
@@ -173,8 +245,8 @@ public class EventServerStart implements WatchCallerInterface {
     conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
     //st = conn.createStatement();
   }
-  public void mqInit(){
-    jedis  = new  Jedis(mqIP, mqPort);
+  public void redisInit(){
+    jedis  = new  Jedis(redisIP, redisPort);
   }
 
   public String evenType2string(int type){
@@ -208,44 +280,12 @@ public class EventServerStart implements WatchCallerInterface {
     return a;
   }
 
-//  public Map<String, String> alrrmMap2Eventmap(Map<String, String> map ) throws SQLException {
-//    String dev_no = map.get("deviceNo");
-//    String res_uid = map.get("ResourceUid");
-//    List<String> b = getResIdResNo(dev_no,res_uid);
-//    int res_id =  Integer.parseInt(b.get(1));
-//    int res_no = Integer.parseInt(b.get(2));
-//    String res_name = b.get(3);
-//    int type = Integer.parseInt(map.get("evenType"));
-//    Map<String, String> mymap =  new HashMap<String, String>();
-//    if( (type == 1) ||((type > 100)&&(type < 200))){ //VSEventTypeMonitor
-//      mymap.put("event_type",evenType2string(type));
-//      mymap.put("res_id",String.valueOf(res_id));
-//      mymap.put("res_name",res_name);
-//      mymap.put("group_id",null);
-//      mymap.put("group_name",null);
-//      mymap.put("happen_time",map.get("happen_time"));
-//      mymap.put("pic_path1",null);
-//      mymap.put("pic_path1",null);
-//      mymap.put("pic_path1",null);
-//    }else if ((type == 2) ||((type > 200)&&(type < 300))){ //VSEventTypeDigitalIO
-//      mymap.put("event_type",evenType2string(type));
-//      mymap.put("res_id",String.valueOf(res_id));
-//      mymap.put("res_name",res_name);
-//      mymap.put("group_id",null);
-//      mymap.put("group_name",null);
-//      mymap.put("happen_time",map.get("happen_time"));
-//    }else{
-//      System.out.println("wrong evenType");
-//      mymap = null;
-//    }
-//    return  mymap;
-//  }
 
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-             .addService(new EventServer(mqIP,mqPort).bindService())
-             .addService(new EventServer2(mqIP,mqPort).bindService())
+             .addService(new EventServer(redisIP,redisPort).bindService())
+             .addService(new EventServer2(redisIP,redisPort).bindService())
              .build();
     server.start();
 
@@ -271,6 +311,24 @@ public class EventServerStart implements WatchCallerInterface {
     }
   }
 
+  public VsIeyeClient getBlgClient() {
+    return blgClient;
+  }
+
+
+  public VsIeyeClient getCmsClient() {
+    return cmsClient;
+  }
+
+
+  public List<VsIAClient> getIaagClients() {
+    return iaagClients;
+  }
+
+  public void setIaagClients(List<VsIAClient> iaagClients) {
+    this.iaagClients = iaagClients;
+  }
+
   public static void main(String[] args) throws Exception {
     int cpuNums = Runtime.getRuntime().availableProcessors();
     int threadPoolNum = cpuNums;
@@ -283,9 +341,74 @@ public class EventServerStart implements WatchCallerInterface {
     MicroService myservice = new MicroServiceImpl();
     //myservice.init(registerCenterAddress, simpleServerStart);
     simpleServerStart.start();
+    simpleServerStart.redisInit();
     simpleServerStart.dbInit();
+    simpleServerStart.getEventConfig().loadConfig(simpleServerStart.getConn());
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
+
     myservice.SetWatcher("server_",true);
+
+    //obtail cms and blg server address
+    simpleServerStart.setBlgClient(new VsIeyeClient("blg",myservice.Resolve("blg").toString()));
+    simpleServerStart.setCmsClient(new VsIeyeClient("cms",myservice.Resolve("cms").toString()));
+
+
+    //monitor process
+    AlarmProcess monitorProcess = new AlarmProcess();
+    monitorProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    monitorProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    monitorProcess.setName("monitorProcess");
+    monitorProcess.setEventConfig(simpleServerStart.getEventConfig());
+    monitorProcess.setProcessType(ProcessServerType);
+    monitorProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    monitorProcess.redisInit(redisIP, redisPort);
+
+    //sio process
+    AlarmProcess sioProcess = new AlarmProcess();
+    sioProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    sioProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    sioProcess.setName("sioProcess");
+    sioProcess.setEventConfig(simpleServerStart.getEventConfig());
+    sioProcess.setProcessType(ProcessSioType);
+    sioProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    sioProcess.redisInit(redisIP, redisPort);
+
+    //ia process
+    AlarmProcess iaProcess = new AlarmProcess();
+    iaProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    iaProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    iaProcess.setName("iaProcess");
+    iaProcess.setEventConfig(simpleServerStart.getEventConfig());
+    iaProcess.setProcessType(ProcessIaType);
+    iaProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    iaProcess.redisInit(redisIP, redisPort);
+
+    //server process
+    AlarmProcess serverProcess = new AlarmProcess();
+    serverProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    serverProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    serverProcess.setName("serverProcess");
+    serverProcess.setEventConfig(simpleServerStart.getEventConfig());
+    serverProcess.setProcessType(ProcessServerType);
+    serverProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    serverProcess.redisInit(redisIP, redisPort);
+
+    //device process
+    AlarmProcess deviceProcess = new AlarmProcess();
+    deviceProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    deviceProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    deviceProcess.setName("deviceProcess");
+    deviceProcess.setEventConfig(simpleServerStart.getEventConfig());
+    deviceProcess.setProcessType(ProcessDeviceType);
+    deviceProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    deviceProcess.redisInit(redisIP, redisPort);
+
+    new Thread(monitorProcess).start();
+    new Thread(sioProcess).start();
+    new Thread(iaProcess).start();
+    new Thread(serverProcess).start();
+    new Thread(deviceProcess).start();
+
     TimeUnit.DAYS.sleep(365 * 2000);
   }
 }

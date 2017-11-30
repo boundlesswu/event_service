@@ -1,7 +1,9 @@
 package com.vorxsoft.ieye.eventservice.config;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
+import io.grpc.Server;
 
+import javax.imageio.spi.ServiceRegistry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +11,86 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class EventConfig {
+  public HashMap<Long, EventInfo> getMonitorConfigList() {
+    return monitorConfigList;
+  }
+
+  public HashMap<Long, EventInfo> getIaConfigList() {
+    return iaConfigList;
+  }
+
+  public HashMap<Long, EventInfo> getSioConfigList() {
+    return sioConfigList;
+  }
+
+  public HashMap<Long, EventInfo> getServerConfigList() {
+    return serverConfigList;
+  }
+
+  public HashMap<Long, EventInfo> getDeviceConfigList() {
+    return deviceConfigList;
+  }
+
+  public HashMap<MonitorConfigKey, EventInfo> getMonitorConfigList2() {
+    return monitorConfigList2;
+  }
+
+  public HashMap<IaConfigKey, EventInfo> getIaConfigList2() {
+    return iaConfigList2;
+  }
+
+  public HashMap<SioConfigKey, EventInfo> getSioConfigList2() {
+    return sioConfigList2;
+  }
+
+  public HashMap<ServerConfigKey, EventInfo> getServerConfigList2() {
+    return serverConfigList2;
+  }
+
+  public HashMap<DeviceConfigKey, EventInfo> getDeviceConfigList2() {
+    return deviceConfigList2;
+  }
+
+  public void setMonitorConfigList(HashMap<Long, EventInfo> monitorConfigList) {
+    this.monitorConfigList = monitorConfigList;
+  }
+
+  public void setIaConfigList(HashMap<Long, EventInfo> iaConfigList) {
+    this.iaConfigList = iaConfigList;
+  }
+
+  public void setSioConfigList(HashMap<Long, EventInfo> sioConfigList) {
+    this.sioConfigList = sioConfigList;
+  }
+
+  public void setServerConfigList(HashMap<Long, EventInfo> serverConfigList) {
+    this.serverConfigList = serverConfigList;
+  }
+
+  public void setDeviceConfigList(HashMap<Long, EventInfo> deviceConfigList) {
+    this.deviceConfigList = deviceConfigList;
+  }
+
+  public void setMonitorConfigList2(HashMap<MonitorConfigKey, EventInfo> monitorConfigList2) {
+    this.monitorConfigList2 = monitorConfigList2;
+  }
+
+  public void setIaConfigList2(HashMap<IaConfigKey, EventInfo> iaConfigList2) {
+    this.iaConfigList2 = iaConfigList2;
+  }
+
+  public void setSioConfigList2(HashMap<SioConfigKey, EventInfo> sioConfigList2) {
+    this.sioConfigList2 = sioConfigList2;
+  }
+
+  public void setServerConfigList2(HashMap<ServerConfigKey, EventInfo> serverConfigList2) {
+    this.serverConfigList2 = serverConfigList2;
+  }
+
+  public void setDeviceConfigList2(HashMap<DeviceConfigKey, EventInfo> deviceConfigList2) {
+    this.deviceConfigList2 = deviceConfigList2;
+  }
+
   private HashMap<Long,EventInfo> monitorConfigList;
   private HashMap<Long,EventInfo> iaConfigList;
   private HashMap<Long,EventInfo> sioConfigList;
@@ -20,6 +102,8 @@ public class EventConfig {
   private HashMap<SioConfigKey,EventInfo> sioConfigList2;
   private HashMap<ServerConfigKey,EventInfo> serverConfigList2;
   private HashMap<DeviceConfigKey,EventInfo> deviceConfigList2;
+
+  private AlarmStormConfig alarmStormConfig;
 
   private int listNum;
   private int disListNum;
@@ -146,12 +230,25 @@ public class EventConfig {
     clearServerConfigConfigListbyKey(serverConfigList2);
     clearDeviceConfigConfigListbyKey(deviceConfigList2);
 
+    setDeviceConfigList(null);
+    setDeviceConfigList2(null);
+    setIaConfigList(null);
+    setIaConfigList2(null);
+    setMonitorConfigList(null);
+    setMonitorConfigList2(null);
+    setServerConfigList(null);
+    setServerConfigList2(null);
+    setSioConfigList(null);
+    setSioConfigList2(null);
+
+    alarmStormConfig.clear();
+
+
   }
 
   public void reLoadConfig(Connection conn) throws SQLException {
     clearConfig();
     loadConfig(conn);
-
   }
 
   public void loadConfig(Connection conn) throws SQLException {
@@ -338,18 +435,38 @@ public class EventConfig {
       }
       a.setEventLinkagelist(c);
       if(event_genus.equals( "event_monitor") ){
+        if(getMonitorConfigList() == null)
+          monitorConfigList = new HashMap<Long,EventInfo>();
+        if(getMonitorConfigList2() == null)
+          monitorConfigList2 = new HashMap<MonitorConfigKey,EventInfo>();
         monitorConfigList.put((long) event_id,a);
         monitorConfigList2.put(monitorConfigKey,a);
       }else if(event_genus .equals("event_sio") ){
+        if(getSioConfigList() == null)
+          sioConfigList = new HashMap<Long,EventInfo>();
+        if(getSioConfigList2()==null)
+          sioConfigList2 = new HashMap<SioConfigKey,EventInfo>();
         sioConfigList.put((long) event_id,a);
         sioConfigList2.put(sioConfigKey,a);
       }else if(event_genus .equals("event_ia") ){
+        if(getIaConfigList() == null)
+          iaConfigList = new HashMap<Long,EventInfo>();
+        if(getIaConfigList2()  == null)
+          iaConfigList2 = new HashMap<IaConfigKey,EventInfo>();
         iaConfigList.put((long) event_id,a);
         iaConfigList2.put(iaConfigKey,a);
       }else if(event_genus .equals("event_server") ){
+        if(getServerConfigList() == null)
+          serverConfigList = new HashMap<Long,EventInfo>();
+        if(getServerConfigList2() == null)
+          serverConfigList2 = new HashMap<ServerConfigKey,EventInfo>();
         serverConfigList.put((long) event_id,a);
         serverConfigList2.put(serverConfigKey,a);
       }else if(event_genus .equals("event_device") ){
+        if(getDeviceConfigList() == null)
+          deviceConfigList = new HashMap<Long,EventInfo>();
+        if(getDeviceConfigList2() == null)
+          deviceConfigList2 = new HashMap<DeviceConfigKey,EventInfo>();
         deviceConfigList.put((long) event_id,a);
         deviceConfigList2.put(deviceConfigKey,a);
       }else{
@@ -357,6 +474,8 @@ public class EventConfig {
         continue;
       }
     }
+    alarmStormConfig.load(conn);
+
     listNum = monitorConfigList.size()+iaConfigList.size()
         +sioConfigList.size()+serverConfigList.size()+deviceConfigList.size();
     setFreshTime(System.currentTimeMillis());
@@ -382,6 +501,11 @@ public class EventConfig {
   }
 
 
+  public AlarmStormConfig getAlarmStormConfig() {
+    return alarmStormConfig;
+  }
 
-
+  public void setAlarmStormConfig(AlarmStormConfig alarmStormConfig) {
+    this.alarmStormConfig = alarmStormConfig;
+  }
 }

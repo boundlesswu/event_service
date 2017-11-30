@@ -4,7 +4,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
-import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.mq.Publisher;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
@@ -15,11 +14,11 @@ import com.vorxsoft.ieye.eventservice.util.TimeUtil;
 import com.vorxsoft.ieye.proto.ReloadRequest;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
-import com.vorxsoft.ieye.proto.VSIAServiceGrpc;
 import redis.clients.jedis.Jedis;
 
 import javax.jms.JMSException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,26 +28,29 @@ import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 
 public class AlarmProcess implements Runnable {
   private String name;
-  private EventConfig eventConfig;
-  private AlarmStormConfig alarmStormConfig;
-  private AlarmStormRecordMap alarmStormRecordMap;
-  private Jedis jedis;
   private ProcessType processType;
+  private EventConfig eventConfig;
+  //private AlarmStormConfig alarmStormConfig;
+  private AlarmStormRecordMap alarmStormRecordMap;
   private EventRecordMap eventRecordMap;
+  private Jedis jedis;
   private Connection conn;
   VsIeyeClient cmsIeyeClient;
   VsIeyeClient blgTeyeClient;
   //HashMap<String,VsIeyeClient>
   Publisher publisher;
 
-
-  public AlarmStormConfig getAlarmStormConfig() {
-    return alarmStormConfig;
+  public AlarmProcess() {
   }
 
-  public void setAlarmStormConfig(AlarmStormConfig alarmStormConfig) {
-    this.alarmStormConfig = alarmStormConfig;
-  }
+
+//  public AlarmStormConfig getAlarmStormConfig() {
+//    return alarmStormConfig;
+//  }
+//
+//  public void setAlarmStormConfig(AlarmStormConfig alarmStormConfig) {
+//    this.alarmStormConfig = alarmStormConfig;
+//  }
 
   public AlarmStormRecordMap getAlarmStormRecordMap() {
     return alarmStormRecordMap;
@@ -119,7 +121,7 @@ public class AlarmProcess implements Runnable {
     this.publisher = publisher;
   }
 
-  enum ProcessType {
+  public enum ProcessType {
     ProcessMonitorType,
     ProcessIaType,
     ProcessSioType,
@@ -127,7 +129,17 @@ public class AlarmProcess implements Runnable {
     ProcessDeviceType,
   }
 
+  public void dbInit(String dbname,String dbAddress,String driverClassName,String dbUser,String dbPasswd) throws SQLException, ClassNotFoundException {
+    String dbUrl = "jdbc:"+dbname+"://"+dbAddress;
+    System.out.println("db url :" + dbUrl);
+    Class.forName(driverClassName);
+    conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
+    //st = conn.createStatement();
+  }
 
+  public void redisInit(String redisIP, int redisPort){
+    jedis  = new  Jedis(redisIP, redisPort);
+  }
 
   public String getName() {
     return name;
@@ -222,7 +234,7 @@ public class AlarmProcess implements Runnable {
         Thread.sleep((int) Math.random() * 10);
         processEvent();
         Thread.sleep((int) Math.random() * 10);
-        updateConfig();
+        //updateConfig();
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -335,7 +347,7 @@ public class AlarmProcess implements Runnable {
         insertSrcLogList(processType,evenType,resourceId,happenTime,iaadId,machineId,deviceId);
         continue;
       }
-      AlarmStorm alarmStorm = alarmStormConfig.getAlarmStorm(evenType);
+      AlarmStorm alarmStorm = getEventConfig().getAlarmStormConfig().getAlarmStorm(evenType);
       if (alarmStorm == null) {
         System.out.println("no alarm storm config for alarm evenType:" + evenType +
                 "happenTime" + happenTime + "extraContent" + extraContent +

@@ -11,6 +11,10 @@ public class VsIAClient extends GrpcClient{
     super(name, IP, PORT);
   }
 
+  public VsIAClient(String name, String address) {
+    super(name, address);
+  }
+
   public IAAGInfo getIaagInfo() {
     return iaagInfo;
   }
