@@ -13,6 +13,10 @@ public class VsIeyeClient extends GrpcClient{
   public VsIeyeClient() {
   }
 
+  public VsIeyeClient(String name, String IP, int PORT) {
+    super(name, IP, PORT);
+  }
+
   public void init(){
     createChannel();
     stub =  VsIeyeProtoGrpc.newStub(getManagedChannel());

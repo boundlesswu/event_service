@@ -4,7 +4,29 @@ import com.vorxsoft.ieye.proto.*;
 import io.grpc.stub.StreamObserver;
 
 public class VsIAClient extends GrpcClient{
+  private IAAGInfo iaagInfo;
   private VSIAServiceGrpc.VSIAServiceStub stub;
+
+  public VsIAClient(String name, String IP, int PORT) {
+    super(name, IP, PORT);
+  }
+
+  public IAAGInfo getIaagInfo() {
+    return iaagInfo;
+  }
+
+  public void setIaagInfo(IAAGInfo iaagInfo) {
+    this.iaagInfo = iaagInfo;
+  }
+
+  public VSIAServiceGrpc.VSIAServiceStub getStub() {
+    return stub;
+  }
+
+  public void setStub(VSIAServiceGrpc.VSIAServiceStub stub) {
+    this.stub = stub;
+  }
+
 
   public VsIAClient(String IP, int PORT) {
     super(IP, PORT);

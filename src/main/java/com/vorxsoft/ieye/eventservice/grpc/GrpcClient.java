@@ -5,9 +5,23 @@ import io.grpc.netty.NettyChannelBuilder;
 
 public abstract class  GrpcClient {
   private ManagedChannel managedChannel;
+  String name;
   private String IP;
   private int PORT = 0;
 
+  public GrpcClient(String name, String IP, int PORT) {
+    this.name = name;
+    this.IP = IP;
+    this.PORT = PORT;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
   public GrpcClient(String IP, int PORT) {
     this.IP = IP;
     this.PORT = PORT;

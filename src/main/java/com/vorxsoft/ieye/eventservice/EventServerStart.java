@@ -1,6 +1,10 @@
 package com.vorxsoft.ieye.eventservice;
 
 import com.coreos.jetcd.Watch;
+import com.coreos.jetcd.data.KeyValue;
+import com.coreos.jetcd.watch.WatchEvent;
+import com.coreos.jetcd.watch.WatchResponse;
+import com.vorxsoft.ieye.eventservice.config.EventConfig;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
@@ -30,8 +34,26 @@ import java.util.concurrent.TimeUnit;
 public class EventServerStart implements WatchCallerInterface {
   @Override
   public void WatchCaller(Watch.Watcher watch) {
+    WatchResponse ret = watch.listen();
     System.out.println("watcher response  " + watch.listen());
+    for (int i = 0; i < ret.getEvents().size(); i++) {
+      WatchEvent a = ret.getEvents().get(i);
+      switch (a.getEventType()) {
+        case PUT:
+          String key = a.getKeyValue().getKey().toString();
+          break;
+        case DELETE:
+          break;
+        case UNRECOGNIZED:
+          break;
+      }
+//      KeyValue keyVal = a.getKeyValue();
+//      String key = a.getKeyValue().getKey().toString();
+//      String value = a.getKeyValue().getKey
+
+    }
   }
+  private EventConfig eventConfig;
   private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);;
   public long count = 0;
   public Connection conn=null;
@@ -46,7 +68,7 @@ public class EventServerStart implements WatchCallerInterface {
   private static String dbUser=null;
   private static String dbPasswd=null;
   private static String driverClassName=null;
-  private static String serviceName;
+  private static String serviceName = "server_ems";
   private static String registerCenterName;
   private static String registerCenterAddress = "http://192.168.20.251:2379";
   private static String mqName;
@@ -155,69 +177,6 @@ public class EventServerStart implements WatchCallerInterface {
     jedis  = new  Jedis(mqIP, mqPort);
   }
 
-  public void alarm2event() throws SQLException {
-    Set<String> set = jedis.keys("alarm_" +"*");
-    Iterator<String> it = set.iterator();
-    while(it.hasNext()){
-      String keyStr = it.next();
-      System.out.println(keyStr);
-      Map<String, String> map = jedis.hgetAll(keyStr);
-      Map<String, String> emap = alrrmMap2Eventmap(map);
-      jedis.del(keyStr);
-      count++;
-      String key = emap.get("event_type") + count;
-      jedis.hmset(key,map);
-    }
-  }
-
-  public void travel(){
-    getExecutor().scheduleAtFixedRate(()->{
-      try {
-        alarm2event();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    },1l,1L, TimeUnit.SECONDS);
-    getExecutor().scheduleAtFixedRate(()->{
-      try {
-        event2db();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    },1l,2L, TimeUnit.SECONDS);
-  }
-  public void event2db() throws SQLException {
-    event2db("event_monitor");
-    event2db("event_sio");
-  }
-
-  public void event2db(String evenType) throws SQLException {
-    Set<String> set = jedis.keys(evenType + "*");
-    Iterator<String> it = set.iterator();
-    while (it.hasNext()) {
-      String keyStr = it.next();
-      System.out.println(keyStr);
-      Map<String, String> map = jedis.hgetAll(keyStr);
-      String res_id = map.get("res_id");
-      String res_name = map.get("res_name");
-      String happen_time = map.get("happen_time");
-      String sql=null;
-      if(evenType.equals("event_monitor")){
-        sql = "insert into tl_event_src_monitor(event_type,res_id,res_name,happen_time) values('event_monitor',?,?,?)";
-      }else if(evenType.equals("event_sio")){
-        sql = "insert into tl_event_src_sio(event_type,res_id,res_name,happen_time) values('event_monitor',?,?,?)";
-      }
-      PreparedStatement pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, res_id);
-      pstmt.setString(2, res_name);
-      pstmt.setString(3, happen_time);
-      if (pstmt.executeUpdate() > 0) {
-        jedis.del(keyStr);
-      }
-      pstmt.close();
-    }
-  }
-
   public String evenType2string(int type){
     if( (type == 1) ||((type > 100)&&(type < 200))) { //VSEventTypeMonitor
       return "event_monitor";
@@ -249,41 +208,41 @@ public class EventServerStart implements WatchCallerInterface {
     return a;
   }
 
-  public Map<String, String> alrrmMap2Eventmap(Map<String, String> map ) throws SQLException {
-    String dev_no = map.get("deviceNo");
-    String res_uid = map.get("ResourceUid");
-    List<String> b = getResIdResNo(dev_no,res_uid);
-    int res_id =  Integer.parseInt(b.get(1));
-    int res_no = Integer.parseInt(b.get(2));
-    String res_name = b.get(3);
-    int type = Integer.parseInt(map.get("evenType"));
-    Map<String, String> mymap =  new HashMap<String, String>();
-    if( (type == 1) ||((type > 100)&&(type < 200))){ //VSEventTypeMonitor
-      mymap.put("event_type",evenType2string(type));
-      mymap.put("res_id",String.valueOf(res_id));
-      mymap.put("res_name",res_name);
-      mymap.put("group_id",null);
-      mymap.put("group_name",null);
-      mymap.put("happen_time",map.get("happen_time"));
-      mymap.put("pic_path1",null);
-      mymap.put("pic_path1",null);
-      mymap.put("pic_path1",null);
-    }else if ((type == 2) ||((type > 200)&&(type < 300))){ //VSEventTypeDigitalIO
-      mymap.put("event_type",evenType2string(type));
-      mymap.put("res_id",String.valueOf(res_id));
-      mymap.put("res_name",res_name);
-      mymap.put("group_id",null);
-      mymap.put("group_name",null);
-      mymap.put("happen_time",map.get("happen_time"));
-    }else{
-      System.out.println("wrong evenType");
-      mymap = null;
-    }
-    return  mymap;
-  }
+//  public Map<String, String> alrrmMap2Eventmap(Map<String, String> map ) throws SQLException {
+//    String dev_no = map.get("deviceNo");
+//    String res_uid = map.get("ResourceUid");
+//    List<String> b = getResIdResNo(dev_no,res_uid);
+//    int res_id =  Integer.parseInt(b.get(1));
+//    int res_no = Integer.parseInt(b.get(2));
+//    String res_name = b.get(3);
+//    int type = Integer.parseInt(map.get("evenType"));
+//    Map<String, String> mymap =  new HashMap<String, String>();
+//    if( (type == 1) ||((type > 100)&&(type < 200))){ //VSEventTypeMonitor
+//      mymap.put("event_type",evenType2string(type));
+//      mymap.put("res_id",String.valueOf(res_id));
+//      mymap.put("res_name",res_name);
+//      mymap.put("group_id",null);
+//      mymap.put("group_name",null);
+//      mymap.put("happen_time",map.get("happen_time"));
+//      mymap.put("pic_path1",null);
+//      mymap.put("pic_path1",null);
+//      mymap.put("pic_path1",null);
+//    }else if ((type == 2) ||((type > 200)&&(type < 300))){ //VSEventTypeDigitalIO
+//      mymap.put("event_type",evenType2string(type));
+//      mymap.put("res_id",String.valueOf(res_id));
+//      mymap.put("res_name",res_name);
+//      mymap.put("group_id",null);
+//      mymap.put("group_name",null);
+//      mymap.put("happen_time",map.get("happen_time"));
+//    }else{
+//      System.out.println("wrong evenType");
+//      mymap = null;
+//    }
+//    return  mymap;
+//  }
 
   private void start() throws Exception {
-    //server = NettyServerBuilder.forPort(PORT).addService(new EventServer().bindService()).build();
+    //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
              .addService(new EventServer(mqIP,mqPort).bindService())
              .addService(new EventServer2(mqIP,mqPort).bindService())
@@ -315,18 +274,18 @@ public class EventServerStart implements WatchCallerInterface {
   public static void main(String[] args) throws Exception {
     int cpuNums = Runtime.getRuntime().availableProcessors();
     int threadPoolNum = cpuNums;
-    for (int i = 0; i < threadPoolNum; i++) {
-      new Thread (new AlarmProcess("thread"+ (i+1))).start();
-    }
+//    for (int i = 0; i < threadPoolNum; i++) {
+//      new Thread (new AlarmProcess("thread"+ (i+1))).start();
+//    }
     System.out.println("cpuNums :" + cpuNums);
     final EventServerStart simpleServerStart = new EventServerStart();
     simpleServerStart.cfgInit();
     MicroService myservice = new MicroServiceImpl();
-    myservice.init(registerCenterAddress, simpleServerStart);
+    //myservice.init(registerCenterAddress, simpleServerStart);
     simpleServerStart.start();
     simpleServerStart.dbInit();
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
-    simpleServerStart.travel();
+    myservice.SetWatcher("server_",true);
     TimeUnit.DAYS.sleep(365 * 2000);
   }
 }

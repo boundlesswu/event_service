@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
+import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.mq.Publisher;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
@@ -14,6 +15,7 @@ import com.vorxsoft.ieye.eventservice.util.TimeUtil;
 import com.vorxsoft.ieye.proto.ReloadRequest;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
+import com.vorxsoft.ieye.proto.VSIAServiceGrpc;
 import redis.clients.jedis.Jedis;
 
 import javax.jms.JMSException;
@@ -34,7 +36,9 @@ public class AlarmProcess implements Runnable {
   private ProcessType processType;
   private EventRecordMap eventRecordMap;
   private Connection conn;
-  VsIeyeClient vsIeyeClient;
+  VsIeyeClient cmsIeyeClient;
+  VsIeyeClient blgTeyeClient;
+  //HashMap<String,VsIeyeClient>
   Publisher publisher;
 
 
@@ -81,6 +85,38 @@ public class AlarmProcess implements Runnable {
 
   public void setEventRecordMap(com.vorxsoft.ieye.eventservice.redis.EventRecordMap map) {
     eventRecordMap = map;
+  }
+
+  public Connection getConn() {
+    return conn;
+  }
+
+  public void setConn(Connection conn) {
+    this.conn = conn;
+  }
+
+  public VsIeyeClient getCmsIeyeClient() {
+    return cmsIeyeClient;
+  }
+
+  public void setCmsIeyeClient(VsIeyeClient cmsIeyeClient) {
+    this.cmsIeyeClient = cmsIeyeClient;
+  }
+
+  public VsIeyeClient getBlgTeyeClient() {
+    return blgTeyeClient;
+  }
+
+  public void setBlgTeyeClient(VsIeyeClient blgTeyeClient) {
+    this.blgTeyeClient = blgTeyeClient;
+  }
+
+  public Publisher getPublisher() {
+    return publisher;
+  }
+
+  public void setPublisher(Publisher publisher) {
+    this.publisher = publisher;
   }
 
   enum ProcessType {
@@ -147,14 +183,14 @@ public class AlarmProcess implements Runnable {
       this.keyStr = keyStr;
     }
   }
-  public List<AAA> getReloadRequest()  {
+  public List<AAA> getReloadRequest() throws JsonFormat.ParseException {
     Set<String> set = jedis.keys("reload_config_req*");
     Iterator<String> it = set.iterator();
 
     List<AAA> reloadRequestList = new ArrayList<>();
     while (it.hasNext()){
       String keyStr = it.next();
-      String a = jedis.hget(keyStr,name);
+      String a = jedis.hget(keyStr,getName());
       if(a == null || a.length() == 0){
         String b = jedis.hget(keyStr,"req");
         ReloadRequest.Builder builder =ReloadRequest.newBuilder();
@@ -168,13 +204,13 @@ public class AlarmProcess implements Runnable {
     return reloadRequestList;
   }
 
-  public void updateConfig() throws SQLException {
+  public void updateConfig() throws SQLException, JsonFormat.ParseException {
     List<AAA> reqList = getReloadRequest();
     for (int i = 0; i < reqList.size(); i++) {
       ReloadRequest req = reqList.get(i).getReq();
       System.out.println("config reload req:"+req);
       getEventConfig().reLoadConfig(conn);
-      getJedis().hset(reqList.get(i).getKeyStr(),"name",getName());
+      getJedis().hset(reqList.get(i).getKeyStr(),getName(),"true");
     }
   }
   @Override
@@ -587,11 +623,11 @@ public class AlarmProcess implements Runnable {
     }
     ReportEventRequest eventRequest = getEventRecordMap().convert2ReportEventRequest();
     if( eventRequest != null || !eventRequest.isInitialized()){
-      vsIeyeClient.reportEvent(eventRequest);
+      getCmsIeyeClient().reportEvent(eventRequest);
     }
     ReportLinkageRequest linkageReq = getEventRecordMap().convert2ReportLinkageRequest();
     if((linkageReq != null) || !linkageReq.isInitialized()){
-      vsIeyeClient.reportLinkage(linkageReq);
+      getBlgTeyeClient().reportLinkage(linkageReq);
     }
     publisher.publishMsg(getEventRecordMap().convert2jsonString());
   }
