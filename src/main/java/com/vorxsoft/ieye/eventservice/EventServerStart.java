@@ -292,30 +292,26 @@ public class EventServerStart implements WatchCallerInterface {
           switch (req.getEmAct()) {
             case OA_ADD:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().addEventInfo(req.getIdList(j));
+                getEventConfig().addEventInfo(conn,req.getIdList(j));
               }
               break;
             case OA_MOD:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().updateEventInfo(req.getIdList(j));
+                getEventConfig().updateEventInfo(conn,req.getIdList(j));
               }
               break;
             case OA_DEL:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().deleteAlarmStorm(req.getIdList(j);
+                getEventConfig().deleteEventInfo(req.getIdList(j));
               }
               break;
             case OA_QUR:
-              break;
             case OA_ON:
-              break;
             case OA_OFF:
-              break;
             case OA_OTHER:
-              break;
             case OA_ALL_ISSUE:
-              break;
             case UNRECOGNIZED:
+            default:
               break;
           }
           break;

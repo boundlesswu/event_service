@@ -17,8 +17,22 @@ public class GuardPlan {
   private TimeSchedule timeSchedule = new TimeSchedule();
   private String time_schedule;
   private GuardPlanType guard_plan_type;
-  private java.sql.Timestamp start_time;
-  private java.sql.Timestamp end_time;
+  private Timestamp start_time;
+  private Timestamp end_time;
+
+  private GuardPlan(Builder builder) {
+    setGuard_plan_id(builder.guard_plan_id);
+    setGuard_plan_name(builder.guard_plan_name);
+    setTimeSchedule(builder.timeSchedule);
+    setTime_schedule(builder.time_schedule);
+    setGuard_plan_type(builder.guard_plan_type);
+    setStart_time(builder.start_time);
+    setEnd_time(builder.end_time);
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
   public void clear(){
     timeSchedule = null;
@@ -73,7 +87,7 @@ public class GuardPlan {
   public enum GuardPlanType{
      Permanent,Temporary;
   }
-  public GuardPlanType Long2GuardPlanType(int a ){
+  public static GuardPlanType Long2GuardPlanType(int a){
     if(a == 1)
       return GuardPlanType.Permanent;
     else if(a == 2)
@@ -112,19 +126,23 @@ public class GuardPlan {
     this.guard_plan_type = guard_plan_type;
   }
 
-  public java.sql.Timestamp getStart_time() {
+  public void setGuard_plan_type(int guard_plan_type) {
+    setGuard_plan_type(Long2GuardPlanType(guard_plan_type));
+  }
+
+  public Timestamp getStart_time() {
     return start_time;
   }
 
-  public void setStart_time(java.sql.Timestamp start_time) {
+  public void setStart_time(Timestamp start_time) {
     this.start_time = start_time;
   }
 
-  public java.sql.Timestamp getEnd_time() {
+  public Timestamp getEnd_time() {
     return end_time;
   }
 
-  public void setEnd_time(java.sql.Timestamp end_time) {
+  public void setEnd_time(Timestamp end_time) {
     this.end_time = end_time;
   }
 
@@ -215,4 +233,55 @@ public Date timestamp2datetime(Timestamp ts){
     return ret;
   }
 
+  public static final class Builder {
+    private int guard_plan_id;
+    private String guard_plan_name;
+    private TimeSchedule timeSchedule;
+    private String time_schedule;
+    private GuardPlanType guard_plan_type;
+    private Timestamp start_time;
+    private Timestamp end_time;
+
+    private Builder() {
+    }
+
+    public Builder guard_plan_id(int val) {
+      guard_plan_id = val;
+      return this;
+    }
+
+    public Builder guard_plan_name(String val) {
+      guard_plan_name = val;
+      return this;
+    }
+
+    public Builder timeSchedule(TimeSchedule val) {
+      timeSchedule = val;
+      return this;
+    }
+
+    public Builder time_schedule(String val) {
+      time_schedule = val;
+      return this;
+    }
+
+    public Builder guard_plan_type(GuardPlanType val) {
+      guard_plan_type = val;
+      return this;
+    }
+
+    public Builder start_time(Timestamp val) {
+      start_time = val;
+      return this;
+    }
+
+    public Builder end_time(Timestamp val) {
+      end_time = val;
+      return this;
+    }
+
+    public GuardPlan build() {
+      return new GuardPlan(this);
+    }
+  }
 }
