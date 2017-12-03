@@ -17,7 +17,7 @@ public class EventInfo {
   private int enable_state;
   private int event_level;
   private int auto_release_interval;
-  private GuardPlan guardPlan=new GuardPlan();
+  private GuardPlan guardPlan;
   private int res_id=0;
   private int dev_id=0;
   private int machine_id=0;
@@ -25,7 +25,7 @@ public class EventInfo {
   private int sourceId=0;
   private int iaagId=0;
   private int iaag_chn_id=0;
-  List<EventLinkage> eventLinkagelist = new ArrayList<>();
+  List<EventLinkage> eventLinkagelist;
 
   public EventInfo() {
   }

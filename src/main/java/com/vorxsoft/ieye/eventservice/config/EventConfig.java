@@ -1,9 +1,7 @@
 package com.vorxsoft.ieye.eventservice.config;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
-import io.grpc.Server;
 
-import javax.imageio.spi.ServiceRegistry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -498,6 +496,36 @@ public class EventConfig {
     return eventInfo;
   }
 
+  private  List<EventInfo> findEventListByGuardId(Iterator iter,int guardPlanId){
+    List<EventInfo> eventInfos = new ArrayList<>();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      EventInfo eventInfo = (EventInfo) val;
+      if (eventInfo.getGuardPlan().getGuard_plan_id() == guardPlanId)
+        eventInfos.add(eventInfo);
+    }
+    return eventInfos;
+  }
+  public List<EventInfo> findEventListByGuardId(int guardPlanId){
+    Iterator iter = monitorConfigList2.entrySet().iterator();
+    List<EventInfo> eventInfos1 = findEventListByGuardId(iter, guardPlanId);
+    iter = iaConfigList2.entrySet().iterator();
+    List<EventInfo> eventInfos2 =findEventListByGuardId(iter, guardPlanId);
+    iter = iaConfigList2.entrySet().iterator();
+    List<EventInfo> eventInfos3 = findEventListByGuardId(iter, guardPlanId);
+    iter = iaConfigList2.entrySet().iterator();
+    List<EventInfo> eventInfos4 = findEventListByGuardId(iter, guardPlanId);
+    iter = iaConfigList2.entrySet().iterator();
+    List<EventInfo> eventInfos5 = findEventListByGuardId(iter, guardPlanId);
+    eventInfos1.addAll(eventInfos2);
+    eventInfos1.addAll(eventInfos3);
+    eventInfos1.addAll(eventInfos4);
+    eventInfos1.addAll(eventInfos5);
+    return eventInfos1;
+  }
+
   //query db and create a eventInfo instance
   public GuardPlan createGuardPlanFromDB(Connection conn, int id) throws SQLException {
     String sql = "SELECT guard_plan_name,time_schedule,guard_plan_type,start_time,end_time " +
@@ -885,16 +913,16 @@ public class EventConfig {
     }
   }
 
-  public void addAlarmStorm(int id) {
-
+  public void addAlarmStorm(Connection conn,int id) throws SQLException {
+    getAlarmStormConfig().addAlarmStorm(conn,id);
   }
 
-  public void updateAlarmStorm(int id) {
-
+  public void updateAlarmStorm(Connection conn,int id) throws SQLException {
+    getAlarmStormConfig().updateAlarmStorm(conn,id);
   }
 
   public void deleteAlarmStorm(int id) {
-
+    getAlarmStormConfig().deleteAlarmStorm(id);
   }
 
   public void addGuardPlan(int id) {

@@ -46,34 +46,34 @@ public class EventServerStart implements WatchCallerInterface {
       WatchEvent a = ret.getEvents().get(i);
       String key = a.getKeyValue().getKey().toString();
       String[] akey = key.split("/");
-      String name =akey[1];
+      String name = akey[1];
       String address = akey[3];
       switch (a.getEventType()) {
         case PUT:
-          if(name.equals("server_cms")){
+          if (name.equals("server_cms")) {
             //update cms grpc client and  synchronize to process threads
           }
-          if(name.equals("server_blg")){
+          if (name.equals("server_blg")) {
             //update blg grpc client and  synchronize to process threads
           }
-          if(name.equals("server_log")){
+          if (name.equals("server_log")) {
             //update log grpc client and  synchronize to process threads
           }
-          if(name.equals("server_iaag")){
+          if (name.equals("server_iaag")) {
             //update cms grpc client
           }
           break;
         case DELETE:
-          if(name.equals("server_cms")){
+          if (name.equals("server_cms")) {
             //clear cms grpc client and  synchronize to process threads
           }
-          if(name.equals("server_blg")){
+          if (name.equals("server_blg")) {
             //clear blg grpc client and  synchronize to process threads
           }
-          if(name.equals("server_log")){
+          if (name.equals("server_log")) {
             //clear log grpc client and  synchronize to process threads
           }
-          if(name.equals("server_iaag")){
+          if (name.equals("server_iaag")) {
             //clear cms grpc client
           }
           break;
@@ -95,7 +95,8 @@ public class EventServerStart implements WatchCallerInterface {
     this.eventConfig = eventConfig;
   }
 
-  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);;
+  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);
+  ;
   public long count = 0;
 
   public Connection getConn() {
@@ -111,17 +112,17 @@ public class EventServerStart implements WatchCallerInterface {
   private String activemqName;
   private String activemqIp;
   private int activemqPort;
-  private Connection conn=null;
+  private Connection conn = null;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
   private static int ttl = 30;
   private static String dbname;
   private static String dbAddress;
-  private static String dbUrl=null;
-  private static String dbUser=null;
-  private static String dbPasswd=null;
-  private static String driverClassName=null;
+  private static String dbUrl = null;
+  private static String dbUser = null;
+  private static String dbPasswd = null;
+  private static String driverClassName = null;
   private static String serviceName = "server_ems";
   private static String registerCenterName;
   private static String registerCenterAddress = "http://192.168.20.251:2379";
@@ -130,9 +131,10 @@ public class EventServerStart implements WatchCallerInterface {
   private static int redisPort;
   private Jedis jedis;
   private InputStream cfgFile;
-  private final  String cfgFileName = "event_service.xml";
-  private ScheduledExecutorService getExecutor(){
-    return  executor_;
+  private final String cfgFileName = "event_service.xml";
+
+  private ScheduledExecutorService getExecutor() {
+    return executor_;
   }
 
   private VsIeyeClient blgClient;
@@ -150,9 +152,9 @@ public class EventServerStart implements WatchCallerInterface {
 
   public void getConfigPath() throws FileNotFoundException {
     String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
-    System.out.println("tmp:"+tmp);
-    if(tmp.startsWith("jar"))
-      cfgFile=new FileInputStream(new File(System.getProperty("user.dir")+File.separator+cfgFileName));
+    System.out.println("tmp:" + tmp);
+    if (tmp.startsWith("jar"))
+      cfgFile = new FileInputStream(new File(System.getProperty("user.dir") + File.separator + cfgFileName));
     else
       cfgFile = this.getClass().getClassLoader().getResourceAsStream(cfgFileName);
   }
@@ -163,9 +165,9 @@ public class EventServerStart implements WatchCallerInterface {
     getConfigPath();
     SAXReader reader = new SAXReader();
     try {
-      System.out.println("cfg file is:"+cfgFile);
+      System.out.println("cfg file is:" + cfgFile);
       // 通过reader对象的read方法加载books.xml文件,获取docuemnt对象。
-           //Document document = reader.read(new File(cfgFile));
+      //Document document = reader.read(new File(cfgFile));
       Document document = reader.read(cfgFile);
       // 通过document对象获取根节点bookstore
       Element bookStore = document.getRootElement();
@@ -247,13 +249,13 @@ public class EventServerStart implements WatchCallerInterface {
     Iterator<String> it = set.iterator();
 
     List<ReloadRequest> reloadRequestList = new ArrayList<>();
-    while (it.hasNext()){
+    while (it.hasNext()) {
       String keyStr = it.next();
-      String a = jedis.hget(keyStr,"req");
-      if(a == null || a.length() == 0){
-        System.out.println("wrong redis hash,and key:"+ keyStr);
-      }else{
-        ReloadRequest.Builder builder =ReloadRequest.newBuilder();
+      String a = jedis.hget(keyStr, "req");
+      if (a == null || a.length() == 0) {
+        System.out.println("wrong redis hash,and key:" + keyStr);
+      } else {
+        ReloadRequest.Builder builder = ReloadRequest.newBuilder();
         JsonFormat.merge(a, builder);
         ReloadRequest req = builder.build();
         reloadRequestList.add(req);
@@ -268,7 +270,7 @@ public class EventServerStart implements WatchCallerInterface {
     List<ReloadRequest> reqList = getReloadRequest();
     for (int i = 0; i < reqList.size(); i++) {
       ReloadRequest req = reqList.get(i);
-      System.out.println("config reload req:"+req);
+      System.out.println("config reload req:" + req);
       REL_EVENT_INFO = 5; //事件信息
       REL_EVENT_GUARD = 6; //事件布防
       REL_EVENT_CONTACTS = 7; //事件联系人
@@ -292,12 +294,12 @@ public class EventServerStart implements WatchCallerInterface {
           switch (req.getEmAct()) {
             case OA_ADD:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().addEventInfo(conn,req.getIdList(j));
+                getEventConfig().addEventInfo(conn, req.getIdList(j));
               }
               break;
             case OA_MOD:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().updateEventInfo(conn,req.getIdList(j));
+                getEventConfig().updateEventInfo(conn, req.getIdList(j));
               }
               break;
             case OA_DEL:
@@ -320,13 +322,37 @@ public class EventServerStart implements WatchCallerInterface {
         case REL_EVENT_CONTACTS:
           break;
         case REL_EVENT_STORM:
-          break;
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().addAlarmStorm(conn,req.getIdList(j));
+              }
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateAlarmStorm(conn, req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteAlarmStorm(req.getIdList(j));
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+            default:
+              break;
+          }
         case REL_EVENT_LINKAGE:
           break;
         case UNRECOGNIZED:
           break;
       }
-      if(req.getLoadType() == REL_EVENT_INFO){
+      if (req.getLoadType() == REL_EVENT_INFO) {
 
       }
       getEventConfig().reLoadConfig(conn);
@@ -334,26 +360,28 @@ public class EventServerStart implements WatchCallerInterface {
   }
 
   public void dbInit() throws SQLException, ClassNotFoundException {
-    dbUrl = "jdbc:"+dbname+"://"+dbAddress;
+    dbUrl = "jdbc:" + dbname + "://" + dbAddress;
     System.out.println("db url :" + dbUrl);
     Class.forName(driverClassName);
-    conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
+    conn = DriverManager.getConnection(dbUrl, dbUser, dbPasswd);
     //st = conn.createStatement();
   }
-  public void redisInit(){
-    jedis  = new  Jedis(redisIP, redisPort);
+
+  public void redisInit() {
+    jedis = new Jedis(redisIP, redisPort);
   }
 
-  public String evenType2string(int type){
-    if( (type == 1) ||((type > 100)&&(type < 200))) { //VSEventTypeMonitor
+  public String evenType2string(int type) {
+    if ((type == 1) || ((type > 100) && (type < 200))) { //VSEventTypeMonitor
       return "event_monitor";
-    }else if ((type == 2) ||((type > 200)&&(type < 300))) { //VSEventTypeDigitalIO
+    } else if ((type == 2) || ((type > 200) && (type < 300))) { //VSEventTypeDigitalIO
       return "event_sio";
-    }else {
+    } else {
       return null;
     }
   }
-  public List<String> getResIdResNo(String dev_no,String res_uid) throws SQLException {
+
+  public List<String> getResIdResNo(String dev_no, String res_uid) throws SQLException {
     PreparedStatement pstmt = conn.prepareStatement("select b.res_id,b.res_no,b.res_name from ti_device a join ti_resource b on a.dev_id=b.dev_id where a.dev_no = ? and b.res_uid = ?");
     pstmt.setString(1, dev_no);
     pstmt.setString(2, res_uid);
@@ -378,9 +406,9 @@ public class EventServerStart implements WatchCallerInterface {
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-             .addService(new EventServer(redisIP,redisPort).bindService())
-             .addService(new EventServer2(redisIP,redisPort).bindService())
-             .build();
+        .addService(new EventServer(redisIP, redisPort).bindService())
+        .addService(new EventServer2(redisIP, redisPort).bindService())
+        .build();
     server.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -440,11 +468,11 @@ public class EventServerStart implements WatchCallerInterface {
     simpleServerStart.getEventConfig().loadConfig(simpleServerStart.getConn());
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
 
-    myservice.SetWatcher("server_",true);
+    myservice.SetWatcher("server_", true);
 
     //obtail cms and blg server address
-    simpleServerStart.setBlgClient(new VsIeyeClient("blg",myservice.Resolve("blg").toString()));
-    simpleServerStart.setCmsClient(new VsIeyeClient("cms",myservice.Resolve("cms").toString()));
+    simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
+    simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
 
     //monitor process
@@ -454,7 +482,7 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setName("monitorProcess");
     monitorProcess.setEventConfig(simpleServerStart.getEventConfig());
     monitorProcess.setProcessType(ProcessServerType);
-    monitorProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     monitorProcess.redisInit(redisIP, redisPort);
 
     //sio process
@@ -464,7 +492,7 @@ public class EventServerStart implements WatchCallerInterface {
     sioProcess.setName("sioProcess");
     sioProcess.setEventConfig(simpleServerStart.getEventConfig());
     sioProcess.setProcessType(ProcessSioType);
-    sioProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    sioProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     sioProcess.redisInit(redisIP, redisPort);
 
     //ia process
@@ -474,7 +502,7 @@ public class EventServerStart implements WatchCallerInterface {
     iaProcess.setName("iaProcess");
     iaProcess.setEventConfig(simpleServerStart.getEventConfig());
     iaProcess.setProcessType(ProcessIaType);
-    iaProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    iaProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     iaProcess.redisInit(redisIP, redisPort);
 
     //server process
@@ -484,7 +512,7 @@ public class EventServerStart implements WatchCallerInterface {
     serverProcess.setName("serverProcess");
     serverProcess.setEventConfig(simpleServerStart.getEventConfig());
     serverProcess.setProcessType(ProcessServerType);
-    serverProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     serverProcess.redisInit(redisIP, redisPort);
 
     //device process
@@ -494,7 +522,7 @@ public class EventServerStart implements WatchCallerInterface {
     deviceProcess.setName("deviceProcess");
     deviceProcess.setEventConfig(simpleServerStart.getEventConfig());
     deviceProcess.setProcessType(ProcessDeviceType);
-    deviceProcess.dbInit(dbname,dbAddress,driverClassName,dbUser,dbPasswd);
+    deviceProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     deviceProcess.redisInit(redisIP, redisPort);
 
     new Thread(monitorProcess).start();

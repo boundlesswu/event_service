@@ -166,65 +166,7 @@ public class AlarmProcess implements Runnable {
   public AlarmProcess(String name) {
     this.name = name;
   }
-  class AAA {
-    private ReloadRequest req;
-    private String  keyStr;
 
-    public AAA() {
-    }
-
-    public AAA(ReloadRequest req, String keyStr) {
-      this.req = req;
-      this.keyStr = keyStr;
-    }
-
-    public ReloadRequest getReq() {
-      return req;
-    }
-
-    public void setReq(ReloadRequest req) {
-      this.req = req;
-    }
-
-
-    public String getKeyStr() {
-      return keyStr;
-    }
-
-    public void setKeyStr(String keyStr) {
-      this.keyStr = keyStr;
-    }
-  }
-  public List<AAA> getReloadRequest() throws JsonFormat.ParseException {
-    Set<String> set = jedis.keys("reload_config_req*");
-    Iterator<String> it = set.iterator();
-
-    List<AAA> reloadRequestList = new ArrayList<>();
-    while (it.hasNext()){
-      String keyStr = it.next();
-      String a = jedis.hget(keyStr,getName());
-      if(a == null || a.length() == 0){
-        String b = jedis.hget(keyStr,"req");
-        ReloadRequest.Builder builder =ReloadRequest.newBuilder();
-        JsonFormat.merge(b, builder);
-        ReloadRequest req = builder.build();
-        reloadRequestList.add(new AAA(req,keyStr));
-      }else{
-        System.out.println("name:"+ name +"has read config: "+a);
-      }
-    }
-    return reloadRequestList;
-  }
-
-  public void updateConfig() throws SQLException, JsonFormat.ParseException {
-    List<AAA> reqList = getReloadRequest();
-    for (int i = 0; i < reqList.size(); i++) {
-      ReloadRequest req = reqList.get(i).getReq();
-      System.out.println("config reload req:"+req);
-      getEventConfig().reLoadConfig(conn);
-      getJedis().hset(reqList.get(i).getKeyStr(),getName(),"true");
-    }
-  }
   @Override
   public void run() {
     for (int i = 0; ; i++) {

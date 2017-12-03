@@ -14,7 +14,7 @@ import java.util.List;
 public class GuardPlan {
   private int guard_plan_id;
   private String guard_plan_name;
-  private TimeSchedule timeSchedule = new TimeSchedule();
+  private TimeSchedule timeSchedule;
   private String time_schedule;
   private GuardPlanType guard_plan_type;
   private Timestamp start_time;
