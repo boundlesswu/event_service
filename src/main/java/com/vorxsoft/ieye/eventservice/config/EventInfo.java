@@ -2,8 +2,10 @@ package com.vorxsoft.ieye.eventservice.config;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
 import com.vorxsoft.ieye.proto.IACMDType;
+import com.vorxsoft.ieye.proto.Linkage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class EventInfo {
@@ -358,5 +360,16 @@ public class EventInfo {
     DeviceConfigKey deviceConfigKey =DeviceConfigKey.newBuilder().
             event_type(getEvent_type()).dev_id(getDev_id()).build();
     return deviceConfigKey;
+  }
+
+  public void deleteLinkagebyId(int id){
+    Iterator<EventLinkage> it = getEventLinkagelist().iterator();
+    while(it.hasNext()){
+      EventLinkage x = it.next();
+      if(x.getLinkage_id() == id ){
+        it.remove();
+        return;
+      }
+    }
   }
 }

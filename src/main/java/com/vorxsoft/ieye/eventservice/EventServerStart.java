@@ -271,14 +271,6 @@ public class EventServerStart implements WatchCallerInterface {
     for (int i = 0; i < reqList.size(); i++) {
       ReloadRequest req = reqList.get(i);
       System.out.println("config reload req:" + req);
-      REL_EVENT_INFO = 5; //事件信息
-      REL_EVENT_GUARD = 6; //事件布防
-      REL_EVENT_CONTACTS = 7; //事件联系人
-      REL_EVENT_STORM = 8; //事件风暴
-      REL_EVENT_LINKAGE = 9; //事件联动
-      OA_ADD = 0; //增
-      OA_MOD = 1; //改
-      OA_DEL = 2; //删
       switch (req.getLoadType()) {
         case REL_DEV_INFO:
           break;
@@ -318,6 +310,28 @@ public class EventServerStart implements WatchCallerInterface {
           }
           break;
         case REL_EVENT_GUARD:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              //guard play add ,and event is or not add or modify?
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateGuardPlan(conn, req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteGuardPlay(conn, req.getIdList(j));
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+              break;
+          }
           break;
         case REL_EVENT_CONTACTS:
           break;
@@ -325,7 +339,7 @@ public class EventServerStart implements WatchCallerInterface {
           switch (req.getEmAct()) {
             case OA_ADD:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().addAlarmStorm(conn,req.getIdList(j));
+                getEventConfig().addAlarmStorm(conn, req.getIdList(j));
               }
               break;
             case OA_MOD:
@@ -347,16 +361,32 @@ public class EventServerStart implements WatchCallerInterface {
             default:
               break;
           }
+          break;
         case REL_EVENT_LINKAGE:
-          break;
-        case UNRECOGNIZED:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              break;
+            case OA_MOD:
+              break;
+            case OA_DEL:
+              break;
+            case OA_QUR:
+              break;
+            case OA_ON:
+              break;
+            case OA_OFF:
+              break;
+            case OA_OTHER:
+              break;
+            case OA_ALL_ISSUE:
+              break;
+            case UNRECOGNIZED:
+              break;
+          }
           break;
       }
-      if (req.getLoadType() == REL_EVENT_INFO) {
-
-      }
-      getEventConfig().reLoadConfig(conn);
     }
+
   }
 
   public void dbInit() throws SQLException, ClassNotFoundException {

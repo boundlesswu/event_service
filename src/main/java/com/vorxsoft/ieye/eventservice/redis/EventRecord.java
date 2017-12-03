@@ -545,7 +545,7 @@ public class EventRecord {
 
     for (int i = 0; i < getEventLinkage().size(); i++) {
       EventLinkage eventLinkage = getEventLinkage().get(i);
-      Linkage linkage = eventLinkage.convert2lingage();
+      Linkage linkage = eventLinkage.convert2linkage();
       eventWithLinkage.getLinkagesList().add(linkage);
 
     }
@@ -569,7 +569,7 @@ public class EventRecord {
 
     for (int i = 0; i < getEventLinkage().size(); i++) {
       EventLinkage eventLinkage = getEventLinkage().get(i);
-      Linkage linkage = eventLinkage.convert2lingage();
+      Linkage linkage = eventLinkage.convert2linkage();
       eventWithLinkage.getLinkagesList().add(linkage);
 
     }

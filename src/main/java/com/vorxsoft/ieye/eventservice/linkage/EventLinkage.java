@@ -212,7 +212,7 @@ public class EventLinkage {
     }
   }
   //public com.vorxsoft.ieye.proto.Linkage
-  public Linkage convert2lingage(){
+  public Linkage convert2linkage(){
     Linkage linkage = Linkage.newBuilder().setNLinkageID(getLinkage_id()).
                       setNEventID(getEvent_id()).setSLinkageType(getLinkage_type()).build();
     if(arg1 == null || arg1.length() <= 0){
