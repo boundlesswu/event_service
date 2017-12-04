@@ -29,15 +29,15 @@ public class AlarmStormConfig {
 
   private Long FreshTime = 0L;
   public void load(Connection conn) throws SQLException {
-    String sql="SELECT  storm_id ,event_type,event_stom FROM ti_event_stom";
+    String sql="SELECT  stom_id ,event_type,event_stom FROM ti_event_stom";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    ResultSet ret = pstmt.executeQuery(sql);
+    ResultSet ret = pstmt.executeQuery();
     int stom_id = 0;
     String event_type = null;
     int event_stom = 0;
     AlarmStorm a = new AlarmStorm();
     while(ret.next()) {
-      stom_id = ret.getInt("storm_id");
+      stom_id = ret.getInt("stom_id");
       event_type = ret.getString("event_type");
       event_stom = ret.getInt("event_stom");
       a.setStomId(stom_id);

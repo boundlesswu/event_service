@@ -107,12 +107,12 @@ public class EventServerStart implements WatchCallerInterface {
     this.conn = conn;
   }
 
-  private EventConfig eventConfig;
+  private EventConfig eventConfig = new EventConfig();
   private String redisName;
   private String activemqName;
   private String activemqIp;
   private int activemqPort;
-  private Connection conn = null;
+  private Connection conn ;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
@@ -227,7 +227,7 @@ public class EventServerStart implements WatchCallerInterface {
             else if (lname.equals("port"))
               redisPort = Integer.parseInt(lvalue);
           }
-          if (tname.equals("mq")) {
+          if (tname.equals("activemq")) {
             if (lname.equals("name"))
               activemqName = lvalue;
             else if (lname.equals("ip"))
@@ -256,7 +256,7 @@ public class EventServerStart implements WatchCallerInterface {
         System.out.println("wrong redis hash,and key:" + keyStr);
       } else {
         ReloadRequest.Builder builder = ReloadRequest.newBuilder();
-        JsonFormat.merge(a, builder);
+        //JsonFormat.merge(a, builder);
         ReloadRequest req = builder.build();
         reloadRequestList.add(req);
       }
@@ -501,8 +501,8 @@ public class EventServerStart implements WatchCallerInterface {
     myservice.SetWatcher("server_", true);
 
     //obtail cms and blg server address
-    simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
-    simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
+    //simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
+    //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
 
     //monitor process

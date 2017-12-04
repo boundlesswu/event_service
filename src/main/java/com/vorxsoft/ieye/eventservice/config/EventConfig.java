@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.vorxsoft.ieye.eventservice.util.Constant.*;
+
 public class EventConfig {
   public HashMap<Long, EventInfo> getMonitorConfigList() {
     return monitorConfigList;
@@ -89,6 +91,21 @@ public class EventConfig {
     this.deviceConfigList2 = deviceConfigList2;
   }
 
+  public EventConfig() {
+    this.monitorConfigList = new HashMap<>();
+    this.iaConfigList = new HashMap<>();
+    this.sioConfigList= new HashMap<>();
+    this.serverConfigList= new HashMap<>();
+    this.deviceConfigList= new HashMap<>();
+
+    this.monitorConfigList2= new HashMap<>();
+    this.iaConfigList2= new HashMap<>();
+    this.sioConfigList2= new HashMap<>();
+    this.serverConfigList2= new HashMap<>();
+    this.deviceConfigList2= new HashMap<>();
+    this.alarmStormConfig= new AlarmStormConfig();
+  }
+
   private HashMap<Long, EventInfo> monitorConfigList;
   private HashMap<Long, EventInfo> iaConfigList;
   private HashMap<Long, EventInfo> sioConfigList;
@@ -101,7 +118,7 @@ public class EventConfig {
   private HashMap<ServerConfigKey, EventInfo> serverConfigList2;
   private HashMap<DeviceConfigKey, EventInfo> deviceConfigList2;
 
-  private AlarmStormConfig alarmStormConfig;
+  private AlarmStormConfig alarmStormConfig ;
 
   private int listNum;
   private int disListNum;
@@ -123,7 +140,7 @@ public class EventConfig {
 
   public void setListNum() {
     this.listNum = monitorConfigList.size() + iaConfigList.size()
-        + sioConfigList.size() + serverConfigList.size() + deviceConfigList.size();
+            + sioConfigList.size() + serverConfigList.size() + deviceConfigList.size();
   }
 
   public void setListNum(int listNum) {
@@ -251,15 +268,26 @@ public class EventConfig {
   }
 
   public synchronized void loadConfig(Connection conn) throws SQLException {
-    String sql = "SELECT  COUNT(*) FROM ti_event WHERE enable_state = 1";
+    String sql = "SELECT  count(*) totalCount  FROM ti_event WHERE enable_state = 1";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    ResultSet ret = pstmt.executeQuery(sql);
-    listNum = ret.getInt("totalCount");
-    sql = "SELECT  COUNT(*) FROM ti_event WHERE enable_state != 1";
+    ResultSet ret = pstmt.executeQuery();
+    System.out.println(ret);
+    if (ret.next()) {
+      listNum = ret.getInt("totalCount");
+    } else {
+      listNum = 0;
+    }
+
+    sql = "SELECT  count(*) totalCount FROM ti_event WHERE enable_state != 1";
     pstmt = conn.prepareStatement(sql);
-    ret = pstmt.executeQuery(sql);
-    disListNum = ret.getInt("totalCount");
+    ret = pstmt.executeQuery();
+    if (ret.next()) {
+      disListNum = ret.getInt("totalCount");
+    } else {
+      disListNum = 0;
+    }
     int num = listNum + disListNum;
+    System.out.println("listNum:" + listNum + "  disListNum:" + disListNum + "  num:" + num);
     if (num <= 0) return;
     int event_id;
     String event_no;
@@ -279,22 +307,23 @@ public class EventConfig {
     int iaagId = 0;
     int iaag_chn_id = 0;
 
-    sql = "SELECT event_id,event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,guard_plan_id " +
-        "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
-        " where ti_event.enable_state = 1";
+    sql = "SELECT event_id,event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,ti_event.guard_plan_id " +
+            "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
+            " where ti_event.enable_state = 1";
     pstmt = conn.prepareStatement(sql);
-    ret = pstmt.executeQuery(sql);
+    ret = pstmt.executeQuery();
     int i = 0;
+
     while (ret.next()) {
       event_id = ret.getInt("event_id");
       event_no = ret.getString("event_no");
-      event_genus = ret.getString("event_genus");
+      event_genus = new String(ret.getString("event_genus"));
       event_type = ret.getString("event_type");
       event_name = ret.getString("event_name");
       event_desc = ret.getString("event_desc");
       event_level = ret.getInt("event_level");
       auto_release_interval = ret.getInt("auto_release_interval");
-      guard_plan_id = ret.getInt("guard_plan_id;");
+      guard_plan_id = ret.getInt("guard_plan_id");
       //guard plan
       GuardPlan guardPlan = createGuardPlanFromDB(conn, guard_plan_id);
       //linage
@@ -314,105 +343,114 @@ public class EventConfig {
       eventInfo.setSourceId(sourceId);
       eventInfo.setAuto_release_interval(auto_release_interval);
 
-      if (event_genus.equals("event_monitor")) {
+      if (event_genus.equals(sGenusMonitor)) {
         sql = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, String.valueOf(event_id));
-        ret = pstmt.executeQuery(sql);
-        sourceId = ret.getInt("res_id");
-        res_id = ret.getInt("res_id");
-        ret.close();
-        pstmt.close();
-        MonitorConfigKey monitorConfigKey = MonitorConfigKey.newBuilder().
-            event_type(event_type).res_id(res_id).build();
-        eventInfo.setRes_id(res_id);
-        if (getMonitorConfigList() == null)
-          monitorConfigList = new HashMap<Long, EventInfo>();
-        if (getMonitorConfigList2() == null)
-          monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
-        monitorConfigList.put((long) event_id, eventInfo);
-        monitorConfigList2.put(monitorConfigKey, eventInfo);
-      } else if (event_genus.equals("event_sio")) {
+        PreparedStatement pstmt2 = conn.prepareStatement(sql);
+        pstmt2.setString(1, String.valueOf(event_id));
+        ResultSet ret2 = pstmt2.executeQuery();
+        if (ret2.next()) {
+          sourceId = ret2.getInt("res_id");
+          res_id = ret2.getInt("res_id");
+          MonitorConfigKey monitorConfigKey = MonitorConfigKey.newBuilder().
+                  event_type(event_type).res_id(res_id).build();
+          eventInfo.setRes_id(res_id);
+          if (getMonitorConfigList() == null)
+            monitorConfigList = new HashMap<Long, EventInfo>();
+          if (getMonitorConfigList2() == null)
+            monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
+          monitorConfigList.put((long) event_id, eventInfo);
+          monitorConfigList2.put(monitorConfigKey, eventInfo);
+        }
+        ret2.close();
+        pstmt2.close();
+      } else if (event_genus.equals(sGenusSio)) {
         sql = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, String.valueOf(event_id));
-        ret = pstmt.executeQuery(sql);
-        sourceId = ret.getInt("res_id");
-        res_id = ret.getInt("res_id");
-        ret.close();
-        pstmt.close();
-        SioConfigKey sioConfigKey = SioConfigKey.newBuilder().event_type(event_type).res_id(res_id).build();
-        ;
-        if (getSioConfigList() == null)
-          sioConfigList = new HashMap<Long, EventInfo>();
-        if (getSioConfigList2() == null)
-          sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
-        sioConfigList.put((long) event_id, eventInfo);
-        sioConfigList2.put(sioConfigKey, eventInfo);
-      } else if (event_genus.equals("event_ ia")) {
-        sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, String.valueOf(event_id));
-        ret = pstmt.executeQuery(sql);
-        sourceId = ret.getInt("res_id");
-        res_id = ret.getInt("res_id");
-        iaag_chn_id = ret.getInt("iaag_chn_id");
-        iaagId = ret.getInt("svr_id");
-        ret.close();
-        pstmt.close();
-        eventInfo.setIaag_chn_id(iaag_chn_id);
-        eventInfo.setIaagId(iaagId);
-        IaConfigKey iaConfigKey = IaConfigKey.newBuilder().event_type(event_desc).iaag_chn_id(iaag_chn_id).
-            iaagId(iaagId).res_id(res_id).build();
-        if (getIaConfigList() == null)
-          iaConfigList = new HashMap<Long, EventInfo>();
-        if (getIaConfigList2() == null)
-          iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
-        iaConfigList.put((long) event_id, eventInfo);
-        iaConfigList2.put(iaConfigKey, eventInfo);
-      } else if (event_genus.equals("event_server")) {
+        PreparedStatement pstmt2 = conn.prepareStatement(sql);
+        pstmt2.setString(1, String.valueOf(event_id));
+        ResultSet ret2 = pstmt2.executeQuery();
+        if (ret2.next()) {
+          sourceId = ret2.getInt("res_id");
+          res_id = ret2.getInt("res_id");
+          SioConfigKey sioConfigKey = SioConfigKey.newBuilder().event_type(event_type).res_id(res_id).build();
+          if (getSioConfigList() == null)
+            sioConfigList = new HashMap<Long, EventInfo>();
+          if (getSioConfigList2() == null)
+            sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
+          sioConfigList.put((long) event_id, eventInfo);
+          sioConfigList2.put(sioConfigKey, eventInfo);
+        }
+        ret2.close();
+        pstmt2.close();
+      } else if (event_genus.equals(sGenusIa)) {
+        sql = "SELECT res_id,svr_id,iaag_chn_id FROM ti_event_ia_ex WHERE event_id = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(sql);
+        pstmt2.setInt(1, event_id);
+        ResultSet ret2 = pstmt2.executeQuery();
+        if (ret2.next()) {
+          sourceId = ret2.getInt("res_id");
+          res_id = ret2.getInt("res_id");
+          iaag_chn_id = ret2.getInt("iaag_chn_id");
+          iaagId = ret2.getInt("svr_id");
+          eventInfo.setIaag_chn_id(iaag_chn_id);
+          eventInfo.setIaagId(iaagId);
+          IaConfigKey iaConfigKey = IaConfigKey.newBuilder().event_type(event_desc).iaag_chn_id(iaag_chn_id).
+                  iaagId(iaagId).res_id(res_id).build();
+          if (getIaConfigList() == null)
+            iaConfigList = new HashMap<Long, EventInfo>();
+          if (getIaConfigList2() == null)
+            iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
+          iaConfigList.put((long) event_id, eventInfo);
+          iaConfigList2.put(iaConfigKey, eventInfo);
+        }
+        ret2.close();
+        pstmt2.close();
+      } else if (event_genus.equals(sGenusServer)) {
         sql = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, String.valueOf(event_id));
-        ret = pstmt.executeQuery(sql);
-        sourceId = ret.getInt("machine_id");
-        machine_id = ret.getInt("machine_id");
-        ret.close();
-        pstmt.close();
-        ServerConfigKey serverConfigKey = ServerConfigKey.newBuilder().
-            event_type(event_type).machine_id(machine_id).build();
-        if (getServerConfigList() == null)
-          serverConfigList = new HashMap<Long, EventInfo>();
-        if (getServerConfigList2() == null)
-          serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
-        serverConfigList.put((long) event_id, eventInfo);
-        serverConfigList2.put(serverConfigKey, eventInfo);
-      } else if (event_genus.equals("event_device")) {
+        PreparedStatement pstmt2 = conn.prepareStatement(sql);
+        pstmt2.setString(1, String.valueOf(event_id));
+        ResultSet ret2 = pstmt2.executeQuery();
+        if(ret2.next()) {
+          sourceId = ret2.getInt("machine_id");
+          machine_id = ret2.getInt("machine_id");
+          ServerConfigKey serverConfigKey = ServerConfigKey.newBuilder().
+                  event_type(event_type).machine_id(machine_id).build();
+          if (getServerConfigList() == null)
+            serverConfigList = new HashMap<Long, EventInfo>();
+          if (getServerConfigList2() == null)
+            serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
+          serverConfigList.put((long) event_id, eventInfo);
+          serverConfigList2.put(serverConfigKey, eventInfo);
+        }
+        ret2.close();
+        pstmt2.close();
+      } else if (event_genus.equals(sGenusDeveice)) {
         sql = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, String.valueOf(event_id));
-        ret = pstmt.executeQuery(sql);
-        sourceId = ret.getInt("device_id");
-        dev_id = ret.getInt("device_id");
-        ret.close();
-        pstmt.close();
-        DeviceConfigKey deviceConfigKey = DeviceConfigKey.newBuilder().
-            event_type(event_type).dev_id(dev_id).build();
-        if (getDeviceConfigList() == null)
-          deviceConfigList = new HashMap<Long, EventInfo>();
-        if (getDeviceConfigList2() == null)
-          deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
-        deviceConfigList.put((long) event_id, eventInfo);
-        deviceConfigList2.put(deviceConfigKey, eventInfo);
+        PreparedStatement pstmt2 = conn.prepareStatement(sql);
+        pstmt2.setString(1, String.valueOf(event_id));
+        ResultSet ret2 = pstmt2.executeQuery();
+        if(ret2.next()) {
+          sourceId = ret2.getInt("device_id");
+          dev_id = ret2.getInt("device_id");
+          DeviceConfigKey deviceConfigKey = DeviceConfigKey.newBuilder().
+                  event_type(event_type).dev_id(dev_id).build();
+          if (getDeviceConfigList() == null)
+            deviceConfigList = new HashMap<Long, EventInfo>();
+          if (getDeviceConfigList2() == null)
+            deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
+          deviceConfigList.put((long) event_id, eventInfo);
+          deviceConfigList2.put(deviceConfigKey, eventInfo);
+        }
+        ret2.close();
+        pstmt2.close();
       } else {
         System.out.println("error event_genus :" + event_genus);
         continue;
       }
     }
-    alarmStormConfig.load(conn);
+    getAlarmStormConfig().load(conn);
 
     listNum = monitorConfigList.size() + iaConfigList.size()
-        + sioConfigList.size() + serverConfigList.size() + deviceConfigList.size();
+            + sioConfigList.size() + serverConfigList.size() + deviceConfigList.size();
     setFreshTime(System.currentTimeMillis());
   }
 
@@ -563,10 +601,11 @@ public class EventConfig {
   //query db and create a eventInfo instance
   public GuardPlan createGuardPlanFromDB(Connection conn, int id) throws SQLException {
     String sql = "SELECT guard_plan_name,time_schedule,guard_plan_type,start_time,end_time " +
-        "FROM ti_guard_plan WHERE guard_plan_id = ?";
+            "FROM ti_guard_plan WHERE guard_plan_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    pstmt.setString(1, String.valueOf(id));
-    ResultSet ret = pstmt.executeQuery(sql);
+    pstmt.setInt(1, id);
+    //pstmt.setString(1, String.valueOf(id));
+    ResultSet ret = pstmt.executeQuery();
     if (!ret.next()) {
       ret.close();
       pstmt.close();
@@ -574,11 +613,11 @@ public class EventConfig {
       return null;
     }
     GuardPlan guardPlan = GuardPlan.newBuilder().guard_plan_id(id).
-        guard_plan_name(ret.getString("guard_plan_name")).
-        guard_plan_type(GuardPlan.Long2GuardPlanType(ret.getInt("guard_plan_type"))).
-        time_schedule(ret.getString("time_schedule")).
-        start_time(ret.getTimestamp("start_time")).
-        end_time(ret.getTimestamp("end_time")).build();
+            guard_plan_name(ret.getString("guard_plan_name")).
+            guard_plan_type(GuardPlan.Long2GuardPlanType(ret.getInt("guard_plan_type"))).
+            time_schedule(ret.getString("time_schedule")).
+            start_time(ret.getTimestamp("start_time")).
+            end_time(ret.getTimestamp("end_time")).build();
     ret.close();
     pstmt.close();
     return guardPlan;
@@ -586,11 +625,11 @@ public class EventConfig {
 
   public List<EventLinkage> createLinkageListFromDB(Connection conn, int event_id) throws SQLException {
     String sql = "SELECT linkage_id,linkage_type,arg1,arg2, arg3,arg4,arg5,arg6,arg7,arg8 " +
-        "FROM ti_event_linkage WHERE event_id = ?";
+            "FROM ti_event_linkage WHERE event_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    pstmt.setString(1, String.valueOf(event_id));
+    pstmt.setInt(1, event_id);
 
-    ResultSet ret = pstmt.executeQuery(sql);
+    ResultSet ret = pstmt.executeQuery();
 
     if (!ret.next()) {
       ret.close();
@@ -639,10 +678,10 @@ public class EventConfig {
 
   public EventLinkage createLinkageFromDB(Connection conn, int linkage_id) throws SQLException {
     String sql = "SELECT linkage_type,event_id,arg1,arg2, arg3,arg4,arg5,arg6,arg7,arg8 " +
-        "FROM ti_event_linkage WHERE linkage_id = ?";
+            "FROM ti_event_linkage WHERE linkage_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, String.valueOf(linkage_id));
-    ResultSet ret = pstmt.executeQuery(sql);
+    ResultSet ret = pstmt.executeQuery();
 
     if (!ret.next()) {
       ret.close();
@@ -670,11 +709,11 @@ public class EventConfig {
   //query db and create a eventInfo instance
   public EventInfo createEventInfoFromDB(Connection conn, int id) throws SQLException {
     String sql = "SELECT event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,guard_plan_id " +
-        "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
-        " where ti_event.enable_state = 1 and event_id = ?";
+            "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
+            " where ti_event.enable_state = 1 and event_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    pstmt.setString(1, String.valueOf(id));
-    ResultSet ret = pstmt.executeQuery(sql);
+    pstmt.setInt(1, id);
+    ResultSet ret = pstmt.executeQuery();
     if (!ret.next()) {
       ret.close();
       pstmt.close();
@@ -694,16 +733,16 @@ public class EventConfig {
     pstmt.close();
     GuardPlan guardPlan = createGuardPlanFromDB(conn, guard_plan_id);
     if (guardPlan == null) {
-      ret.close();
-      pstmt.close();
+      //ret.close();
+      //pstmt.close();
       System.out.println("no guardPlan id :" + id + " config info found ");
       return null;
     }
     //linage
     List<EventLinkage> eventLinkages = createLinkageListFromDB(conn, event_id);
     if (eventLinkages == null) {
-      ret.close();
-      pstmt.close();
+      //ret.close();
+      //pstmt.close();
       //System.out.println("no event id :" + event_id + "linkage  info found ");
       return null;
     }
@@ -715,62 +754,72 @@ public class EventConfig {
     int dev_id;
     int enable_state = 1;
     EventInfo eventInfo = EventInfo.newBuilder().event_id(event_id).
-        event_no(event_no).
-        event_genus(event_genus).
-        event_name(event_name).
-        event_desc(event_desc).
-        enable_state(enable_state).
-        event_level(event_level).
-        auto_release_interval(auto_release_interval).
-        guardPlan(guardPlan).
-        event_type(event_type).build();
-    if (event_genus.equals("event_monitor")) {
+            event_no(event_no).
+            event_genus(event_genus).
+            event_name(event_name).
+            event_desc(event_desc).
+            enable_state(enable_state).
+            event_level(event_level).
+            auto_release_interval(auto_release_interval).
+            guardPlan(guardPlan).
+            event_type(event_type).build();
+    if (event_genus.equals(sGenusMonitor)) {
       sql = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      res_id = ret.getInt("res_id");
-      eventInfo.setRes_id(res_id);
+      pstmt.setInt(1,event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        res_id = ret.getInt("res_id");
+        eventInfo.setRes_id(res_id);
+      }
       ret.close();
       pstmt.close();
-    } else if (event_genus.equals("event_sio")) {
+    } else if (event_genus.equals(sGenusSio)) {
       sql = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      res_id = ret.getInt("res_id");
-      eventInfo.setRes_id(res_id);
+      pstmt.setInt(1, event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        res_id = ret.getInt("res_id");
+        eventInfo.setRes_id(res_id);
+      }
       ret.close();
       pstmt.close();
-    } else if (event_genus.equals("event_ ia")) {
+    } else if (event_genus.equals(sGenusIa)) {
       sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      res_id = ret.getInt("res_id");
-      iaag_chn_id = ret.getInt("iaag_chn_id");
-      iaagId = ret.getInt("svr_id");
-      eventInfo.setRes_id(res_id);
-      eventInfo.setIaag_chn_id(iaag_chn_id);
-      eventInfo.setIaagId(iaagId);
+      pstmt.setInt(1,event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        res_id = ret.getInt("res_id");
+        iaag_chn_id = ret.getInt("iaag_chn_id");
+        iaagId = ret.getInt("svr_id");
+        eventInfo.setRes_id(res_id);
+        eventInfo.setIaag_chn_id(iaag_chn_id);
+        eventInfo.setIaagId(iaagId);
+      }
       ret.close();
       pstmt.close();
-    } else if (event_genus.equals("event_server")) {
+    } else if (event_genus.equals(sGenusServer)) {
       sql = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      machine_id = ret.getInt("machine_id");
-      eventInfo.setMachine_id(machine_id);
+      pstmt.setInt(1,event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        machine_id = ret.getInt("machine_id");
+        eventInfo.setMachine_id(machine_id);
+      }
       ret.close();
       pstmt.close();
-    } else if (event_genus.equals("event_device")) {
+    } else if (event_genus.equals(sGenusDeveice)) {
       sql = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      dev_id = ret.getInt("device_id");
-      eventInfo.setDev_id(dev_id);
+      pstmt.setInt(1,event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        dev_id = ret.getInt("device_id");
+        eventInfo.setDev_id(dev_id);
+      }
       ret.close();
       pstmt.close();
     } else {
@@ -786,20 +835,34 @@ public class EventConfig {
       return null;
     }
     String sql = "SELECT event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,guard_plan_id " +
-        "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
-        " where ti_event.enable_state = 1 and event_id = ?";
+            "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
+            " where ti_event.enable_state = 1 and event_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    pstmt.setString(1, String.valueOf(id));
-    ResultSet ret = pstmt.executeQuery(sql);
+    pstmt.setInt(1, id);
+    ResultSet ret = pstmt.executeQuery();
     int event_id = id;
-    String event_no = ret.getString("event_no");
-    String event_genus = ret.getString("event_genus");
-    String event_type = ret.getString("event_type");
-    String event_name = ret.getString("event_name");
-    String event_desc = ret.getString("event_desc");
-    int event_level = ret.getInt("event_level");
-    int auto_release_interval = ret.getInt("auto_release_interval");
-    int guard_plan_id = ret.getInt("guard_plan_id;");
+    String event_no ="" ;
+    String event_genus ="";
+    String event_type="";
+    String event_name="";
+    String event_desc="";
+    int event_level=0;
+    int auto_release_interval =0;
+    int guard_plan_id=0;
+    if(ret.next()) {
+      event_no = ret.getString("event_no");
+      event_genus = ret.getString("event_genus");
+      event_type = ret.getString("event_type");
+      event_name = ret.getString("event_name");
+      event_desc = ret.getString("event_desc");
+      event_level = ret.getInt("event_level");
+      auto_release_interval = ret.getInt("auto_release_interval");
+      guard_plan_id = ret.getInt("guard_plan_id;");
+    }else{
+      ret.close();
+      pstmt.close();
+      return null;
+    }
     ret.close();
     pstmt.close();
 
@@ -827,106 +890,116 @@ public class EventConfig {
     ServerConfigKey serverConfigKey = ServerConfigKey.newBuilder().build();
     DeviceConfigKey deviceConfigKey = DeviceConfigKey.newBuilder().build();
     EventInfo eventInfo = EventInfo.newBuilder().event_id(event_id).
-        event_no(event_no).
-        event_genus(event_genus).
-        event_name(event_name).
-        event_desc(event_desc).
-        enable_state(enable_state).
-        event_level(event_level).
-        auto_release_interval(auto_release_interval).
-        guardPlan(guardPlan).
-        event_type(event_type).build();
-    if (event_genus.equals("event_monitor")) {
+            event_no(event_no).
+            event_genus(event_genus).
+            event_name(event_name).
+            event_desc(event_desc).
+            enable_state(enable_state).
+            event_level(event_level).
+            auto_release_interval(auto_release_interval).
+            guardPlan(guardPlan).
+            event_type(event_type).build();
+    if (event_genus.equals(sGenusMonitor)) {
       sql = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      res_id = ret.getInt("res_id");
-      eventInfo.setRes_id(res_id);
+      pstmt.setInt(1, event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        res_id = ret.getInt("res_id");
+        eventInfo.setRes_id(res_id);
+        monitorConfigKey.setEvent_type(event_type);
+        monitorConfigKey.setRes_id(res_id);
+        if (getMonitorConfigList() == null)
+          monitorConfigList = new HashMap<Long, EventInfo>();
+        if (getMonitorConfigList2() == null)
+          monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
+        monitorConfigList.put((long) event_id, eventInfo);
+        monitorConfigList2.put(monitorConfigKey, eventInfo);
+      }
       ret.close();
       pstmt.close();
-      monitorConfigKey.setEvent_type(event_type);
-      monitorConfigKey.setRes_id(res_id);
-      if (getMonitorConfigList() == null)
-        monitorConfigList = new HashMap<Long, EventInfo>();
-      if (getMonitorConfigList2() == null)
-        monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
-      monitorConfigList.put((long) event_id, eventInfo);
-      monitorConfigList2.put(monitorConfigKey, eventInfo);
-    } else if (event_genus.equals("event_sio")) {
+    } else if (event_genus.equals(sGenusSio)) {
       sql = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
+      pstmt.setInt(1, event_id);
+      ret = pstmt.executeQuery();
       res_id = ret.getInt("res_id");
-      eventInfo.setRes_id(res_id);
+      if(ret.next()) {
+        eventInfo.setRes_id(res_id);
+        sioConfigKey.setEvent_type(event_type);
+        sioConfigKey.setRes_id(res_id);
+        if (getSioConfigList() == null)
+          sioConfigList = new HashMap<Long, EventInfo>();
+        if (getSioConfigList2() == null)
+          sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
+        sioConfigList.put((long) event_id, eventInfo);
+        sioConfigList2.put(sioConfigKey, eventInfo);
+      }
       ret.close();
       pstmt.close();
-      sioConfigKey.setEvent_type(event_type);
-      sioConfigKey.setRes_id(res_id);
-      if (getSioConfigList() == null)
-        sioConfigList = new HashMap<Long, EventInfo>();
-      if (getSioConfigList2() == null)
-        sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
-      sioConfigList.put((long) event_id, eventInfo);
-      sioConfigList2.put(sioConfigKey, eventInfo);
-    } else if (event_genus.equals("event_ ia")) {
+    } else if (event_genus.equals(sGenusIa)) {
       sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      res_id = ret.getInt("res_id");
-      iaag_chn_id = ret.getInt("iaag_chn_id");
-      iaagId = ret.getInt("svr_id");
-      eventInfo.setRes_id(res_id);
-      eventInfo.setIaag_chn_id(iaag_chn_id);
-      eventInfo.setIaagId(iaagId);
+      pstmt.setInt(1, event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        res_id = ret.getInt("res_id");
+        iaag_chn_id = ret.getInt("iaag_chn_id");
+        iaagId = ret.getInt("svr_id");
+        eventInfo.setRes_id(res_id);
+        eventInfo.setIaag_chn_id(iaag_chn_id);
+        eventInfo.setIaagId(iaagId);
+        iaConfigKey.setEvent_type(event_type);
+        iaConfigKey.setIaag_chn_id(iaag_chn_id);
+        iaConfigKey.setIaagId(iaagId);
+        iaConfigKey.setRes_id(res_id);
+        if (getIaConfigList() == null)
+          iaConfigList = new HashMap<Long, EventInfo>();
+        if (getIaConfigList2() == null)
+          iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
+        iaConfigList.put((long) event_id, eventInfo);
+        iaConfigList2.put(iaConfigKey, eventInfo);
+      }
       ret.close();
       pstmt.close();
-      iaConfigKey.setEvent_type(event_type);
-      iaConfigKey.setIaag_chn_id(iaag_chn_id);
-      iaConfigKey.setIaagId(iaagId);
-      iaConfigKey.setRes_id(res_id);
-      if (getIaConfigList() == null)
-        iaConfigList = new HashMap<Long, EventInfo>();
-      if (getIaConfigList2() == null)
-        iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
-      iaConfigList.put((long) event_id, eventInfo);
-      iaConfigList2.put(iaConfigKey, eventInfo);
-    } else if (event_genus.equals("event_server")) {
+    } else if (event_genus.equals(sGenusServer)) {
       sql = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      machine_id = ret.getInt("machine_id");
-      eventInfo.setMachine_id(machine_id);
+      pstmt.setInt(1, event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        machine_id = ret.getInt("machine_id");
+        eventInfo.setMachine_id(machine_id);
+        serverConfigKey.setEvent_type(event_type);
+        serverConfigKey.setMachine_id(machine_id);
+        if (getServerConfigList() == null)
+          serverConfigList = new HashMap<Long, EventInfo>();
+        if (getServerConfigList2() == null)
+          serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
+        serverConfigList.put((long) event_id, eventInfo);
+        serverConfigList2.put(serverConfigKey, eventInfo);
+      }
       ret.close();
       pstmt.close();
-      serverConfigKey.setEvent_type(event_type);
-      serverConfigKey.setMachine_id(machine_id);
-      if (getServerConfigList() == null)
-        serverConfigList = new HashMap<Long, EventInfo>();
-      if (getServerConfigList2() == null)
-        serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
-      serverConfigList.put((long) event_id, eventInfo);
-      serverConfigList2.put(serverConfigKey, eventInfo);
-    } else if (event_genus.equals("event_device")) {
+    } else if (event_genus.equals(sGenusDeveice)) {
       sql = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, String.valueOf(event_id));
-      ret = pstmt.executeQuery(sql);
-      dev_id = ret.getInt("device_id");
-      eventInfo.setDev_id(dev_id);
+      pstmt.setInt(1, event_id);
+      ret = pstmt.executeQuery();
+      if(ret.next()) {
+        dev_id = ret.getInt("device_id");
+        eventInfo.setDev_id(dev_id);
+        deviceConfigKey.setEvent_type(event_type);
+        deviceConfigKey.setDev_id(dev_id);
+        if (getDeviceConfigList() == null)
+          deviceConfigList = new HashMap<Long, EventInfo>();
+        if (getDeviceConfigList2() == null)
+          deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
+        deviceConfigList.put((long) event_id, eventInfo);
+        deviceConfigList2.put(deviceConfigKey, eventInfo);
+      }
       ret.close();
       pstmt.close();
-      deviceConfigKey.setEvent_type(event_type);
-      deviceConfigKey.setDev_id(dev_id);
-      if (getDeviceConfigList() == null)
-        deviceConfigList = new HashMap<Long, EventInfo>();
-      if (getDeviceConfigList2() == null)
-        deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
-      deviceConfigList.put((long) event_id, eventInfo);
-      deviceConfigList2.put(deviceConfigKey, eventInfo);
     } else {
       System.out.println("error event_genus :" + event_genus);
       return null;
@@ -954,19 +1027,19 @@ public class EventConfig {
     EventInfo eventInfo2 = findEventInfo2(id);
     if (eventInfo1 != null) {
       String event_genus = eventInfo1.getEvent_genus();
-      if (event_genus.equals("event_monitor")) {
+      if (event_genus.equals(sGenusMonitor)) {
         getMonitorConfigList().remove(eventInfo1.getEvent_id());
         getMonitorConfigList2().remove(eventInfo2.getMonitorConfigKey());
-      } else if (event_genus.equals("event_sio")) {
+      } else if (event_genus.equals(sGenusSio)) {
         getSioConfigList().remove(eventInfo1.getEvent_id());
         getSioConfigList2().remove(eventInfo2.getSioConfigKey());
-      } else if (event_genus.equals("event_ ia")) {
+      } else if (event_genus.equals(sGenusIa)) {
         getIaConfigList().remove(eventInfo1.getEvent_id());
         getIaConfigList2().remove(eventInfo2.getIaConfigKey());
-      } else if (event_genus.equals("event_server")) {
+      } else if (event_genus.equals(sGenusServer)) {
         getServerConfigList().remove(eventInfo1.getEvent_id());
         getServerConfigList2().remove(eventInfo2.getServerConfigKey());
-      } else if (event_genus.equals("event_device")) {
+      } else if (event_genus.equals(sGenusDeveice)) {
         getDeviceConfigList().remove(eventInfo1.getEvent_id());
         getDeviceConfigList2().remove(eventInfo2.getDeviceConfigKey());
       } else {
@@ -1028,13 +1101,13 @@ public class EventConfig {
   }
 
   public void updateLinkage(Connection conn, int id) throws SQLException {
-    EventLinkage eventLinkage = createLinkageFromDB(conn,id);
+    EventLinkage eventLinkage = createLinkageFromDB(conn, id);
     List<EventInfo> eventInfos = findEventListBylinkageId(id);
     for (int i = 0; i < eventInfos.size(); i++) {
       List<EventLinkage> eventLinkages = eventInfos.get(i).getEventLinkagelist();
       for (int j = 0; j < eventLinkages.size(); j++) {
         EventLinkage eventLinkage1 = eventLinkages.get(j);
-        if(eventLinkage1.getLinkage_id() == eventLinkage.getLinkage_id() ){
+        if (eventLinkage1.getLinkage_id() == eventLinkage.getLinkage_id()) {
           eventLinkage1.setEvent_id(eventLinkage.getEvent_id());
           eventLinkage1.setLinkage_id(eventLinkage.getLinkage_id());
           eventLinkage1.setLinkage_type(eventLinkage.getLinkage_type());

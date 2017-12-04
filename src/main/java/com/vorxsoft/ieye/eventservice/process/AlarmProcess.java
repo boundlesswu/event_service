@@ -41,6 +41,9 @@ public class AlarmProcess implements Runnable {
   Publisher publisher;
 
   public AlarmProcess() {
+    this.eventConfig = new EventConfig();
+    this.alarmStormRecordMap = new AlarmStormRecordMap();
+    this.eventRecordMap = new EventRecordMap();
   }
 
 
@@ -113,13 +116,13 @@ public class AlarmProcess implements Runnable {
     this.blgTeyeClient = blgTeyeClient;
   }
 
-  public Publisher getPublisher() {
-    return publisher;
-  }
-
-  public void setPublisher(Publisher publisher) {
-    this.publisher = publisher;
-  }
+//  public Publisher getPublisher() {
+//    return publisher;
+//  }
+//
+//  public void setPublisher(Publisher publisher) {
+//    this.publisher = publisher;
+//  }
 
   public enum ProcessType {
     ProcessMonitorType,
@@ -170,12 +173,15 @@ public class AlarmProcess implements Runnable {
   @Override
   public void run() {
     for (int i = 0; ; i++) {
-      System.out.println(name + "运行  :  " + i);
+      //System.out.println(name + "运行  :  " + i);
       try {
         processAlarm();
         Thread.sleep((int) Math.random() * 10);
         processEvent();
         Thread.sleep((int) Math.random() * 10);
+        if(i%2000 == 0) {
+          System.out.println("process :" + getName() + getProcessType() + "is running");
+        }
         //updateConfig();
         //Thread.sleep(1000);
       } catch (InterruptedException e) {
@@ -226,6 +232,10 @@ public class AlarmProcess implements Runnable {
         return;
     }
     Set<String> set = jedis.keys("patterKey");
+    if(set.size() == 0){
+      System.out.println("patterKey :" + patterKey +"is not exist");
+      return;
+    }
     Iterator<String> it = set.iterator();
     String sCount = "";
     String evenType = "";
@@ -475,6 +485,10 @@ public class AlarmProcess implements Runnable {
 
   public void processEvent() throws SQLException, InvalidProtocolBufferException, JMSException {
     int LogId = 0;
+    if(getEventRecordMap().getEventRecords().isEmpty()){
+      System.out.println("EventRecordMap is empty!!!!!!!!!!");
+      return;
+    }
     Iterator<EventRecord>  it = getEventRecordMap().getEventRecords().iterator();
     while(it.hasNext()){
       EventRecord record = it.next();
