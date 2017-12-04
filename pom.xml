@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.vorxsoft.ieye</groupId>
+            <artifactId>proto</artifactId>
+            <version>4.0.1.2</version>
+        </dependency>
+        <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
             <version>${grpc.version}</version>
@@ -48,11 +53,6 @@
             <version>1.6.1</version>
         </dependency>
         <dependency>
-            <groupId>com.vorxsoft.ieye</groupId>
-            <artifactId>proto</artifactId>
-            <version>4.0.1.2</version>
-        </dependency>
-        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.googlecode.protobuf-java-format</groupId>
             <artifactId>protobuf-java-format</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
