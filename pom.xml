@@ -8,8 +8,8 @@
     <artifactId>event_service</artifactId>
     <version>4.0.1.2</version>
     <properties>
-    <grpc.version>1.4.0</grpc.version>
-</properties>
+        <grpc.version>1.4.0</grpc.version>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -101,11 +101,6 @@
             <version>4.0.1.2</version>
         </dependency>
         <dependency>
-            <groupId>com.vorxsoft.ieye</groupId>
-            <artifactId>micro_service</artifactId>
-            <version>4.0.1.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.28</version>
@@ -130,16 +125,16 @@
             <artifactId>qpid-jms-client</artifactId>
             <version>0.11.1</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>io.grpc</groupId>-->
-            <!--<artifactId>grpc-stub</artifactId>-->
-            <!--<version>${grpc.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.grpc</groupId>-->
-            <!--<artifactId>grpc-protobuf</artifactId>-->
-            <!--<version>${grpc.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
