@@ -491,7 +491,7 @@ public class EventServerStart implements WatchCallerInterface {
     final EventServerStart simpleServerStart = new EventServerStart();
     simpleServerStart.cfgInit();
     MicroService myservice = new MicroServiceImpl();
-    //myservice.init(registerCenterAddress, simpleServerStart);
+    myservice.init(registerCenterAddress, simpleServerStart);
     simpleServerStart.start();
     simpleServerStart.redisInit();
     simpleServerStart.dbInit();

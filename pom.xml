@@ -76,6 +76,21 @@
     </build>
     <dependencies>
         <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
@@ -89,16 +104,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vorxsoft.ieye</groupId>
-            <artifactId>proto</artifactId>
-            <version>4.0.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vorxsoft.ieye</groupId>
-            <artifactId>micro_service</artifactId>
-            <version>4.0.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -126,19 +131,14 @@
             <version>0.11.1</version>
         </dependency>
         <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
+            <groupId>com.vorxsoft.ieye</groupId>
+            <artifactId>micro_service</artifactId>
+            <version>4.0.1.2</version>
         </dependency>
         <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty</artifactId>
-            <version>${grpc.version}</version>
+            <groupId>com.vorxsoft.ieye</groupId>
+            <artifactId>proto</artifactId>
+            <version>4.0.1.2</version>
         </dependency>
 
     </dependencies>
