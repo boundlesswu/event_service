@@ -585,8 +585,7 @@ public class AlarmProcess implements Runnable {
     }
     publisher.publishMsg(getEventRecordMap().convert2jsonString());
   }
-
-
 }
+
 
 

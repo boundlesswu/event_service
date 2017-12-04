@@ -54,20 +54,20 @@ public class Publisher {
     connection.close();
     return;
   }
-  public static void main(String[] args) throws JMSException, InvalidProtocolBufferException {
-    Publisher publisher= new Publisher("192.168.20.222",61616);
-    //Publisher publisher= new Publisher();
-    //publisher.init();
-    for (int i = 0; ; i++) {
-      DefaultReply req = DefaultReply.newBuilder().setResult(i).setSBusinessID(SimpleEventClientStart.randomString()).build();
-//      byte[] result=req.toByteArray() ;
-//      DefaultReply req2= DefaultReply.parseFrom(result);
-//      System.out.println(req2);
-//      String jsonFormat =JsonFormat.printer().print(req2.toBuilder());
-//      System.out.println(jsonFormat);
-      String a = JsonFormat.printer().print(req.toBuilder());
-      System.out.println(a);
-      publisher.publishMsg(a);
-    }
-  }
+//  public static void main(String[] args) throws JMSException, InvalidProtocolBufferException {
+//    Publisher publisher= new Publisher("192.168.20.222",61616);
+//    //Publisher publisher= new Publisher();
+//    //publisher.init();
+//    for (int i = 0; ; i++) {
+//      DefaultReply req = DefaultReply.newBuilder().setResult(i).setSBusinessID(SimpleEventClientStart.randomString()).build();
+////      byte[] result=req.toByteArray() ;
+////      DefaultReply req2= DefaultReply.parseFrom(result);
+////      System.out.println(req2);
+////      String jsonFormat =JsonFormat.printer().print(req2.toBuilder());
+////      System.out.println(jsonFormat);
+//      String a = JsonFormat.printer().print(req.toBuilder());
+//      System.out.println(a);
+//      publisher.publishMsg(a);
+//    }
+//  }
 }

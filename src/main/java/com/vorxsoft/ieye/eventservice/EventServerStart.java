@@ -137,7 +137,7 @@ public class EventServerStart implements WatchCallerInterface {
     return executor_;
   }
 
-  private VsIeyeClient blgClient;
+
 
   public void setBlgClient(VsIeyeClient blgClient) {
     this.blgClient = blgClient;
@@ -146,7 +146,7 @@ public class EventServerStart implements WatchCallerInterface {
   public void setCmsClient(VsIeyeClient cmsClient) {
     this.cmsClient = cmsClient;
   }
-
+  private VsIeyeClient blgClient;
   private VsIeyeClient cmsClient;
   private List<VsIAClient> iaagClients;
 
