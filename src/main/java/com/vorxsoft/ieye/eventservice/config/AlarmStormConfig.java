@@ -106,7 +106,7 @@ public class AlarmStormConfig {
     String sql = "SELECT event_type,event_stom FROM ti_event_stom WHERE  stom_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, String.valueOf(id));
-    ResultSet ret = pstmt.executeQuery(sql);
+    ResultSet ret = pstmt.executeQuery();
     AlarmStorm alarmStorm = null;
     if (ret.next()) {
       alarmStorm = AlarmStorm.newBuilder().stomId(id).
