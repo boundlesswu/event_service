@@ -22,6 +22,9 @@ public class EventServer2 extends VsIeyeProtoGrpc.VsIeyeProtoImplBase{
     } catch (InvalidProtocolBufferException e) {
       e.printStackTrace();
     }
+    DefaultReply defaultReply = DefaultReply.newBuilder().setResult(1).setSBusinessID("1212121").build();
+    reply.onNext(defaultReply);
+    reply.onCompleted();
   }
 
 }
