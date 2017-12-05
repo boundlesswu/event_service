@@ -231,7 +231,7 @@ public class AlarmProcess implements Runnable {
         System.out.println("wrong processType");
         return;
     }
-    Set<String> set = jedis.keys("patterKey");
+    Set<String> set = jedis.keys(patterKey);
     if(set.size() == 0){
       System.out.println("patterKey :" + patterKey +"is not exist");
       return;

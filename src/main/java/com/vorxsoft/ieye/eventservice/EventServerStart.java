@@ -504,6 +504,22 @@ public class EventServerStart implements WatchCallerInterface {
     //simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
     //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
+    String blgAddress = myservice.Resolve("blg").toString();
+    if(blgAddress == null){
+      System.out.println("cannot resolve blg server  address");
+    }else{
+      System.out.println("successful resolve blg server  address:"+ blgAddress);
+      simpleServerStart.setBlgClient(new VsIeyeClient("blg", blgAddress));
+    }
+    String cmsAddress = myservice.Resolve("cms").toString();
+    if(cmsAddress == null){
+      System.out.println("cannot resolve cms server  address");
+    }else{
+      System.out.println("successful resolve cms server  address:"+ cmsAddress);
+      simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
+    }
+
+
 
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
