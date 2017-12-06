@@ -3,6 +3,8 @@ package com.vorxsoft.ieye.eventservice;
 import com.coreos.jetcd.Watch;
 import com.coreos.jetcd.watch.WatchEvent;
 import com.coreos.jetcd.watch.WatchResponse;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat.Parser;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.EventConfig;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
@@ -12,6 +14,7 @@ import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
 import com.vorxsoft.ieye.proto.ReloadRequest;
+import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
 import org.dom4j.Attribute;
@@ -31,8 +34,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.protobuf.util.JsonFormat.Parser.*;
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
-import static com.vorxsoft.ieye.proto.RELOAD_TYPE.REL_EVENT_INFO;
 
 /**
  * Created by Administrator on 2017/8/3 0003.
@@ -246,8 +249,10 @@ public class EventServerStart implements WatchCallerInterface {
 
   public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
     Set<String> set = jedis.keys("reload_config_req*");
+    if(set == null || set.size() == 0){
+      return null;
+    }
     Iterator<String> it = set.iterator();
-
     List<ReloadRequest> reloadRequestList = new ArrayList<>();
     while (it.hasNext()) {
       String keyStr = it.next();
@@ -255,19 +260,24 @@ public class EventServerStart implements WatchCallerInterface {
       if (a == null || a.length() == 0) {
         System.out.println("wrong redis hash,and key:" + keyStr);
       } else {
-        ReloadRequest.Builder builder = ReloadRequest.newBuilder();
-        //JsonFormat.merge(a, builder);
-        ReloadRequest req = builder.build();
-        reloadRequestList.add(req);
+        try {
+          ReloadRequest.Builder builder = ReloadRequest.newBuilder();
+          com.google.protobuf.util.JsonFormat.parser().merge(a,builder);
+          ReloadRequest req = builder.build();
+          reloadRequestList.add(req);
+        } catch (InvalidProtocolBufferException e) {
+          e.printStackTrace();
+        }
       }
       jedis.del(keyStr);
     }
     return reloadRequestList;
   }
-
-
   public void updateConfig() throws SQLException, JsonFormat.ParseException {
     List<ReloadRequest> reqList = getReloadRequest();
+    if(reqList == null){
+      return;
+    }
     for (int i = 0; i < reqList.size(); i++) {
       ReloadRequest req = reqList.get(i);
       System.out.println("config reload req:" + req);
@@ -386,7 +396,6 @@ public class EventServerStart implements WatchCallerInterface {
           break;
       }
     }
-
   }
 
   public void dbInit() throws SQLException, ClassNotFoundException {
@@ -481,7 +490,7 @@ public class EventServerStart implements WatchCallerInterface {
     this.iaagClients = iaagClients;
   }
 
-  public static void main(String[] args) throws Exception {
+  public static  void main(String[] args) throws Exception {
     int cpuNums = Runtime.getRuntime().availableProcessors();
     int threadPoolNum = cpuNums;
 //    for (int i = 0; i < threadPoolNum; i++) {
@@ -504,22 +513,20 @@ public class EventServerStart implements WatchCallerInterface {
     //simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
     //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
-    String blgAddress = myservice.Resolve("blg").toString();
+    String blgAddress = myservice.Resolve("blg");
     if(blgAddress == null){
       System.out.println("cannot resolve blg server  address");
     }else{
       System.out.println("successful resolve blg server  address:"+ blgAddress);
       simpleServerStart.setBlgClient(new VsIeyeClient("blg", blgAddress));
     }
-    String cmsAddress = myservice.Resolve("cms").toString();
+    String cmsAddress = myservice.Resolve("cms");
     if(cmsAddress == null){
       System.out.println("cannot resolve cms server  address");
     }else{
       System.out.println("successful resolve cms server  address:"+ cmsAddress);
       simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
     }
-
-
 
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
@@ -576,6 +583,16 @@ public class EventServerStart implements WatchCallerInterface {
     new Thread(iaProcess).start();
     new Thread(serverProcess).start();
     new Thread(deviceProcess).start();
+
+    simpleServerStart.getExecutor().scheduleWithFixedDelay(()->{
+      try {
+        simpleServerStart.updateConfig();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } catch (JsonFormat.ParseException e) {
+        e.printStackTrace();
+      }
+    },1l,ttl, TimeUnit.SECONDS);
 
     TimeUnit.DAYS.sleep(365 * 2000);
   }
