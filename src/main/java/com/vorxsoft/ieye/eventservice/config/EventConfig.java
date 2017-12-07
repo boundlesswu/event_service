@@ -720,7 +720,6 @@ public class EventConfig {
       System.out.println("no event id :" + id + "event config info found ");
       return null;
     }
-    int event_id = id;
     String event_no = ret.getString("event_no");
     String event_genus = ret.getString("event_genus");
     String event_type = ret.getString("event_type");
@@ -739,7 +738,7 @@ public class EventConfig {
       return null;
     }
     //linage
-    List<EventLinkage> eventLinkages = createLinkageListFromDB(conn, event_id);
+    List<EventLinkage> eventLinkages = createLinkageListFromDB(conn, id);
     if (eventLinkages == null) {
       //ret.close();
       //pstmt.close();
@@ -753,7 +752,7 @@ public class EventConfig {
     int machine_id;
     int dev_id;
     int enable_state = 1;
-    EventInfo eventInfo = EventInfo.newBuilder().event_id(event_id).
+    EventInfo eventInfo = EventInfo.newBuilder().event_id(id).
             event_no(event_no).
             event_genus(event_genus).
             event_name(event_name).
@@ -766,7 +765,7 @@ public class EventConfig {
     if (event_genus.equals(sGenusMonitor)) {
       sql = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1,event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         res_id = ret.getInt("res_id");
@@ -777,7 +776,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusSio)) {
       sql = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         res_id = ret.getInt("res_id");
@@ -788,7 +787,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusIa)) {
       sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1,event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         res_id = ret.getInt("res_id");
@@ -803,7 +802,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusServer)) {
       sql = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1,event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         machine_id = ret.getInt("machine_id");
@@ -814,7 +813,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusDeveice)) {
       sql = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1,event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         dev_id = ret.getInt("device_id");
@@ -840,7 +839,6 @@ public class EventConfig {
     PreparedStatement pstmt = conn.prepareStatement(sql);
     pstmt.setInt(1, id);
     ResultSet ret = pstmt.executeQuery();
-    int event_id = id;
     String event_no ="" ;
     String event_genus ="";
     String event_type="";
@@ -872,7 +870,7 @@ public class EventConfig {
       return null;
     }
     //linage
-    List<EventLinkage> eventLinkages = createLinkageListFromDB(conn, event_id);
+    List<EventLinkage> eventLinkages = createLinkageListFromDB(conn, id);
     if (eventLinkages == null) {
       guardPlan = null;
       return null;
@@ -889,7 +887,7 @@ public class EventConfig {
     IaConfigKey iaConfigKey = IaConfigKey.newBuilder().build();
     ServerConfigKey serverConfigKey = ServerConfigKey.newBuilder().build();
     DeviceConfigKey deviceConfigKey = DeviceConfigKey.newBuilder().build();
-    EventInfo eventInfo = EventInfo.newBuilder().event_id(event_id).
+    EventInfo eventInfo = EventInfo.newBuilder().event_id(id).
             event_no(event_no).
             event_genus(event_genus).
             event_name(event_name).
@@ -902,7 +900,7 @@ public class EventConfig {
     if (event_genus.equals(sGenusMonitor)) {
       sql = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         res_id = ret.getInt("res_id");
@@ -913,7 +911,7 @@ public class EventConfig {
           monitorConfigList = new HashMap<Long, EventInfo>();
         if (getMonitorConfigList2() == null)
           monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
-        monitorConfigList.put((long) event_id, eventInfo);
+        monitorConfigList.put((long) id, eventInfo);
         monitorConfigList2.put(monitorConfigKey, eventInfo);
       }
       ret.close();
@@ -921,7 +919,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusSio)) {
       sql = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       res_id = ret.getInt("res_id");
       if(ret.next()) {
@@ -932,7 +930,7 @@ public class EventConfig {
           sioConfigList = new HashMap<Long, EventInfo>();
         if (getSioConfigList2() == null)
           sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
-        sioConfigList.put((long) event_id, eventInfo);
+        sioConfigList.put((long) id, eventInfo);
         sioConfigList2.put(sioConfigKey, eventInfo);
       }
       ret.close();
@@ -940,7 +938,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusIa)) {
       sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         res_id = ret.getInt("res_id");
@@ -957,7 +955,7 @@ public class EventConfig {
           iaConfigList = new HashMap<Long, EventInfo>();
         if (getIaConfigList2() == null)
           iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
-        iaConfigList.put((long) event_id, eventInfo);
+        iaConfigList.put((long) id, eventInfo);
         iaConfigList2.put(iaConfigKey, eventInfo);
       }
       ret.close();
@@ -965,7 +963,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusServer)) {
       sql = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         machine_id = ret.getInt("machine_id");
@@ -976,7 +974,7 @@ public class EventConfig {
           serverConfigList = new HashMap<Long, EventInfo>();
         if (getServerConfigList2() == null)
           serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
-        serverConfigList.put((long) event_id, eventInfo);
+        serverConfigList.put((long) id, eventInfo);
         serverConfigList2.put(serverConfigKey, eventInfo);
       }
       ret.close();
@@ -984,7 +982,7 @@ public class EventConfig {
     } else if (event_genus.equals(sGenusDeveice)) {
       sql = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
-      pstmt.setInt(1, event_id);
+      pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       if(ret.next()) {
         dev_id = ret.getInt("device_id");
@@ -995,7 +993,7 @@ public class EventConfig {
           deviceConfigList = new HashMap<Long, EventInfo>();
         if (getDeviceConfigList2() == null)
           deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
-        deviceConfigList.put((long) event_id, eventInfo);
+        deviceConfigList.put((long) id, eventInfo);
         deviceConfigList2.put(deviceConfigKey, eventInfo);
       }
       ret.close();
@@ -1068,14 +1066,14 @@ public class EventConfig {
   public void updateGuardPlan(Connection conn, int id) throws SQLException {
     List<EventInfo> eventInfos = findEventListByGuardId(id);
     GuardPlan guardPlan = createGuardPlanFromDB(conn, id);
-    for (int i = 0; i < eventInfos.size(); i++) {
-      eventInfos.get(i).getGuardPlan().setGuard_plan_name(guardPlan.getGuard_plan_name());
-      eventInfos.get(i).getGuardPlan().setTime_schedule(guardPlan.getTime_schedule());
-      eventInfos.get(i).getGuardPlan().setGuard_plan_type(guardPlan.getGuard_plan_type());
-      eventInfos.get(i).getGuardPlan().setStart_time(guardPlan.getStart_time());
-      eventInfos.get(i).getGuardPlan().setEnd_time(guardPlan.getEnd_time());
-      for (int j = 0; j < eventInfos.get(i).getGuardPlan().getTimeSchedule().getTimeScheduleItems().size(); j++) {
-        TimeScheduleItem a = eventInfos.get(i).getGuardPlan().getTimeSchedule().getTimeScheduleItems().get(j);
+    for (EventInfo eventInfo : eventInfos) {
+      eventInfo.getGuardPlan().setGuard_plan_name(guardPlan.getGuard_plan_name());
+      eventInfo.getGuardPlan().setTime_schedule(guardPlan.getTime_schedule());
+      eventInfo.getGuardPlan().setGuard_plan_type(guardPlan.getGuard_plan_type());
+      eventInfo.getGuardPlan().setStart_time(guardPlan.getStart_time());
+      eventInfo.getGuardPlan().setEnd_time(guardPlan.getEnd_time());
+      for (int j = 0; j < eventInfo.getGuardPlan().getTimeSchedule().getTimeScheduleItems().size(); j++) {
+        TimeScheduleItem a = eventInfo.getGuardPlan().getTimeSchedule().getTimeScheduleItems().get(j);
         TimeScheduleItem b = guardPlan.getTimeSchedule().getTimeScheduleItems().get(j);
         a.setDayOfWeek(b.getDayOfWeek());
         for (int k = 0; k < a.getTimePeriods().size(); k++) {
@@ -1091,8 +1089,8 @@ public class EventConfig {
 
   public void deleteGuardPlay(Connection conn, int id) {
     List<EventInfo> eventInfos = findEventListByGuardId(id);
-    for (int i = 0; i < eventInfos.size(); i++) {
-      eventInfos.get(i).setGuardPlan(null);
+    for (EventInfo eventInfo : eventInfos) {
+      eventInfo.setGuardPlan(null);
     }
   }
 
@@ -1103,10 +1101,9 @@ public class EventConfig {
   public void updateLinkage(Connection conn, int id) throws SQLException {
     EventLinkage eventLinkage = createLinkageFromDB(conn, id);
     List<EventInfo> eventInfos = findEventListBylinkageId(id);
-    for (int i = 0; i < eventInfos.size(); i++) {
-      List<EventLinkage> eventLinkages = eventInfos.get(i).getEventLinkagelist();
-      for (int j = 0; j < eventLinkages.size(); j++) {
-        EventLinkage eventLinkage1 = eventLinkages.get(j);
+    for (EventInfo eventInfo : eventInfos) {
+      List<EventLinkage> eventLinkages = eventInfo.getEventLinkagelist();
+      for (EventLinkage eventLinkage1 : eventLinkages) {
         if (eventLinkage1.getLinkage_id() == eventLinkage.getLinkage_id()) {
           eventLinkage1.setEvent_id(eventLinkage.getEvent_id());
           eventLinkage1.setLinkage_id(eventLinkage.getLinkage_id());
@@ -1126,8 +1123,8 @@ public class EventConfig {
 
   public void deleteLinkage(int id) {
     List<EventInfo> eventInfos = findEventListBylinkageId(id);
-    for (int i = 0; i < eventInfos.size(); i++) {
-      eventInfos.get(i).deleteLinkagebyId(id);
+    for (EventInfo eventInfo : eventInfos) {
+      eventInfo.deleteLinkagebyId(id);
     }
   }
 }

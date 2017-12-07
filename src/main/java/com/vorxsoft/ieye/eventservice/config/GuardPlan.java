@@ -160,8 +160,7 @@ public Date timestamp2datetime(Timestamp ts){
 }
 
   public Timestamp datetime2timestamp( Date date){
-    Timestamp ts = new Timestamp(date.getTime());
-    return ts;
+    return new Timestamp(date.getTime());
   }
 
   public Timestamp String2timestamp(String time) {

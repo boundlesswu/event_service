@@ -4,7 +4,6 @@ import com.vorxsoft.ieye.proto.*;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.vorxsoft.ieye.proto.VSEventGenus.*;

@@ -1,10 +1,7 @@
 package com.vorxsoft.ieye.eventservice.config;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
-import com.vorxsoft.ieye.proto.IACMDType;
-import com.vorxsoft.ieye.proto.Linkage;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -336,30 +333,25 @@ public class EventInfo {
 
   }
   public MonitorConfigKey getMonitorConfigKey(){
-    MonitorConfigKey monitorConfigKey = MonitorConfigKey.newBuilder().
+    return MonitorConfigKey.newBuilder().
             event_type(getEvent_type()).res_id(getRes_id()).build();
-    return monitorConfigKey;
   }
   public SioConfigKey getSioConfigKey(){
-    SioConfigKey sioConfigKey = SioConfigKey.newBuilder().
+    return SioConfigKey.newBuilder().
             event_type(getEvent_type()).res_id(getRes_id()).build();
-    return sioConfigKey;
   }
   public IaConfigKey getIaConfigKey(){
-    IaConfigKey iaConfigKey = IaConfigKey.newBuilder().
+    return IaConfigKey.newBuilder().
             event_type(getEvent_type()).res_id(getRes_id()).
             iaagId(getIaagId()).iaag_chn_id(getIaag_chn_id()).build();
-    return iaConfigKey;
   }
   public ServerConfigKey getServerConfigKey(){
-    ServerConfigKey serverConfigKey = ServerConfigKey.newBuilder().
+    return ServerConfigKey.newBuilder().
             event_type(getEvent_type()).machine_id(getMachine_id()).build();
-    return serverConfigKey;
   }
   public DeviceConfigKey getDeviceConfigKey(){
-    DeviceConfigKey deviceConfigKey =DeviceConfigKey.newBuilder().
+    return DeviceConfigKey.newBuilder().
             event_type(getEvent_type()).dev_id(getDev_id()).build();
-    return deviceConfigKey;
   }
 
   public void deleteLinkagebyId(int id){

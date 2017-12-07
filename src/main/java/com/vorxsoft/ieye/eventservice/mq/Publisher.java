@@ -2,13 +2,8 @@ package com.vorxsoft.ieye.eventservice.mq;
 
 import javax.jms.*;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat;
-import com.vorxsoft.ieye.eventservice.SimpleEventClientStart;
-import com.vorxsoft.ieye.proto.DefaultReply;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
-import org.apache.qpid.jms.JmsConnectionFactory;
 
 
 public class Publisher {

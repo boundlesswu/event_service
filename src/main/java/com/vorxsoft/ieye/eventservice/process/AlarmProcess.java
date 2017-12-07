@@ -1,7 +1,6 @@
 package com.vorxsoft.ieye.eventservice.process;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
@@ -10,8 +9,8 @@ import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
+import com.vorxsoft.ieye.eventservice.util.ResUtilImpl;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
-import com.vorxsoft.ieye.proto.ReloadRequest;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 import redis.clients.jedis.Jedis;
@@ -39,6 +38,16 @@ public class AlarmProcess implements Runnable {
   VsIeyeClient blgTeyeClient;
   //HashMap<String,VsIeyeClient>
   Publisher publisher;
+
+  public ResUtil getResUtil() {
+    return resUtil;
+  }
+
+  public void setResUtil(ResUtil resUtil) {
+    this.resUtil = resUtil;
+  }
+
+  private ResUtil resUtil;
 
   public AlarmProcess() {
     this.eventConfig = new EventConfig();
@@ -138,6 +147,8 @@ public class AlarmProcess implements Runnable {
     Class.forName(driverClassName);
     conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
     //st = conn.createStatement();
+    resUtil = new ResUtilImpl();
+    resUtil.init(conn);
   }
 
   public void redisInit(String redisIP, int redisPort){
@@ -352,7 +363,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).
+                sResName(getResUtil().getResName(resourceId)).
                 bInsert2srcLog(true).
                 bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
@@ -370,9 +381,9 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nSvrID(iaadId).
-                sSvrName(ResUtil.SvrID2SvrName(iaadId)).
+                sSvrName(getResUtil().getSvrName(iaadId)).
                 nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).
+                sResName(getResUtil().getResName(resourceId)).
                 bInsert2srcLog(true).
                 bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
@@ -390,7 +401,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).
+                sResName(getResUtil().getResName(resourceId)).
                 bInsert2srcLog(true).
                 bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
@@ -408,7 +419,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nMachineID(machineId).
-                sMachineName(ResUtil.MachineID2MachineName(machineId)).
+                sMachineName(getResUtil().getMachineName(machineId)).
                 bInsert2srcLog(true).bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
           eventRecord4.setEventLinkage(eventInfo.getEventLinkagelist());
@@ -425,7 +436,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nDevID(deviceId).
-                sDevName(ResUtil.DevID2DevName(deviceId)).
+                sDevName(getResUtil().getDevName(deviceId)).
                 bInsert2srcLog(true).bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
           eventRecord5.setEventLinkage(eventInfo.getEventLinkagelist());
@@ -449,32 +460,32 @@ public class AlarmProcess implements Runnable {
     switch (type) {
       case ProcessMonitorType:
         EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                sResName(getResUtil().getResName(resourceId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_monitor").build();
         getEventRecordMap().add(eventRecord);
         break;
       case ProcessIaType:
         EventRecord eventRecord2 = EventRecord.newBuilder().sEventType(evenType).nSvrID(iaadId).
-                sSvrName(ResUtil.SvrID2SvrName(iaadId)).sHappentime(happenTime).
-                nResID(resourceId).sResName(ResUtil.ResID2ResName(resourceId)).
+                sSvrName(getResUtil().getSvrName(iaadId)).sHappentime(happenTime).
+                nResID(resourceId).sResName(getResUtil().getResName(resourceId)).
                 bInsert2srcLog(true).sEventGenus("event_ia").build();
         getEventRecordMap().add(eventRecord2);
         break;
       case ProcessSioType:
         EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
-                sResName(ResUtil.ResID2ResName(resourceId)).sHappentime(happenTime).
+                sResName(getResUtil().getResName(resourceId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_sio").build();
         getEventRecordMap().add(eventRecord3);
         break;
       case ProcessServerType:
         EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
-                sMachineName(ResUtil.MachineID2MachineName(machineId)).sHappentime(happenTime).
+                sMachineName(getResUtil().getMachineName(machineId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_server").build();
         getEventRecordMap().add(eventRecord4);
         break;
       case ProcessDeviceType:
         EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
-                sDevName(ResUtil.DevID2DevName(deviceId)).sHappentime(happenTime).
+                sDevName(getResUtil().getDevName(deviceId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_device").build();
         getEventRecordMap().add(eventRecord5);
         break;

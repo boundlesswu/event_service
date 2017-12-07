@@ -4,7 +4,6 @@ import com.coreos.jetcd.Watch;
 import com.coreos.jetcd.watch.WatchEvent;
 import com.coreos.jetcd.watch.WatchResponse;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat.Parser;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.EventConfig;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
@@ -14,7 +13,6 @@ import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
 import com.vorxsoft.ieye.proto.ReloadRequest;
-import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
 import org.dom4j.Attribute;
@@ -34,7 +32,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.protobuf.util.JsonFormat.Parser.*;
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 
 /**
@@ -278,8 +275,7 @@ public class EventServerStart implements WatchCallerInterface {
     if(reqList == null){
       return;
     }
-    for (int i = 0; i < reqList.size(); i++) {
-      ReloadRequest req = reqList.get(i);
+    for (ReloadRequest req : reqList) {
       System.out.println("config reload req:" + req);
       switch (req.getLoadType()) {
         case REL_DEV_INFO:
@@ -375,21 +371,48 @@ public class EventServerStart implements WatchCallerInterface {
         case REL_EVENT_LINKAGE:
           switch (req.getEmAct()) {
             case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                //getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+              }
               break;
             case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                //getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+              }
               break;
             case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                //getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+              }
               break;
             case OA_QUR:
-              break;
             case OA_ON:
-              break;
             case OA_OFF:
-              break;
             case OA_OTHER:
-              break;
             case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
               break;
+          }
+          break;
+        case REL_EVENT_CAM:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+              }
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
             case UNRECOGNIZED:
               break;
           }

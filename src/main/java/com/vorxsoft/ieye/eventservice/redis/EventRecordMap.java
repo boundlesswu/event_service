@@ -33,8 +33,6 @@ public class EventRecordMap {
     this.eventRecords = eventRecords;
   }
 
-
-
   public void add(EventRecord record) {
     eventRecords.add(record);
   }
