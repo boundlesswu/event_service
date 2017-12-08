@@ -4,34 +4,47 @@ import java.sql.*;
 
 public class EventLog {
   private int nEventLogId = 0;
-  private String sEventGenus="";
+  private String sEventGenus = "";
   private String sEventType = "";
   private String sEventName = "";
   private String sEventDesc = "";
   private int nEventlevel = 0;
   private Timestamp tHappenTime;
   private Timestamp tEndTime;
-  private String sExtraDesc ="";
+  private String sExtraDesc = "";
 
-  public int insert2db(Connection conn) throws SQLException
-  {
-    int ret = -1;
+  public int insert2db(Connection conn) throws SQLException {
+    int ret = 0;
     String sql = "INSERT INTO tl_event(event_genus,event_type,event_name,event_desc," +
-        "event_level,happen_time,end_time,extra_desc) VALUES (?,?,?,?,?,?,?,?)";
-    PreparedStatement pstmt = conn.prepareStatement(sql);
+            "event_level,happen_time,end_time,extra_desc,deal_state) VALUES (?,?,?,?,?,?,?,?,?)";
+    //PreparedStatement pstmt = conn.prepareStatement(sql);
+    PreparedStatement pstmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
     pstmt.setString(1, getsEventGenus());
     pstmt.setString(2, getsEventType());
     pstmt.setString(3, getsEventName());
     pstmt.setString(4, getsEventDesc());
     pstmt.setInt(5, getnEventlevel());
     pstmt.setTimestamp(6, gettHappenTime());
-    pstmt.setString(7, getsEventDesc());
-    if (pstmt.executeUpdate() > 0) {
-      ResultSet rs = pstmt.getGeneratedKeys();
+    pstmt.setTimestamp(7, gettEndTime());
+    pstmt.setString(8, getsExtraDesc());
+    //deal_state
+    pstmt.setInt(9, 1);
+    pstmt.executeUpdate();
+    ResultSet rs = pstmt.getGeneratedKeys();
+    if(rs.next())
+    {
       ret = rs.getInt(1);
       setnEventLogId(ret);
-      rs.close();
     }
+    rs.close();
+//    if (pstmt.executeUpdate() > 0) {
+//      ResultSet rs = pstmt.getGeneratedKeys();
+//      if (rs.next()) {
+//        ret = rs.getInt(1);
+//        setnEventLogId(ret);
+//      }
+//      rs.close();
+//    }
     pstmt.close();
     return ret;
   }
@@ -123,7 +136,6 @@ public class EventLog {
   public void setsExtraDesc(String sExtraDesc) {
     this.sExtraDesc = sExtraDesc;
   }
-
 
 
   public EventLog() {

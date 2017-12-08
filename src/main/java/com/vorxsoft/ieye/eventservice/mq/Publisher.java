@@ -7,8 +7,8 @@ import org.apache.activemq.command.ActiveMQTopic;
 
 
 public class Publisher {
-  private String host = "localhost";
-  private int port=5672;
+  private String host = "192.168.20.222";
+  private int port=61616;
   private String user="admin";
   private String password="password";
   private String topicName = "topic://event";

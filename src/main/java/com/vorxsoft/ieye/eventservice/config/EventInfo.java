@@ -27,6 +27,11 @@ public class EventInfo {
   List<EventLinkage> eventLinkagelist;
 
   public EventInfo() {
+    event_no="";
+    event_genus="";
+    event_type="";
+    event_name="";
+    event_desc="";
   }
 
   private EventInfo(Builder builder) {
@@ -202,6 +207,8 @@ public class EventInfo {
 
 
   public int getEventLinkagelistSize(){
+    if(getEventLinkagelist() == null)
+      return 0;
     return getEventLinkagelist().size();
   }
 

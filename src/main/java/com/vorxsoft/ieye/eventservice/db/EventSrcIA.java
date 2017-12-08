@@ -1,9 +1,6 @@
 package com.vorxsoft.ieye.eventservice.db;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class EventSrcIA extends EventSrc {
   private int nSvrID = 0;
@@ -73,7 +70,7 @@ public class EventSrcIA extends EventSrc {
     boolean ret = false;
     String sql = "INSERT INTO tl_event_src_ia(event_log_id,event_type,svr_id," +
         "svr_name,res_id,res_name,happen_time) VALUES (?,?,?,?,?,?,?)";
-    PreparedStatement pstmt = conn.prepareStatement(sql);
+    PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     pstmt.setInt(1, getnEventLogId());
     pstmt.setString(2, getsEventType());
     pstmt.setInt(3, getnSvrID());
@@ -85,7 +82,9 @@ public class EventSrcIA extends EventSrc {
     if (pstmt.executeUpdate() > 0) {
       ret = true;
       ResultSet rs = pstmt.getGeneratedKeys();
-      setnEsmLogId(rs.getInt(1));
+      if(rs.next()){
+        setnEsmLogId(rs.getInt(1));
+      }
       rs.close();
     }
     pstmt.close();

@@ -25,7 +25,7 @@
     </redis>
     <activemq>
         <name>activemq1</name>
-        <ip>127.0.0.1</ip>
+        <ip>192.168.20.222</ip>
         <port>61616</port>
     </activemq>>
 </microservice>

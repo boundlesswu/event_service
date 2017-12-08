@@ -1,6 +1,7 @@
 package com.vorxsoft.ieye.eventservice.process;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
@@ -11,6 +12,8 @@ import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import com.vorxsoft.ieye.eventservice.util.ResUtilImpl;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
+import com.vorxsoft.ieye.proto.EventWithLinkage;
+import com.vorxsoft.ieye.proto.Events;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 import redis.clients.jedis.Jedis;
@@ -38,6 +41,16 @@ public class AlarmProcess implements Runnable {
   VsIeyeClient blgTeyeClient;
   //HashMap<String,VsIeyeClient>
   Publisher publisher;
+
+  public Publisher getPublisher() {
+    return publisher;
+  }
+
+  public void setPublisher(Publisher publisher) {
+    this.publisher = publisher;
+  }
+
+
 
   public ResUtil getResUtil() {
     return resUtil;
@@ -78,6 +91,9 @@ public class AlarmProcess implements Runnable {
 
   public void setJedis(Jedis jedis) {
     this.jedis = jedis;
+  }
+  public void mqInit(String ip,int port){
+    publisher = new Publisher(ip,port);
   }
 
 
@@ -257,7 +273,7 @@ public class AlarmProcess implements Runnable {
     int iauId = 0;
     int machineId = 0;
     int deviceId = 0;
-    EventInfo eventInfo = new EventInfo();
+    EventInfo eventInfo = null;
     while (it.hasNext()) {
       String keyStr = it.next();
       System.out.println(keyStr);
@@ -512,9 +528,12 @@ public class AlarmProcess implements Runnable {
         LogId = eventLog.insert2db(conn);
         if (LogId <= 0) {
           System.out.println("insert event  log error");
+        }else{
+          //it.next().setnEventlogID(LogId);
+          record.setnEventlogID(LogId);
+          record.setbInsert2log(false);
         }
-        it.next().setnEventlogID(LogId);
-        record.setnEventlogID(LogId);
+
       }
       switch (processType) {
         case ProcessMonitorType:
@@ -527,6 +546,8 @@ public class AlarmProcess implements Runnable {
             eventSrcMonitor.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcMonitor.insert2db(conn)) {
               System.out.println("insert event  src monitor log error");
+            }else{
+              record.setbInsert2srcLog(false);
             }
           }
           break;
@@ -541,6 +562,8 @@ public class AlarmProcess implements Runnable {
             eventSrcIA.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcIA.insert2db(conn)) {
               System.out.println("insert event  src ia log error");
+            }else{
+              record.setbInsert2srcLog(false);
             }
           }
           break;
@@ -552,8 +575,11 @@ public class AlarmProcess implements Runnable {
             eventSrcSio.setnEventLogId(LogId);
             eventSrcSio.setsEventType(record.getsEventType());
             eventSrcSio.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
+            System.out.println(eventSrcSio);
             if (!eventSrcSio.insert2db(conn)) {
               System.out.println("insert event  src sio log error");
+            }else{
+              record.setbInsert2srcLog(false);
             }
           }
           break;
@@ -567,6 +593,8 @@ public class AlarmProcess implements Runnable {
             eventSrcMachine.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcMachine.insert2db(conn)) {
               System.out.println("insert event  src sio log error");
+            }else{
+              record.setbInsert2srcLog(false);
             }
           }
           break;
@@ -580,6 +608,8 @@ public class AlarmProcess implements Runnable {
             eventSrcDev.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcDev.insert2db(conn)) {
               System.out.println("insert event  src sio log error");
+            }else{
+              record.setbInsert2srcLog(false);
             }
           }
           break;
@@ -588,27 +618,49 @@ public class AlarmProcess implements Runnable {
       }
       //send to blg
       if(record.isbSend2blg()){
-
+        ReportLinkageRequest.Builder reqBuilder = ReportLinkageRequest.newBuilder().
+                setSBusinessID("00000000");
+        EventWithLinkage eventWithLinkage = record.covert2EventWithLinkage();
+        reqBuilder.addEventWithLinkages(eventWithLinkage);
+        if(getBlgTeyeClient()!=null) {
+          getBlgTeyeClient().reportLinkage(reqBuilder.build());
+        }
+        record.setbSend2blg(false);
       }
       //send to mq
       if(record.isbSend2mq()){
-
+        ReportEventRequest.Builder reqBuiler = ReportEventRequest.newBuilder().setSBusinessID("00000000");
+        Events event = record.covert2Events();
+        reqBuiler.addEvents(event);
+        getPublisher().publishMsg(JsonFormat.printer().print(reqBuiler.build().toBuilder()));
+        record.setbSend2mq(false);
       }
       //send to cms
       if(record.isbSend2cms()){
-
+        //need not send to cms
+        record.setbSend2cms(false);
       }
       //it.remove();
     }
+    /*
+    //send to cms
     ReportEventRequest eventRequest = getEventRecordMap().convert2ReportEventRequest();
     if( eventRequest != null || !eventRequest.isInitialized()){
-      getCmsIeyeClient().reportEvent(eventRequest);
+      if(getCmsIeyeClient()!=null) {
+        getCmsIeyeClient().reportEvent(eventRequest);
+      }
     }
-    ReportLinkageRequest linkageReq = getEventRecordMap().convert2ReportLinkageRequest();
-    if((linkageReq != null) || !linkageReq.isInitialized()){
-      getBlgTeyeClient().reportLinkage(linkageReq);
-    }
-    publisher.publishMsg(getEventRecordMap().convert2jsonString());
+    */
+//    ReportLinkageRequest linkageReq = getEventRecordMap().convert2ReportLinkageRequest();
+//    if((linkageReq != null) || !linkageReq.isInitialized()){
+//      if(getBlgTeyeClient()!=null) {
+//        getBlgTeyeClient().reportLinkage(linkageReq);
+//      }
+//    }
+//    if(getPublisher()!=null) {
+//      publisher.publishMsg(getEventRecordMap().convert2jsonString());
+//    }
+    getEventRecordMap().clearRecord();
   }
 }
 

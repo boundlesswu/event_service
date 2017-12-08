@@ -65,16 +65,21 @@ public class GuardPlan {
         JSONObject ccc = (JSONObject) timeArray.toArray()[j];
         TimePeriod  timePeriod = new TimePeriod();
         timePeriod.setType(Integer.parseInt(ccc.get("type").toString()));
-        timePeriod.setSt(Integer.parseInt(ccc.get("start").toString()));
-        timePeriod.setEt(Integer.parseInt(ccc.get("end").toString()));
+        timePeriod.setSt(Float.parseFloat(ccc.get("start").toString()));
+        timePeriod.setEt(Float.parseFloat(ccc.get("end").toString()));
         timePeriods.add(timePeriod);
       }
       timeScheduleItem.setTimePeriods(timePeriods);
       System.out.println(timeScheduleItem.toString());
+      if(getTimeSchedule() == null)
+        timeSchedule = TimeSchedule.newBuilder().build();
       timeSchedule.addTimeScheduleItem(timeScheduleItem);
     }
   }
   public TimeScheduleItem getTimeScheduleItemIndexOf(int index){
+    if(getTimeSchedule() == null){
+      return null;
+    }
     for (int i = 0; i < getTimeSchedule().getTimeScheduleItems().size(); i++) {
       TimeScheduleItem item = getTimeSchedule().getTimeScheduleItems().get(i);
       if(index == item.getDayOfWeek()){

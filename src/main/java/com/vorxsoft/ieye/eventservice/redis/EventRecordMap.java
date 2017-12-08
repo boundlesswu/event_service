@@ -79,4 +79,14 @@ public class EventRecordMap {
     }
     return req;
   }
+
+  public void clearRecord(){
+    Iterator<EventRecord> it = getEventRecords().iterator();
+    while(it.hasNext()) {
+      EventRecord record = it.next();
+      if(record.isProcessed()){
+        getEventRecords().remove(record);
+      }
+    }
+  }
 }

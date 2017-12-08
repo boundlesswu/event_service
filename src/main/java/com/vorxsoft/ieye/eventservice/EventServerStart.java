@@ -110,9 +110,9 @@ public class EventServerStart implements WatchCallerInterface {
   private EventConfig eventConfig = new EventConfig();
   private String redisName;
   private String activemqName;
-  private String activemqIp;
-  private int activemqPort;
-  private Connection conn ;
+  private static String activemqIp;
+  private static int activemqPort;
+  private Connection conn;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
@@ -138,7 +138,6 @@ public class EventServerStart implements WatchCallerInterface {
   }
 
 
-
   public void setBlgClient(VsIeyeClient blgClient) {
     this.blgClient = blgClient;
   }
@@ -146,6 +145,7 @@ public class EventServerStart implements WatchCallerInterface {
   public void setCmsClient(VsIeyeClient cmsClient) {
     this.cmsClient = cmsClient;
   }
+
   private VsIeyeClient blgClient;
   private VsIeyeClient cmsClient;
   private List<VsIAClient> iaagClients;
@@ -246,7 +246,7 @@ public class EventServerStart implements WatchCallerInterface {
 
   public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
     Set<String> set = jedis.keys("reload_config_req*");
-    if(set == null || set.size() == 0){
+    if (set == null || set.size() == 0) {
       return null;
     }
     Iterator<String> it = set.iterator();
@@ -259,7 +259,7 @@ public class EventServerStart implements WatchCallerInterface {
       } else {
         try {
           ReloadRequest.Builder builder = ReloadRequest.newBuilder();
-          com.google.protobuf.util.JsonFormat.parser().merge(a,builder);
+          com.google.protobuf.util.JsonFormat.parser().merge(a, builder);
           ReloadRequest req = builder.build();
           reloadRequestList.add(req);
         } catch (InvalidProtocolBufferException e) {
@@ -270,9 +270,10 @@ public class EventServerStart implements WatchCallerInterface {
     }
     return reloadRequestList;
   }
+
   public void updateConfig() throws SQLException, JsonFormat.ParseException {
     List<ReloadRequest> reqList = getReloadRequest();
-    if(reqList == null){
+    if (reqList == null) {
       return;
     }
     for (ReloadRequest req : reqList) {
@@ -468,9 +469,9 @@ public class EventServerStart implements WatchCallerInterface {
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-        .addService(new EventServer(redisIP, redisPort).bindService())
-        .addService(new EventServer2(redisIP, redisPort).bindService())
-        .build();
+            .addService(new EventServer(redisIP, redisPort).bindService())
+            .addService(new EventServer2(redisIP, redisPort).bindService())
+            .build();
     server.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -513,7 +514,7 @@ public class EventServerStart implements WatchCallerInterface {
     this.iaagClients = iaagClients;
   }
 
-  public static  void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
     int cpuNums = Runtime.getRuntime().availableProcessors();
     int threadPoolNum = cpuNums;
 //    for (int i = 0; i < threadPoolNum; i++) {
@@ -537,17 +538,17 @@ public class EventServerStart implements WatchCallerInterface {
     //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
     String blgAddress = myservice.Resolve("blg");
-    if(blgAddress == null){
+    if (blgAddress == null) {
       System.out.println("cannot resolve blg server  address");
-    }else{
-      System.out.println("successful resolve blg server  address:"+ blgAddress);
+    } else {
+      System.out.println("successful resolve blg server  address:" + blgAddress);
       simpleServerStart.setBlgClient(new VsIeyeClient("blg", blgAddress));
     }
     String cmsAddress = myservice.Resolve("cms");
-    if(cmsAddress == null){
+    if (cmsAddress == null) {
       System.out.println("cannot resolve cms server  address");
-    }else{
-      System.out.println("successful resolve cms server  address:"+ cmsAddress);
+    } else {
+      System.out.println("successful resolve cms server  address:" + cmsAddress);
       simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
     }
 
@@ -560,6 +561,7 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setProcessType(ProcessServerType);
     monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     monitorProcess.redisInit(redisIP, redisPort);
+    monitorProcess.mqInit(activemqIp, activemqPort);
 
     //sio process
     AlarmProcess sioProcess = new AlarmProcess();
@@ -570,6 +572,7 @@ public class EventServerStart implements WatchCallerInterface {
     sioProcess.setProcessType(ProcessSioType);
     sioProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     sioProcess.redisInit(redisIP, redisPort);
+    sioProcess.mqInit(activemqIp, activemqPort);
 
     //ia process
     AlarmProcess iaProcess = new AlarmProcess();
@@ -580,34 +583,36 @@ public class EventServerStart implements WatchCallerInterface {
     iaProcess.setProcessType(ProcessIaType);
     iaProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     iaProcess.redisInit(redisIP, redisPort);
+    iaProcess.mqInit(activemqIp, activemqPort);
 
-    //server process
-    AlarmProcess serverProcess = new AlarmProcess();
-    serverProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
-    serverProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
-    serverProcess.setName("serverProcess");
-    serverProcess.setEventConfig(simpleServerStart.getEventConfig());
-    serverProcess.setProcessType(ProcessServerType);
-    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    serverProcess.redisInit(redisIP, redisPort);
-
-    //device process
-    AlarmProcess deviceProcess = new AlarmProcess();
-    deviceProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
-    deviceProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
-    deviceProcess.setName("deviceProcess");
-    deviceProcess.setEventConfig(simpleServerStart.getEventConfig());
-    deviceProcess.setProcessType(ProcessDeviceType);
-    deviceProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    deviceProcess.redisInit(redisIP, redisPort);
+//    //server process
+//    AlarmProcess serverProcess = new AlarmProcess();
+//    serverProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+//    serverProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+//    serverProcess.setName("serverProcess");
+//    serverProcess.setEventConfig(simpleServerStart.getEventConfig());
+//    serverProcess.setProcessType(ProcessServerType);
+//    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+//    serverProcess.redisInit(redisIP, redisPort);
+//serverProcess.mqInit(activemqIp, activemqPort);
+//    //device process
+//    AlarmProcess deviceProcess = new AlarmProcess();
+//    deviceProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+//    deviceProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+//    deviceProcess.setName("deviceProcess");
+//    deviceProcess.setEventConfig(simpleServerStart.getEventConfig());
+//    deviceProcess.setProcessType(ProcessDeviceType);
+//    deviceProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+//    deviceProcess.redisInit(redisIP, redisPort);
+//    deviceProcess.mqInit(activemqIp, activemqPort);
 
     new Thread(monitorProcess).start();
     new Thread(sioProcess).start();
     new Thread(iaProcess).start();
-    new Thread(serverProcess).start();
-    new Thread(deviceProcess).start();
+//    new Thread(serverProcess).start();
+//    new Thread(deviceProcess).start();
 
-    simpleServerStart.getExecutor().scheduleWithFixedDelay(()->{
+    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
       try {
         simpleServerStart.updateConfig();
       } catch (SQLException e) {
@@ -615,7 +620,7 @@ public class EventServerStart implements WatchCallerInterface {
       } catch (JsonFormat.ParseException e) {
         e.printStackTrace();
       }
-    },1l,ttl, TimeUnit.SECONDS);
+    }, 1l, ttl, TimeUnit.SECONDS);
 
     TimeUnit.DAYS.sleep(365 * 2000);
   }

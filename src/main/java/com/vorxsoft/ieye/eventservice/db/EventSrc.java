@@ -49,4 +49,13 @@ public abstract class EventSrc {
     this.sEventType = sEventType;
   }
 
+  @Override
+  public String toString() {
+    return "EventSrc{" +
+            "nEsmLogId=" + nEsmLogId +
+            ", nEventLogId=" + nEventLogId +
+            ", sEventType='" + sEventType + '\'' +
+            ", tHappenTime=" + tHappenTime +
+            '}';
+  }
 }

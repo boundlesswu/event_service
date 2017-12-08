@@ -23,6 +23,8 @@ public class TimeSchedule{
     this.timeScheduleItems = timeScheduleItems;
   }
   public void addTimeScheduleItem(TimeScheduleItem timeScheduleItem) {
+    if(this.timeScheduleItems == null)
+      this.timeScheduleItems = new ArrayList<>();
     this.timeScheduleItems.add(timeScheduleItem);
   }
 

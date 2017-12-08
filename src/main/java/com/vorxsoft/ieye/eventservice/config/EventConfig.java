@@ -344,9 +344,9 @@ public class EventConfig {
       eventInfo.setAuto_release_interval(auto_release_interval);
 
       if (event_genus.equals(sGenusMonitor)) {
-        sql = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
-        PreparedStatement pstmt2 = conn.prepareStatement(sql);
-        pstmt2.setString(1, String.valueOf(event_id));
+        String sql2 = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+        pstmt2.setInt(1,event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if (ret2.next()) {
           sourceId = ret2.getInt("res_id");
@@ -364,9 +364,9 @@ public class EventConfig {
         ret2.close();
         pstmt2.close();
       } else if (event_genus.equals(sGenusSio)) {
-        sql = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
-        PreparedStatement pstmt2 = conn.prepareStatement(sql);
-        pstmt2.setString(1, String.valueOf(event_id));
+        String sql2 = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+        pstmt2.setInt(1,event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if (ret2.next()) {
           sourceId = ret2.getInt("res_id");
@@ -382,9 +382,9 @@ public class EventConfig {
         ret2.close();
         pstmt2.close();
       } else if (event_genus.equals(sGenusIa)) {
-        sql = "SELECT res_id,svr_id,iaag_chn_id FROM ti_event_ia_ex WHERE event_id = ?";
-        PreparedStatement pstmt2 = conn.prepareStatement(sql);
-        pstmt2.setInt(1, event_id);
+        String sql2 = "SELECT res_id,svr_id,iaag_chn_id FROM ti_event_ia_ex WHERE event_id = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+        pstmt2.setInt(1,event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if (ret2.next()) {
           sourceId = ret2.getInt("res_id");
@@ -405,9 +405,9 @@ public class EventConfig {
         ret2.close();
         pstmt2.close();
       } else if (event_genus.equals(sGenusServer)) {
-        sql = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
-        PreparedStatement pstmt2 = conn.prepareStatement(sql);
-        pstmt2.setString(1, String.valueOf(event_id));
+        String sql2 = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+        pstmt2.setInt(1,event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if(ret2.next()) {
           sourceId = ret2.getInt("machine_id");
@@ -424,9 +424,9 @@ public class EventConfig {
         ret2.close();
         pstmt2.close();
       } else if (event_genus.equals(sGenusDeveice)) {
-        sql = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
-        PreparedStatement pstmt2 = conn.prepareStatement(sql);
-        pstmt2.setString(1, String.valueOf(event_id));
+        String sql2 = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+        pstmt2.setInt(1,event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if(ret2.next()) {
           sourceId = ret2.getInt("device_id");
@@ -618,6 +618,8 @@ public class EventConfig {
             time_schedule(ret.getString("time_schedule")).
             start_time(ret.getTimestamp("start_time")).
             end_time(ret.getTimestamp("end_time")).build();
+    guardPlan.setTimeSchedule(ret.getString("time_schedule"));
+
     ret.close();
     pstmt.close();
     return guardPlan;
@@ -631,14 +633,8 @@ public class EventConfig {
 
     ResultSet ret = pstmt.executeQuery();
 
-    if (!ret.next()) {
-      ret.close();
-      pstmt.close();
-      //System.out.println("no event id :" + event_id + "linkage  info found ");
-      return null;
-    }
     List<EventLinkage> eventLinkages = new ArrayList();
-    for (int j = 0; ret.next(); j++) {
+    while(ret.next()){
       int linkage_id;
       String linkage_type;
       String arg1;
