@@ -50,6 +50,24 @@ public class  MonitorConfigKey {
       return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Builder builder = (Builder) o;
+
+      if (res_id != builder.res_id) return false;
+      return event_type.equals(builder.event_type);
+    }
+
+    @Override
+    public int hashCode() {
+      int result = event_type.hashCode();
+      result = 31 * result + res_id;
+      return result;
+    }
+
     public Builder res_id(int val) {
       res_id = val;
       return this;

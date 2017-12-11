@@ -380,6 +380,7 @@ public class AlarmProcess implements Runnable {
                 sExtraDesc(extraContent).
                 nResID(resourceId).
                 sResName(getResUtil().getResName(resourceId)).
+                nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).
                 bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
@@ -400,6 +401,7 @@ public class AlarmProcess implements Runnable {
                 sSvrName(getResUtil().getSvrName(iaadId)).
                 nResID(resourceId).
                 sResName(getResUtil().getResName(resourceId)).
+                nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).
                 bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
@@ -418,6 +420,7 @@ public class AlarmProcess implements Runnable {
                 sExtraDesc(extraContent).
                 nResID(resourceId).
                 sResName(getResUtil().getResName(resourceId)).
+                nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).
                 bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
@@ -436,6 +439,7 @@ public class AlarmProcess implements Runnable {
                 sExtraDesc(extraContent).
                 nMachineID(machineId).
                 sMachineName(getResUtil().getMachineName(machineId)).
+                nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
           eventRecord4.setEventLinkage(eventInfo.getEventLinkagelist());
@@ -453,6 +457,7 @@ public class AlarmProcess implements Runnable {
                 sExtraDesc(extraContent).
                 nDevID(deviceId).
                 sDevName(getResUtil().getDevName(deviceId)).
+                nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).bInsert2log(true).build();
         if(eventInfo.getEventLinkagelistSize() >  0){
           eventRecord5.setEventLinkage(eventInfo.getEventLinkagelist());
@@ -629,10 +634,16 @@ public class AlarmProcess implements Runnable {
       }
       //send to mq
       if(record.isbSend2mq()){
-        ReportEventRequest.Builder reqBuiler = ReportEventRequest.newBuilder().setSBusinessID("00000000");
-        Events event = record.covert2Events();
-        reqBuiler.addEvents(event);
-        getPublisher().publishMsg(JsonFormat.printer().print(reqBuiler.build().toBuilder()));
+//        ReportEventRequest.Builder reqBuiler = ReportEventRequest.newBuilder().setSBusinessID("00000000");
+//        Events event = record.covert2Events();
+//        reqBuiler.addEvents(event);
+//        getPublisher().publishMsg(JsonFormat.printer().print(reqBuiler.build().toBuilder()));
+//        record.setbSend2mq(false);
+        ReportLinkageRequest.Builder reqBuilder = ReportLinkageRequest.newBuilder().
+                setSBusinessID("00000000");
+        EventWithLinkage eventWithLinkage = record.covert2EventWithLinkage();
+        reqBuilder.addEventWithLinkages(eventWithLinkage);
+        getPublisher().publishMsg(JsonFormat.printer().print(reqBuilder));
         record.setbSend2mq(false);
       }
       //send to cms
