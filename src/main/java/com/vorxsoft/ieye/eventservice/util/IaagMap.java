@@ -33,7 +33,6 @@ public class IaagMap {
     String sql = "SELECT a.svr_id,a.svr_no ,a.svr_name,a.machine_id,a,remark,b.ip_intranet,b.ip_extranet,b.port_intranet,b.port_extranet" +
             "  ti_server a INNER JOIN ti_server_main_ex b ON a.svr_id = b.svr_id " +
             " WHERE a.svr_type = 'server_iaag'AND a.enable_state = 1";
-
     PreparedStatement pstmt = conn.prepareStatement(sql);
     ResultSet ret = pstmt.executeQuery();
     IaagMapItem iaagMapItem = null;
