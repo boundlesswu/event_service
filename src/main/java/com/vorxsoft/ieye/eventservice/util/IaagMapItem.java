@@ -9,6 +9,16 @@ public class IaagMapItem {
   public IaagMapItem() {
   }
 
+  private IaagMapItem(Builder builder) {
+    setIaagInfo(builder.iaagInfo);
+    setChannels(builder.channels);
+    setIaus(builder.iaus);
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
   public IaagInfo getIaagInfo() {
     return iaagInfo;
   }
@@ -60,5 +70,33 @@ public class IaagMapItem {
             ", channels=" + channels +
             ", iaus=" + iaus +
             '}';
+  }
+
+  public static final class Builder {
+    private IaagInfo iaagInfo;
+    private HashMap<Integer, IaagChannelInfo> channels;
+    private HashMap<Integer, IauItem> iaus;
+
+    private Builder() {
+    }
+
+    public Builder iaagInfo(IaagInfo val) {
+      iaagInfo = val;
+      return this;
+    }
+
+    public Builder channels(HashMap<Integer, IaagChannelInfo> val) {
+      channels = val;
+      return this;
+    }
+
+    public Builder iaus(HashMap<Integer, IauItem> val) {
+      iaus = val;
+      return this;
+    }
+
+    public IaagMapItem build() {
+      return new IaagMapItem(this);
+    }
   }
 }
