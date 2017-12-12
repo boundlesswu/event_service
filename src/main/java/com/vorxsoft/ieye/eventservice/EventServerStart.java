@@ -1,6 +1,7 @@
 package com.vorxsoft.ieye.eventservice;
 
 import com.coreos.jetcd.Watch;
+import com.coreos.jetcd.data.KeyValue;
 import com.coreos.jetcd.watch.WatchEvent;
 import com.coreos.jetcd.watch.WatchResponse;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -133,6 +134,10 @@ public class EventServerStart implements WatchCallerInterface {
   private InputStream cfgFile;
   private final String cfgFileName = "event_service.xml";
 
+  private VsIeyeClient blgClient;
+  private VsIeyeClient cmsClient;
+  private List<VsIAClient> iaagClients;
+
   private ScheduledExecutorService getExecutor() {
     return executor_;
   }
@@ -146,9 +151,7 @@ public class EventServerStart implements WatchCallerInterface {
     this.cmsClient = cmsClient;
   }
 
-  private VsIeyeClient blgClient;
-  private VsIeyeClient cmsClient;
-  private List<VsIAClient> iaagClients;
+
 
   public void getConfigPath() throws FileNotFoundException {
     String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
@@ -551,6 +554,8 @@ public class EventServerStart implements WatchCallerInterface {
       System.out.println("successful resolve cms server  address:" + cmsAddress);
       simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
     }
+
+    List<KeyValue> iaagAdress = myservice.ResolveAll("server_iaag");
 
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
