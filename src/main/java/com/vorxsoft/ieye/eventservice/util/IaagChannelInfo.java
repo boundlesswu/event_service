@@ -1,13 +1,26 @@
 package com.vorxsoft.ieye.eventservice.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IaagChannelInfo {
   private int iaag_chn_id;
   private int svr_id;
   private int res_id;
   private String preset_no;
+  //通道状态 0-停止;1-正在分析;2-分析异常 3-未知
   private int chn_state;
+  private int dev_id;
+  private List<Integer> event_ids;
 
   public IaagChannelInfo() {
+    this.iaag_chn_id =  0;
+    this.svr_id = 0;
+    this.res_id = 0;
+    this.preset_no ="";
+    this.chn_state = 0;
+    this.dev_id = 0;
+    this.event_ids = new ArrayList<>();
   }
 
   private IaagChannelInfo(Builder builder) {
@@ -16,6 +29,8 @@ public class IaagChannelInfo {
     setRes_id(builder.res_id);
     setPreset_no(builder.preset_no);
     setChn_state(builder.chn_state);
+    setDev_id(builder.dev_id);
+    setEvent_ids(builder.event_ids);
   }
 
   public static Builder newBuilder() {
@@ -62,24 +77,20 @@ public class IaagChannelInfo {
     this.chn_state = chn_state;
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
+  public int getDev_id() {
+    return dev_id;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
+  public void setDev_id(int dev_id) {
+    this.dev_id = dev_id;
   }
 
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    return super.clone();
+  public List<Integer> getEvent_ids() {
+    return event_ids;
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    super.finalize();
+  public void setEvent_ids(List<Integer> event_ids) {
+    this.event_ids = event_ids;
   }
 
   @Override
@@ -90,6 +101,8 @@ public class IaagChannelInfo {
             ", res_id=" + res_id +
             ", preset_no='" + preset_no + '\'' +
             ", chn_state=" + chn_state +
+            ", dev_id=" + dev_id +
+            ", event_ids=" + event_ids +
             '}';
   }
 
@@ -99,6 +112,8 @@ public class IaagChannelInfo {
     private int res_id;
     private String preset_no;
     private int chn_state;
+    private int dev_id;
+    private List<Integer> event_ids;
 
     private Builder() {
     }
@@ -125,6 +140,16 @@ public class IaagChannelInfo {
 
     public Builder chn_state(int val) {
       chn_state = val;
+      return this;
+    }
+
+    public Builder dev_id(int val) {
+      dev_id = val;
+      return this;
+    }
+
+    public Builder event_ids(List<Integer> val) {
+      event_ids = val;
       return this;
     }
 

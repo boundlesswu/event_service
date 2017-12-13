@@ -393,7 +393,7 @@ public class EventConfig {
           iaagId = ret2.getInt("svr_id");
           eventInfo.setIaag_chn_id(iaag_chn_id);
           eventInfo.setIaagId(iaagId);
-          IaConfigKey iaConfigKey = IaConfigKey.newBuilder().event_type(event_desc).iaag_chn_id(iaag_chn_id).
+          IaConfigKey iaConfigKey = IaConfigKey.newBuilder().event_type(event_type).iaag_chn_id(iaag_chn_id).
                   iaagId(iaagId).res_id(res_id).build();
           if (getIaConfigList() == null)
             iaConfigList = new HashMap<Long, EventInfo>();

@@ -1,10 +1,14 @@
 package com.vorxsoft.ieye.eventservice.util;
 
+import com.vorxsoft.ieye.eventservice.config.EventInfo;
+import com.vorxsoft.ieye.eventservice.config.IaConfigKey;
+import com.vorxsoft.ieye.eventservice.redis.EventRecord;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.*;
 
 public class IaagMap {
   private HashMap<Integer,IaagMapItem> iaags;
@@ -67,14 +71,32 @@ public class IaagMap {
      ResultSet ret = pstmt.executeQuery();
      IaagChannelInfo chanel = null;
      HashMap<Integer,IaagChannelInfo> channels = new HashMap<>();
+     List<Integer> ids = new ArrayList<>();
+     int iaag_chn_id = 0;
+     int res_id = 0;
      while (ret.next()){
+       iaag_chn_id = ret.getInt(1);
+       res_id = ret.getInt(2);
        chanel = IaagChannelInfo.newBuilder().
-                iaag_chn_id(ret.getInt(1)).
-                res_id(ret.getInt(2)).
+                iaag_chn_id(iaag_chn_id).
+                res_id(res_id).
                 preset_no(ret.getString(3)).
                 svr_id(svr_id).
                 build();
+       String sql2 = "SELECT a.event_id FROM ti_event a INNER JOIN ti_event_ia_ex b on a.event_id = b.event_id " +
+               "WHERE b.svr_id = ? AND b.iaag_chn_id =? AND B.res_id=?";
+       PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+       pstmt2.setInt(1,svr_id);
+       pstmt2.setInt(2,iaag_chn_id);
+       pstmt2.setInt(3,res_id);
+       ResultSet ret2 = pstmt2.executeQuery();
+       while (ret2.next()){
+         ids.add(ret2.getInt(1));
+       }
+       chanel.setEvent_ids(ids);
        channels.put(svr_id,chanel);
+       ret2.close();
+       pstmt2.close();
      }
      ret.close();
      pstmt.close();
@@ -114,5 +136,25 @@ public class IaagMap {
       pstmt.close();
       return iaus;
     }
+
+  public IaagMapItem findIaagMapItem(int svr_id){
+    return ((getIaags() == null)?null:getIaags().get(svr_id));
+  }
+
+  public IaagMapItem findIaagMapItem(String ip,int port){
+    if(getIaags() == null){
+      return null;
+    }
+    Iterator iter = getIaags().entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      IaagMapItem iaag = (IaagMapItem) val;
+      if(iaag.getIaagInfo().getIp_intranet().equals(ip) && iaag.getIaagInfo().getPort_intranet() == port)
+        return iaag;
+    }
+    return null;
+  }
 
 }

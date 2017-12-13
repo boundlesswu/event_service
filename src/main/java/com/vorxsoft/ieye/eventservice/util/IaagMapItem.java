@@ -6,6 +6,7 @@ public class IaagMapItem {
   public IaagInfo iaagInfo;
   public HashMap<Integer,IaagChannelInfo> channels;
   public HashMap<Integer,IauItem> iaus;
+
   public IaagMapItem() {
   }
 
@@ -98,5 +99,12 @@ public class IaagMapItem {
     public IaagMapItem build() {
       return new IaagMapItem(this);
     }
+  }
+  public IaagChannelInfo findChannelInfo(int channel_id){
+    return (getChannels()==null)?null:getChannels().get(channel_id);
+  }
+
+  public IauItem findIauItem(int dev_id){
+    return (getIaus() == null)?null:getIaus().get(dev_id);
   }
 }

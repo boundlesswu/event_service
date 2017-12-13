@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class EventInfo {
-
   private int event_id;
   private String event_no;
   private String event_genus;
