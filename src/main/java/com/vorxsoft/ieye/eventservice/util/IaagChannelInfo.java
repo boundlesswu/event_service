@@ -38,11 +38,6 @@ public class IaagChannelInfo {
   }
 
   public com.vorxsoft.ieye.proto.ResInfo convert2ResInfo(Connection conn){
-//    int32 resourceId = 1; //资源ID
-//    string resourceNo = 2; //资源编号
-//    int32 deviceId = 3; //设备ID
-//    string deviceNo = 4; //设备编号
-//    string resourceUid = 5; //资源UID
     ResUtil resUtil = new ResUtilImpl();
     resUtil.init(conn);
     com.vorxsoft.ieye.proto.ResInfo resInfo = ResInfo.newBuilder().

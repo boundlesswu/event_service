@@ -14,45 +14,63 @@ public class IaagMapItem {
   public HashMap<Integer, IauItem> iaus;
   VsIAClient client;
 
-  public void sethasSendCmd(){
+  public void sethasSendCmd() {
     Iterator it = getChannels().entrySet().iterator();
-    while(it.hasNext()) {
+    while (it.hasNext()) {
       Map.Entry entry = (Map.Entry) it.next();
-      IaagChannelInfo channal = (IaagChannelInfo) entry.getValue();;
+      IaagChannelInfo channal = (IaagChannelInfo) entry.getValue();
+      ;
       channal.setHasSendCmd(true);
     }
   }
 
+  public void redispatch(Connection conn) {
+    dispatch(conn, false);
+  }
+
   public void dispatch(Connection conn) {
-    if(getClient() == null)
+    dispatch(conn, true);
+  }
+
+  private void dispatch(Connection conn, boolean ischeckstat) {
+    if (getClient() == null)
       return;
-    if(getChannels() == null || getChannels().size() == 0)
+    if (getChannels() == null || getChannels().size() == 0)
       return;
-    SentIACMDRequest.Builder builer= SentIACMDRequest.newBuilder();
-    SentIACMDRequest.Builder builer2= SentIACMDRequest.newBuilder();
+    SentIACMDRequest.Builder builer = SentIACMDRequest.newBuilder();
+    SentIACMDRequest.Builder builer2 = SentIACMDRequest.newBuilder();
     List<ResInfo> resInfos = new ArrayList<>();
     List<ResInfo> resInfos2 = new ArrayList<>();
     Iterator it = getChannels().entrySet().iterator();
-    while(it.hasNext()) {
+    while (it.hasNext()) {
       Map.Entry entry = (Map.Entry) it.next();
       Object key = entry.getKey();
       Object val = entry.getValue();
       IaagChannelInfo channal = (IaagChannelInfo) val;
-      if(channal.isNeedSendcmd() && !channal.isHasSendCmd()){
-        ResInfo a = channal.convert2ResInfo(conn);
-        if(channal.getCmdType() == IACMDType.Start){
-          resInfos.add(a);
-        }else if(channal.getCmdType() == IACMDType.Stop){
-          resInfos2.add(a);
+      if (ischeckstat) {
+        if (channal.isNeedSendcmd() && !channal.isHasSendCmd()) {
+          ResInfo a = channal.convert2ResInfo(conn);
+          if (channal.getCmdType() == IACMDType.Start) {
+            resInfos.add(a);
+          } else if (channal.getCmdType() == IACMDType.Stop) {
+            resInfos2.add(a);
+          }
+        } else {
+          ResInfo a = channal.convert2ResInfo(conn);
+          if (channal.getCmdType() == IACMDType.Start) {
+            resInfos.add(a);
+          } else if (channal.getCmdType() == IACMDType.Stop) {
+            resInfos2.add(a);
+          }
         }
       }
     }
-    if(resInfos.size() > 0) {
+    if (resInfos.size() > 0) {
       SentIACMDRequest req = builer.setCmdId(0).setCmdType(IACMDType.Start).addAllResInfoList(resInfos).build();
       getClient().sentIACMD(req);
     }
-    if(resInfos2.size() > 0) {
-      SentIACMDRequest req2 =builer2.setCmdId(1).setCmdType(IACMDType.Stop).addAllResInfoList(resInfos2).build();
+    if (resInfos2.size() > 0) {
+      SentIACMDRequest req2 = builer2.setCmdId(1).setCmdType(IACMDType.Stop).addAllResInfoList(resInfos2).build();
       getClient().sentIACMD(req2);
     }
     sethasSendCmd();
@@ -126,10 +144,10 @@ public class IaagMapItem {
   @Override
   public String toString() {
     return "IaagMapItem{" +
-            "iaagInfo=" + iaagInfo +
-            ", channels=" + channels +
-            ", iaus=" + iaus +
-            '}';
+        "iaagInfo=" + iaagInfo +
+        ", channels=" + channels +
+        ", iaus=" + iaus +
+        '}';
   }
 
   public static final class Builder {
