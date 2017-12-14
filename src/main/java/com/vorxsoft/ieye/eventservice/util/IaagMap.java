@@ -3,6 +3,7 @@ package com.vorxsoft.ieye.eventservice.util;
 import com.vorxsoft.ieye.eventservice.config.EventInfo;
 import com.vorxsoft.ieye.eventservice.config.IaConfigKey;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
+import com.vorxsoft.ieye.proto.IACMDType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,8 +84,8 @@ public class IaagMap {
                 preset_no(ret.getString(3)).
                 svr_id(svr_id).
                 build();
-       String sql2 = "SELECT a.event_id FROM ti_event a INNER JOIN ti_event_ia_ex b on a.event_id = b.event_id " +
-               "WHERE b.svr_id = ? AND b.iaag_chn_id =? AND B.res_id=?";
+       String sql2 = "SELECT a.event_id ,a.enable_state FROM ti_event a INNER JOIN ti_event_ia_ex b on a.event_id = b.event_id " +
+               "WHERE b.svr_id = ? AND b.iaag_chn_id =? AND b.res_id=? ";
        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
        pstmt2.setInt(1,svr_id);
        pstmt2.setInt(2,iaag_chn_id);
@@ -93,7 +94,10 @@ public class IaagMap {
        while (ret2.next()){
          ids.add(ret2.getInt(1));
        }
+       chanel.setCmdType(((ret2.getInt(1)==0)? IACMDType.Stop:IACMDType.Start));
        chanel.setEvent_ids(ids);
+       chanel.setNeedSendcmd(true);
+       chanel.setHasSendCmd(false);
        channels.put(svr_id,chanel);
        ret2.close();
        pstmt2.close();

@@ -1,11 +1,70 @@
 package com.vorxsoft.ieye.eventservice.util;
 
-import java.util.HashMap;
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
+import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
+import com.vorxsoft.ieye.proto.*;
+import com.vorxsoft.ieye.proto.ResInfo;
+
+import java.sql.Connection;
+import java.util.*;
 
 public class IaagMapItem {
   public IaagInfo iaagInfo;
-  public HashMap<Integer,IaagChannelInfo> channels;
-  public HashMap<Integer,IauItem> iaus;
+  public HashMap<Integer, IaagChannelInfo> channels;
+  public HashMap<Integer, IauItem> iaus;
+  VsIAClient client;
+
+  public void sethasSendCmd(){
+    Iterator it = getChannels().entrySet().iterator();
+    while(it.hasNext()) {
+      Map.Entry entry = (Map.Entry) it.next();
+      IaagChannelInfo channal = (IaagChannelInfo) entry.getValue();;
+      channal.setHasSendCmd(true);
+    }
+  }
+
+  public void dispatch(Connection conn) {
+    if(getClient() == null)
+      return;
+    if(getChannels() == null || getChannels().size() == 0)
+      return;
+    SentIACMDRequest.Builder builer= SentIACMDRequest.newBuilder();
+    SentIACMDRequest.Builder builer2= SentIACMDRequest.newBuilder();
+    List<ResInfo> resInfos = new ArrayList<>();
+    List<ResInfo> resInfos2 = new ArrayList<>();
+    Iterator it = getChannels().entrySet().iterator();
+    while(it.hasNext()) {
+      Map.Entry entry = (Map.Entry) it.next();
+      Object key = entry.getKey();
+      Object val = entry.getValue();
+      IaagChannelInfo channal = (IaagChannelInfo) val;
+      if(channal.isNeedSendcmd() && !channal.isHasSendCmd()){
+        ResInfo a = channal.convert2ResInfo(conn);
+        if(channal.getCmdType() == IACMDType.Start){
+          resInfos.add(a);
+        }else if(channal.getCmdType() == IACMDType.Stop){
+          resInfos2.add(a);
+        }
+      }
+    }
+    if(resInfos.size() > 0) {
+      SentIACMDRequest req = builer.setCmdId(0).setCmdType(IACMDType.Start).addAllResInfoList(resInfos).build();
+      getClient().sentIACMD(req);
+    }
+    if(resInfos2.size() > 0) {
+      SentIACMDRequest req2 =builer2.setCmdId(1).setCmdType(IACMDType.Stop).addAllResInfoList(resInfos2).build();
+      getClient().sentIACMD(req2);
+    }
+    sethasSendCmd();
+  }
+
+  public VsIAClient getClient() {
+    return client;
+  }
+
+  public void setClient(VsIAClient client) {
+    this.client = client;
+  }
 
   public IaagMapItem() {
   }
@@ -100,11 +159,12 @@ public class IaagMapItem {
       return new IaagMapItem(this);
     }
   }
-  public IaagChannelInfo findChannelInfo(int channel_id){
-    return (getChannels()==null)?null:getChannels().get(channel_id);
+
+  public IaagChannelInfo findChannelInfo(int channel_id) {
+    return (getChannels() == null) ? null : getChannels().get(channel_id);
   }
 
-  public IauItem findIauItem(int dev_id){
-    return (getIaus() == null)?null:getIaus().get(dev_id);
+  public IauItem findIauItem(int dev_id) {
+    return (getIaus() == null) ? null : getIaus().get(dev_id);
   }
 }

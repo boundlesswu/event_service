@@ -18,15 +18,6 @@ public class IauItem {
   private int port;
   private String username;
   private String password;
-  VsIAClient client;
-
-  public VsIAClient getClient() {
-    return client;
-  }
-
-  public void setClient(VsIAClient client) {
-    this.client = client;
-  }
 
   public IauItem() {
   }

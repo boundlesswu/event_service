@@ -1,5 +1,7 @@
 package com.vorxsoft.ieye.eventservice.util;
 
+import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
+
 public class IaagInfo {
   private int svr_id;
   private String svr_no;

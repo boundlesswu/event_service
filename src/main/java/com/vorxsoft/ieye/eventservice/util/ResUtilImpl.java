@@ -57,6 +57,30 @@ public class ResUtilImpl implements ResUtil {
   }
 
   @Override
+  public int getResDevId(int id) {
+    ResInfo resInfo = getResinfo(id);
+    if (resInfo == null)
+      return 0;
+    return resInfo.getDev_id();
+  }
+
+  @Override
+  public String getResDevNo(int id) {
+    ResInfo resInfo = getResinfo(id);
+    if (resInfo == null)
+      return null;
+    return resInfo.getRes_no();
+  }
+
+  @Override
+  public String getResUid(int id) {
+    ResInfo resInfo = getResinfo(id);
+    if (resInfo == null)
+      return null;
+    return resInfo.getRes_uid();
+  }
+
+  @Override
   public SvrInfo getSvrInfo(int id) {
     return getSvrInfo(id,"",1);
   }

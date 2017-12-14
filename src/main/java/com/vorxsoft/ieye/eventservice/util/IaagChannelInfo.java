@@ -1,5 +1,13 @@
 package com.vorxsoft.ieye.eventservice.util;
 
+import com.sun.org.apache.regexp.internal.RE;
+import com.sun.prism.paint.Stop;
+import com.vorxsoft.ieye.proto.IACMDType;
+import com.vorxsoft.ieye.proto.ResInfo;
+import java.sql.Connection;
+//import redis.clients.jedis.Connection;
+import redis.clients.jedis.Jedis;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +15,14 @@ public class IaagChannelInfo {
   private int iaag_chn_id;
   private int svr_id;
   private int res_id;
-  private String preset_no;
+  private String preset_no="";
   //通道状态 0-停止;1-正在分析;2-分析异常 3-未知
   private int chn_state;
   private int dev_id;
   private List<Integer> event_ids;
+  boolean needSendcmd;
+  boolean hasSendCmd;
+  private IACMDType cmdType;
 
   public IaagChannelInfo() {
     this.iaag_chn_id =  0;
@@ -21,6 +32,27 @@ public class IaagChannelInfo {
     this.chn_state = 0;
     this.dev_id = 0;
     this.event_ids = new ArrayList<>();
+    this.needSendcmd = false;
+    this.hasSendCmd = false;
+    cmdType = IACMDType.Stop;
+  }
+
+  public com.vorxsoft.ieye.proto.ResInfo convert2ResInfo(Connection conn){
+//    int32 resourceId = 1; //资源ID
+//    string resourceNo = 2; //资源编号
+//    int32 deviceId = 3; //设备ID
+//    string deviceNo = 4; //设备编号
+//    string resourceUid = 5; //资源UID
+    ResUtil resUtil = new ResUtilImpl();
+    resUtil.init(conn);
+    com.vorxsoft.ieye.proto.ResInfo resInfo = ResInfo.newBuilder().
+            setResourceId(getRes_id()).
+            setResourceNo(resUtil.getResNo(getRes_id())).
+            setDeviceId(resUtil.getResDevId(getRes_id())).
+            setDeviceNo(resUtil.getResDevNo(getRes_id())).
+            setResourceUid(resUtil.getResUid(getRes_id())).
+            build();
+     return resInfo;
   }
 
   private IaagChannelInfo(Builder builder) {
@@ -31,10 +63,53 @@ public class IaagChannelInfo {
     setChn_state(builder.chn_state);
     setDev_id(builder.dev_id);
     setEvent_ids(builder.event_ids);
+    needSendcmd = builder.needSendcmd;
+    hasSendCmd = builder.hasSendCmd;
+    cmdType = builder.cmdType;
+  }
+
+  @Override
+  public String toString() {
+    return "IaagChannelInfo{" +
+            "iaag_chn_id=" + iaag_chn_id +
+            ", svr_id=" + svr_id +
+            ", res_id=" + res_id +
+            ", preset_no='" + preset_no + '\'' +
+            ", chn_state=" + chn_state +
+            ", dev_id=" + dev_id +
+            ", event_ids=" + event_ids +
+            ", needSendcmd=" + needSendcmd +
+            ", hasSendCmd=" + hasSendCmd +
+            ", cmdType=" + cmdType +
+            '}';
   }
 
   public static Builder newBuilder() {
     return new Builder();
+  }
+
+  public boolean isNeedSendcmd() {
+    return needSendcmd;
+  }
+
+  public void setNeedSendcmd(boolean needSendcmd) {
+    this.needSendcmd = needSendcmd;
+  }
+
+  public boolean isHasSendCmd() {
+    return hasSendCmd;
+  }
+
+  public void setHasSendCmd(boolean hasSendCmd) {
+    this.hasSendCmd = hasSendCmd;
+  }
+
+  public IACMDType getCmdType() {
+    return cmdType;
+  }
+
+  public void setCmdType(IACMDType cmdType) {
+    this.cmdType = cmdType;
   }
 
   public int getIaag_chn_id() {
@@ -93,19 +168,6 @@ public class IaagChannelInfo {
     this.event_ids = event_ids;
   }
 
-  @Override
-  public String toString() {
-    return "IaagChannelInfo{" +
-            "iaag_chn_id=" + iaag_chn_id +
-            ", svr_id=" + svr_id +
-            ", res_id=" + res_id +
-            ", preset_no='" + preset_no + '\'' +
-            ", chn_state=" + chn_state +
-            ", dev_id=" + dev_id +
-            ", event_ids=" + event_ids +
-            '}';
-  }
-
   public static final class Builder {
     private int iaag_chn_id;
     private int svr_id;
@@ -114,6 +176,9 @@ public class IaagChannelInfo {
     private int chn_state;
     private int dev_id;
     private List<Integer> event_ids;
+    private boolean needSendcmd;
+    private boolean hasSendCmd;
+    private IACMDType cmdType;
 
     private Builder() {
     }
@@ -153,8 +218,27 @@ public class IaagChannelInfo {
       return this;
     }
 
+    public Builder needSendcmd(boolean val) {
+      needSendcmd = val;
+      return this;
+    }
+
+    public Builder hasSendCmd(boolean val) {
+      hasSendCmd = val;
+      return this;
+    }
+
+    public Builder cmdType(IACMDType val) {
+      cmdType = val;
+      return this;
+    }
+
     public IaagChannelInfo build() {
       return new IaagChannelInfo(this);
     }
+  }
+
+  public void store2redis(Jedis jedis){
+
   }
 }

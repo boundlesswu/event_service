@@ -11,6 +11,9 @@ public interface ResUtil  {
   String getResName(String no);
   String getResNo(int id);
   int getResId(String no);
+  int getResDevId(int id);
+  String getResDevNo(int  id);
+  String getResUid(int id);
 
   SvrInfo getSvrInfo(int id);
   SvrInfo getSvrInfo(String no);
@@ -22,4 +25,5 @@ public interface ResUtil  {
 
   String getDevName(int id);
   String getDevName(String no);
+
 }
