@@ -2,6 +2,7 @@ package com.vorxsoft.ieye.eventservice.util;
 
 import com.vorxsoft.ieye.eventservice.config.EventInfo;
 import com.vorxsoft.ieye.eventservice.config.IaConfigKey;
+import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.proto.IACMDType;
 
@@ -91,10 +92,12 @@ public class IaagMap {
        pstmt2.setInt(2,iaag_chn_id);
        pstmt2.setInt(3,res_id);
        ResultSet ret2 = pstmt2.executeQuery();
+       IACMDType  iacmdType = IACMDType.Stop;
        while (ret2.next()){
          ids.add(ret2.getInt(1));
+         iacmdType = (ret2.getInt(1)==0)? IACMDType.Stop:IACMDType.Start;
        }
-       chanel.setCmdType(((ret2.getInt(1)==0)? IACMDType.Stop:IACMDType.Start));
+       chanel.setCmdType(iacmdType);
        chanel.setEvent_ids(ids);
        chanel.setNeedSendcmd(true);
        chanel.setHasSendCmd(false);
@@ -107,9 +110,9 @@ public class IaagMap {
      return channels;
    }
     public HashMap<Integer,IauItem> createIauHashMapFromDB(int svr_id) throws SQLException {
-        String sql = "SELECT a.dev_id,a.dev_no ,a.dev_name,a.protocol_type,a,dev_sn,a.group_id,a.remark," +
+        String sql = "SELECT a.dev_id,a.dev_no ,a.dev_name,a.protocol_type,a.dev_sn,a.group_id,a.remark," +
           "b.chn_video,b.ip,b.port,b.username,b.password" +
-          " FROM ti_device a INNER JOIN ti_device_iau_ex b ON a.svr_id = b.svr_id " +
+          " FROM ti_device a INNER JOIN ti_device_iau_ex b ON a.dev_id = b.dev_id " +
           " WHERE a.dev_type = 'device_iau' AND a.svr_id = ?";
       PreparedStatement pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1,svr_id);
@@ -118,6 +121,7 @@ public class IaagMap {
       IauItem iau=null;
       HashMap<Integer,IauItem> iaus = new HashMap<>();
       while(ret.next()){
+
         iau = IauItem.newBuilder().
             dev_id(ret.getInt(1)).
             dev_no(ret.getString(2)).
@@ -161,4 +165,27 @@ public class IaagMap {
     return null;
   }
 
+  public IaagMapItem findIaagMapItem(String address){
+    String[] akey = address.split(":");
+    String ip = akey[0];
+    int port = Integer.parseInt(akey[1]);
+    return findIaagMapItem(ip,port);
+  }
+
+  public VsIAClient IaClinetInit(String address){
+    IaagMapItem iaagMapItem = findIaagMapItem(address);
+    if(iaagMapItem ==  null) return null;
+    iaagMapItem.shutClient();
+    iaagMapItem.createClient();
+    return iaagMapItem.createClient();
+  }
+
+  public void dispatch(){
+    Iterator iter = getIaags().entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      IaagMapItem iaag = (IaagMapItem) entry.getValue();
+      iaag.dispatch(getConn());
+    }
+  }
 }

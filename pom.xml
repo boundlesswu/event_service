@@ -17,6 +17,11 @@
             <artifactId>proto</artifactId>
             <version>4.0.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.vorxsoft.ieye</groupId>
+            <artifactId>micro_service</artifactId>
+            <version>4.0.1.2</version>
+        </dependency>
         <!--<dependency>-->
         <!--<groupId>io.grpc</groupId>-->
         <!--<artifactId>grpc-netty</artifactId>-->
@@ -31,11 +36,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vorxsoft</groupId>
-            <artifactId>micro-service</artifactId>
-            <version>4.0.1.2</version>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>

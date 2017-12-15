@@ -74,4 +74,10 @@ public abstract class  GrpcClient {
   public void setPORT(int PORT) {
     this.PORT = PORT;
   }
+
+  public void shut(){
+    if (getManagedChannel()!=null && !getManagedChannel().isShutdown()){
+      getManagedChannel().shutdown();
+    }
+  }
 }

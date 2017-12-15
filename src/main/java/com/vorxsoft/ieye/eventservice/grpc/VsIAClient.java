@@ -5,7 +5,7 @@ import io.grpc.stub.StreamObserver;
 
 public class VsIAClient extends GrpcClient{
   private VSIAServiceGrpc.VSIAServiceStub stub;
-  private IAAGInfo iaagInfo;
+  //private IAAGInfo iaagInfo;
 
   public VsIAClient(String name, String IP, int PORT) {
     super(name, IP, PORT);
@@ -21,13 +21,13 @@ public class VsIAClient extends GrpcClient{
     }
   }
 
-  public IAAGInfo getIaagInfo() {
-    return iaagInfo;
-  }
-
-  public void setIaagInfo(IAAGInfo iaagInfo) {
-    this.iaagInfo = iaagInfo;
-  }
+//  public IAAGInfo getIaagInfo() {
+//    return iaagInfo;
+//  }
+//
+//  public void setIaagInfo(IAAGInfo iaagInfo) {
+//    this.iaagInfo = iaagInfo;
+//  }
 
   public VSIAServiceGrpc.VSIAServiceStub getStub() {
     return stub;
@@ -111,4 +111,5 @@ public class VsIAClient extends GrpcClient{
     };
     stub.queryIAUList(request, responseObserver);
   }
+
 }

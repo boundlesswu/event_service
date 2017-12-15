@@ -1,7 +1,6 @@
 package com.vorxsoft.ieye.eventservice;
 
 import com.coreos.jetcd.Watch;
-import com.coreos.jetcd.data.KeyValue;
 import com.coreos.jetcd.watch.WatchEvent;
 import com.coreos.jetcd.watch.WatchResponse;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -10,6 +9,8 @@ import com.vorxsoft.ieye.eventservice.config.EventConfig;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
+import com.vorxsoft.ieye.eventservice.util.IaagMap;
+import com.vorxsoft.ieye.eventservice.util.IaagMapItem;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
@@ -137,6 +138,16 @@ public class EventServerStart implements WatchCallerInterface {
   private VsIeyeClient blgClient;
   private VsIeyeClient cmsClient;
   private List<VsIAClient> iaagClients;
+  IaagMap iaagMap;
+
+  public IaagMap getIaagMap() {
+    return iaagMap;
+  }
+
+  public void setIaagMap(IaagMap iaagMap) {
+    this.iaagMap = iaagMap;
+  }
+
 
   private ScheduledExecutorService getExecutor() {
     return executor_;
@@ -150,7 +161,6 @@ public class EventServerStart implements WatchCallerInterface {
   public void setCmsClient(VsIeyeClient cmsClient) {
     this.cmsClient = cmsClient;
   }
-
 
 
   public void getConfigPath() throws FileNotFoundException {
@@ -555,7 +565,23 @@ public class EventServerStart implements WatchCallerInterface {
       simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
     }
 
-    List<KeyValue> iaagAdress = myservice.ResolveAll("server_iaag");
+    IaagMap iaagMap = new IaagMap();
+    iaagMap.setConn(simpleServerStart.getConn());
+    iaagMap.load();
+
+    List<String> iaagAdress = null;
+    try {
+      iaagAdress = myservice.ResolveAllAddress("server_iaag");
+      for (int i = 0; i < iaagAdress.size(); i++) {
+        VsIAClient a = iaagMap.IaClinetInit(iaagAdress.get(i));
+        if (a != null)
+          simpleServerStart.getIaagClients().add(a);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
 
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
@@ -625,6 +651,10 @@ public class EventServerStart implements WatchCallerInterface {
       } catch (JsonFormat.ParseException e) {
         e.printStackTrace();
       }
+    }, 1l, ttl, TimeUnit.SECONDS);
+
+    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
+        simpleServerStart.getIaagMap().dispatch();
     }, 1l, ttl, TimeUnit.SECONDS);
 
     TimeUnit.DAYS.sleep(365 * 2000);

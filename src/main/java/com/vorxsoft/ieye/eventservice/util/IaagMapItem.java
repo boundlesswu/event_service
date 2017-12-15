@@ -1,6 +1,6 @@
 package com.vorxsoft.ieye.eventservice.util;
 
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
+
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.proto.*;
 import com.vorxsoft.ieye.proto.ResInfo;
@@ -184,5 +184,17 @@ public class IaagMapItem {
 
   public IauItem findIauItem(int dev_id) {
     return (getIaus() == null) ? null : getIaus().get(dev_id);
+  }
+
+  public void shutClient(){
+    if(getClient() != null){
+      getClient().shut();
+      setClient(null);
+    }
+  }
+  public  VsIAClient createClient(){
+    VsIAClient vsIAClient = new VsIAClient(getIaagInfo().getSvr_name(),getIaagInfo().getIp_intranet(),getIaagInfo().getPort_intranet());
+    setClient(vsIAClient);
+    return vsIAClient;
   }
 }
