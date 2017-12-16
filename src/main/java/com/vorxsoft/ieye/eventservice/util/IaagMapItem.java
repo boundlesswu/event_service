@@ -121,34 +121,6 @@ public class IaagMapItem {
     this.iaus = iaus;
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    return super.clone();
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    super.finalize();
-  }
-
-  @Override
-  public String toString() {
-    return "IaagMapItem{" +
-        "iaagInfo=" + iaagInfo +
-        ", channels=" + channels +
-        ", iaus=" + iaus +
-        '}';
-  }
 
   public static final class Builder {
     private IaagInfo iaagInfo;
@@ -196,5 +168,37 @@ public class IaagMapItem {
     VsIAClient vsIAClient = new VsIAClient(getIaagInfo().getSvr_name(),getIaagInfo().getIp_intranet(),getIaagInfo().getPort_intranet());
     setClient(vsIAClient);
     return vsIAClient;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof IaagMapItem)) return false;
+
+    IaagMapItem that = (IaagMapItem) o;
+
+    if (iaagInfo != null ? !iaagInfo.equals(that.iaagInfo) : that.iaagInfo != null) return false;
+    if (channels != null ? !channels.equals(that.channels) : that.channels != null) return false;
+    if (iaus != null ? !iaus.equals(that.iaus) : that.iaus != null) return false;
+    return client != null ? client.equals(that.client) : that.client == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = iaagInfo != null ? iaagInfo.hashCode() : 0;
+    result = 31 * result + (channels != null ? channels.hashCode() : 0);
+    result = 31 * result + (iaus != null ? iaus.hashCode() : 0);
+    result = 31 * result + (client != null ? client.hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "IaagMapItem{" +
+            "iaagInfo=" + iaagInfo +
+            ", channels=" + channels +
+            ", iaus=" + iaus +
+            ", client=" + client +
+            '}';
   }
 }

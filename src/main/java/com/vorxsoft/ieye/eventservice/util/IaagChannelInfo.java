@@ -234,6 +234,39 @@ public class IaagChannelInfo {
   }
 
   public void store2redis(Jedis jedis){
+  }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof IaagChannelInfo)) return false;
+
+    IaagChannelInfo that = (IaagChannelInfo) o;
+
+    if (iaag_chn_id != that.iaag_chn_id) return false;
+    if (svr_id != that.svr_id) return false;
+    if (res_id != that.res_id) return false;
+    if (chn_state != that.chn_state) return false;
+    if (dev_id != that.dev_id) return false;
+    if (needSendcmd != that.needSendcmd) return false;
+    if (hasSendCmd != that.hasSendCmd) return false;
+    if (preset_no != null ? !preset_no.equals(that.preset_no) : that.preset_no != null) return false;
+    if (event_ids != null ? !event_ids.equals(that.event_ids) : that.event_ids != null) return false;
+    return cmdType == that.cmdType;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = iaag_chn_id;
+    result = 31 * result + svr_id;
+    result = 31 * result + res_id;
+    result = 31 * result + (preset_no != null ? preset_no.hashCode() : 0);
+    result = 31 * result + chn_state;
+    result = 31 * result + dev_id;
+    result = 31 * result + (event_ids != null ? event_ids.hashCode() : 0);
+    result = 31 * result + (needSendcmd ? 1 : 0);
+    result = 31 * result + (hasSendCmd ? 1 : 0);
+    result = 31 * result + (cmdType != null ? cmdType.hashCode() : 0);
+    return result;
   }
 }

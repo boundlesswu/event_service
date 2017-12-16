@@ -115,16 +115,6 @@ public class IaagInfo {
   }
 
   @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-
-  @Override
   protected Object clone() throws CloneNotSupportedException {
     return super.clone();
   }
@@ -246,4 +236,37 @@ public class IaagInfo {
 //    }
 //    return iaagInfo;
 //  }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    IaagInfo iaagInfo = (IaagInfo) o;
+
+    if (svr_id != iaagInfo.svr_id) return false;
+    if (machine_id != iaagInfo.machine_id) return false;
+    if (port_extranet != iaagInfo.port_extranet) return false;
+    if (port_intranet != iaagInfo.port_intranet) return false;
+    if (svr_no != null ? !svr_no.equals(iaagInfo.svr_no) : iaagInfo.svr_no != null) return false;
+    if (svr_name != null ? !svr_name.equals(iaagInfo.svr_name) : iaagInfo.svr_name != null) return false;
+    if (ip_extranet != null ? !ip_extranet.equals(iaagInfo.ip_extranet) : iaagInfo.ip_extranet != null) return false;
+    if (ip_intranet != null ? !ip_intranet.equals(iaagInfo.ip_intranet) : iaagInfo.ip_intranet != null) return false;
+    if (remark != null ? !remark.equals(iaagInfo.remark) : iaagInfo.remark != null) return false;
+    return preset_no != null ? preset_no.equals(iaagInfo.preset_no) : iaagInfo.preset_no == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = svr_id;
+    result = 31 * result + (svr_no != null ? svr_no.hashCode() : 0);
+    result = 31 * result + (svr_name != null ? svr_name.hashCode() : 0);
+    result = 31 * result + machine_id;
+    result = 31 * result + (ip_extranet != null ? ip_extranet.hashCode() : 0);
+    result = 31 * result + (ip_intranet != null ? ip_intranet.hashCode() : 0);
+    result = 31 * result + port_extranet;
+    result = 31 * result + port_intranet;
+    result = 31 * result + (remark != null ? remark.hashCode() : 0);
+    result = 31 * result + (preset_no != null ? preset_no.hashCode() : 0);
+    return result;
+  }
 }

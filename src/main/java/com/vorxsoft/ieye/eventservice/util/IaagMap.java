@@ -188,4 +188,22 @@ public class IaagMap {
       iaag.dispatch(getConn());
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof IaagMap)) return false;
+
+    IaagMap iaagMap = (IaagMap) o;
+
+    if (iaags != null ? !iaags.equals(iaagMap.iaags) : iaagMap.iaags != null) return false;
+    return conn != null ? conn.equals(iaagMap.conn) : iaagMap.conn == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = iaags != null ? iaags.hashCode() : 0;
+    result = 31 * result + (conn != null ? conn.hashCode() : 0);
+    return result;
+  }
 }

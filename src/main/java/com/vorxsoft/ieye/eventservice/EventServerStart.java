@@ -43,7 +43,7 @@ public class EventServerStart implements WatchCallerInterface {
   @Override
   public void WatchCaller(Watch.Watcher watch) {
     WatchResponse ret = watch.listen();
-    System.out.println("watcher response  " + watch.listen());
+    System.out.println("watcher response  " +ret);
     for (int i = 0; i < ret.getEvents().size(); i++) {
       WatchEvent a = ret.getEvents().get(i);
       String key = a.getKeyValue().getKey().toString();
@@ -408,17 +408,21 @@ public class EventServerStart implements WatchCallerInterface {
               break;
           }
           break;
+        //  需要判断级联删除后，事件配置是否修改
         case REL_EVENT_CAM:
           switch (req.getEmAct()) {
             case OA_ADD:
+              //无增加情况出现
               for (int j = 0; j < req.getIdListList().size(); j++) {
               }
               break;
             case OA_MOD:
+              //修改时候 id无效
               for (int j = 0; j < req.getIdListList().size(); j++) {
               }
               break;
             case OA_DEL:
+              //删除时候 id是有效的
               for (int j = 0; j < req.getIdListList().size(); j++) {
               }
               break;

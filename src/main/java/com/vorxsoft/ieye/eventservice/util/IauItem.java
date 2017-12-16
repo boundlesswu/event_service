@@ -155,32 +155,7 @@ public class IauItem {
     this.password = password;
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    return super.clone();
-  }
-
-  @Override
-  public String toString() {
-    return super.toString();
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    super.finalize();
-  }
-
-  public static final class Builder {
+   public static final class Builder {
     private int dev_id;
     private String dev_no;
     private int svr_id;
@@ -274,4 +249,46 @@ public class IauItem {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    IauItem iauItem = (IauItem) o;
+
+    if (dev_id != iauItem.dev_id) return false;
+    if (svr_id != iauItem.svr_id) return false;
+    if (group_id != iauItem.group_id) return false;
+    if (chn_video != iauItem.chn_video) return false;
+    if (port != iauItem.port) return false;
+    if (dev_no != null ? !dev_no.equals(iauItem.dev_no) : iauItem.dev_no != null) return false;
+    if (dev_name != null ? !dev_name.equals(iauItem.dev_name) : iauItem.dev_name != null) return false;
+    if (dev_type != null ? !dev_type.equals(iauItem.dev_type) : iauItem.dev_type != null) return false;
+    if (protocol_type != null ? !protocol_type.equals(iauItem.protocol_type) : iauItem.protocol_type != null)
+      return false;
+    if (dev_sn != null ? !dev_sn.equals(iauItem.dev_sn) : iauItem.dev_sn != null) return false;
+    if (remark != null ? !remark.equals(iauItem.remark) : iauItem.remark != null) return false;
+    if (ip != null ? !ip.equals(iauItem.ip) : iauItem.ip != null) return false;
+    if (username != null ? !username.equals(iauItem.username) : iauItem.username != null) return false;
+    return password != null ? password.equals(iauItem.password) : iauItem.password == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = dev_id;
+    result = 31 * result + (dev_no != null ? dev_no.hashCode() : 0);
+    result = 31 * result + svr_id;
+    result = 31 * result + (dev_name != null ? dev_name.hashCode() : 0);
+    result = 31 * result + (dev_type != null ? dev_type.hashCode() : 0);
+    result = 31 * result + (protocol_type != null ? protocol_type.hashCode() : 0);
+    result = 31 * result + (dev_sn != null ? dev_sn.hashCode() : 0);
+    result = 31 * result + group_id;
+    result = 31 * result + (remark != null ? remark.hashCode() : 0);
+    result = 31 * result + chn_video;
+    result = 31 * result + (ip != null ? ip.hashCode() : 0);
+    result = 31 * result + port;
+    result = 31 * result + (username != null ? username.hashCode() : 0);
+    result = 31 * result + (password != null ? password.hashCode() : 0);
+    return result;
+  }
 }
