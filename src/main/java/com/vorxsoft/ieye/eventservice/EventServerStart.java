@@ -572,6 +572,7 @@ public class EventServerStart implements WatchCallerInterface {
     IaagMap iaagMap = new IaagMap();
     iaagMap.setConn(simpleServerStart.getConn());
     iaagMap.load();
+    simpleServerStart.setIaagMap(iaagMap);
 
     List<String> iaagAdress = null;
     try {
@@ -593,6 +594,7 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
     monitorProcess.setName("monitorProcess");
     monitorProcess.setEventConfig(simpleServerStart.getEventConfig());
+    monitorProcess.setIaagMap(simpleServerStart.getIaagMap());
     monitorProcess.setProcessType(ProcessServerType);
     monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     monitorProcess.redisInit(redisIP, redisPort);
@@ -604,6 +606,7 @@ public class EventServerStart implements WatchCallerInterface {
     sioProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
     sioProcess.setName("sioProcess");
     sioProcess.setEventConfig(simpleServerStart.getEventConfig());
+    sioProcess.setIaagMap(simpleServerStart.getIaagMap());
     sioProcess.setProcessType(ProcessSioType);
     sioProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     sioProcess.redisInit(redisIP, redisPort);
@@ -615,6 +618,7 @@ public class EventServerStart implements WatchCallerInterface {
     iaProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
     iaProcess.setName("iaProcess");
     iaProcess.setEventConfig(simpleServerStart.getEventConfig());
+    iaProcess.setIaagMap(simpleServerStart.getIaagMap());
     iaProcess.setProcessType(ProcessIaType);
     iaProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     iaProcess.redisInit(redisIP, redisPort);
@@ -626,6 +630,7 @@ public class EventServerStart implements WatchCallerInterface {
 //    serverProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
 //    serverProcess.setName("serverProcess");
 //    serverProcess.setEventConfig(simpleServerStart.getEventConfig());
+//    serverProcess.setIaagMap(simpleServerStart.getIaagMap());
 //    serverProcess.setProcessType(ProcessServerType);
 //    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
 //    serverProcess.redisInit(redisIP, redisPort);
@@ -636,6 +641,7 @@ public class EventServerStart implements WatchCallerInterface {
 //    deviceProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
 //    deviceProcess.setName("deviceProcess");
 //    deviceProcess.setEventConfig(simpleServerStart.getEventConfig());
+//    deviceProcess.setIaagMap(simpleServerStart.getIaagMap());
 //    deviceProcess.setProcessType(ProcessDeviceType);
 //    deviceProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
 //    deviceProcess.redisInit(redisIP, redisPort);

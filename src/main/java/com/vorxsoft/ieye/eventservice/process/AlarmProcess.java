@@ -9,6 +9,7 @@ import com.vorxsoft.ieye.eventservice.mq.Publisher;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
+import com.vorxsoft.ieye.eventservice.util.IaagMap;
 import com.vorxsoft.ieye.eventservice.util.ResUtil;
 import com.vorxsoft.ieye.eventservice.util.ResUtilImpl;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
@@ -40,7 +41,16 @@ public class AlarmProcess implements Runnable {
   VsIeyeClient cmsIeyeClient;
   VsIeyeClient blgTeyeClient;
   //HashMap<String,VsIeyeClient>
-  Publisher publisher;
+  private Publisher publisher;
+  private IaagMap iaagMap;
+
+  public IaagMap getIaagMap() {
+    return iaagMap;
+  }
+
+  public void setIaagMap(IaagMap iaagMap) {
+    this.iaagMap = iaagMap;
+  }
 
   public Publisher getPublisher() {
     return publisher;
@@ -290,9 +300,10 @@ public class AlarmProcess implements Runnable {
         SioConfigKey sioConfigKey = new SioConfigKey(evenType, resourceId);
         eventInfo = eventConfig.getSioConfig(sioConfigKey);
       } else if (processType == ProcessIaType) {
+        resourceId = Integer.parseInt(map.get("resourceId"));
         iaadId = Integer.parseInt(map.get("iaagId"));
         iauId = Integer.parseInt(map.get("iauId"));
-        IaConfigKey iaConfigKey = new IaConfigKey(evenType, resourceId, iaadId, iauId);
+        IaConfigKey iaConfigKey = new IaConfigKey(evenType, resourceId, iaadId, getIaagMap().getIaag_chn_id(iaadId,resourceId));
         eventInfo = eventConfig.getIaConfig(iaConfigKey);
       } else if (processType == ProcessServerType) {
         machineId = Integer.parseInt(map.get("machineId"));

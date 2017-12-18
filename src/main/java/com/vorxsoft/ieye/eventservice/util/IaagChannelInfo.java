@@ -107,6 +107,7 @@ public class IaagChannelInfo {
     this.cmdType = cmdType;
   }
 
+
   public int getIaag_chn_id() {
     return iaag_chn_id;
   }
@@ -269,4 +270,6 @@ public class IaagChannelInfo {
     result = 31 * result + (cmdType != null ? cmdType.hashCode() : 0);
     return result;
   }
+
+
 }

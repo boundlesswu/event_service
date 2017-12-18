@@ -101,7 +101,8 @@ public class IaagMap {
        chanel.setEvent_ids(ids);
        chanel.setNeedSendcmd(true);
        chanel.setHasSendCmd(false);
-       channels.put(svr_id,chanel);
+       channels.put(iaag_chn_id,chanel);
+       //channels.put(svr_id,chanel);
        ret2.close();
        pstmt2.close();
      }
@@ -205,5 +206,19 @@ public class IaagMap {
     int result = iaags != null ? iaags.hashCode() : 0;
     result = 31 * result + (conn != null ? conn.hashCode() : 0);
     return result;
+  }
+
+  public int getIaag_chn_id(int svr_id,int res_id) {
+    if (getIaags() == null) return 0;
+    IaagMapItem a = getIaags().get(svr_id);
+    if(a == null ) return 0;
+    Iterator iter = a.getChannels().entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      IaagChannelInfo val = (IaagChannelInfo)entry.getValue();
+      if(val.getRes_id() ==  res_id )
+        return val.getIaag_chn_id();
+    }
+    return 0;
   }
 }
