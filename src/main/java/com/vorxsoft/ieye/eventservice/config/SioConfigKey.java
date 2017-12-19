@@ -74,4 +74,12 @@ public class SioConfigKey{
     result = 31 * result + res_id;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "SioConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", res_id=" + res_id +
+            '}';
+  }
 }

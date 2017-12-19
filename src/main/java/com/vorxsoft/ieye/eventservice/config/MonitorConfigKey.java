@@ -77,4 +77,12 @@ public class  MonitorConfigKey {
       return new MonitorConfigKey(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "MonitorConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", res_id=" + res_id +
+            '}';
+  }
 }

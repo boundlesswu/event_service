@@ -12,11 +12,12 @@ public class EventLog {
   private Timestamp tHappenTime;
   private Timestamp tEndTime;
   private String sExtraDesc = "";
+  private int nEventId = 0;
 
   public int insert2db(Connection conn) throws SQLException {
     int ret = 0;
     String sql = "INSERT INTO tl_event(event_genus,event_type,event_name,event_desc," +
-            "event_level,happen_time,end_time,extra_desc,deal_state) VALUES (?,?,?,?,?,?,?,?,?)";
+            "event_level,happen_time,end_time,extra_desc,deal_state,event_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
     //PreparedStatement pstmt = conn.prepareStatement(sql);
     PreparedStatement pstmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
     pstmt.setString(1, getsEventGenus());
@@ -29,6 +30,7 @@ public class EventLog {
     pstmt.setString(8, getsExtraDesc());
     //deal_state
     pstmt.setInt(9, 1);
+    pstmt.setInt(10,getnEventId());
     pstmt.executeUpdate();
     ResultSet rs = pstmt.getGeneratedKeys();
     if(rs.next())
@@ -59,11 +61,21 @@ public class EventLog {
     settHappenTime(builder.tHappenTime);
     settEndTime(builder.tEndTime);
     setsExtraDesc(builder.sExtraDesc);
+    setnEventId(builder.nEventId);
   }
 
   public static Builder newBuilder() {
     return new Builder();
   }
+
+  public int getnEventId() {
+    return nEventId;
+  }
+
+  public void setnEventId(int nEventId) {
+    this.nEventId = nEventId;
+  }
+
 
   public int getnEventLogId() {
     return nEventLogId;
@@ -151,6 +163,7 @@ public class EventLog {
     private Timestamp tHappenTime;
     private Timestamp tEndTime;
     private String sExtraDesc;
+    private int nEventId;
 
     private Builder() {
     }
@@ -200,8 +213,29 @@ public class EventLog {
       return this;
     }
 
+    public Builder nEventId(int val) {
+      nEventId = val;
+      return this;
+    }
+
     public EventLog build() {
       return new EventLog(this);
     }
+  }
+
+  @Override
+  public String toString() {
+    return "EventLog{" +
+            "nEventLogId=" + nEventLogId +
+            ", sEventGenus='" + sEventGenus + '\'' +
+            ", sEventType='" + sEventType + '\'' +
+            ", sEventName='" + sEventName + '\'' +
+            ", sEventDesc='" + sEventDesc + '\'' +
+            ", nEventlevel=" + nEventlevel +
+            ", tHappenTime=" + tHappenTime +
+            ", tEndTime=" + tEndTime +
+            ", sExtraDesc='" + sExtraDesc + '\'' +
+            ", nEventId=" + nEventId +
+            '}';
   }
 }

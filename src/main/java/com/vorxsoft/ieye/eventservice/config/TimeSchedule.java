@@ -45,4 +45,11 @@ public class TimeSchedule{
       return new TimeSchedule(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "TimeSchedule{" +
+            "timeScheduleItems=" + timeScheduleItems +
+            '}';
+  }
 }

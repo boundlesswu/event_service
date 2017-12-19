@@ -76,4 +76,12 @@ public class DeviceConfigKey {
     result = 31 * result + dev_id;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "DeviceConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", dev_id=" + dev_id +
+            '}';
+  }
 }

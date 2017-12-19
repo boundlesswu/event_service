@@ -76,4 +76,12 @@ public class ServerConfigKey{
     result = 31 * result + machine_id;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "ServerConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", machine_id=" + machine_id +
+            '}';
+  }
 }

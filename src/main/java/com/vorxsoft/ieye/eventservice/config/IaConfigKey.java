@@ -113,4 +113,14 @@ public class  IaConfigKey {
     result = 31 * result + iaag_chn_id;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "IaConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", res_id=" + res_id +
+            ", iaagId=" + iaagId +
+            ", iaag_chn_id=" + iaag_chn_id +
+            '}';
+  }
 }

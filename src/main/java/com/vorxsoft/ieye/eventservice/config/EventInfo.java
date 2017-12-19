@@ -370,4 +370,28 @@ public class EventInfo {
       }
     }
   }
+
+  @Override
+  public String toString() {
+    return "EventInfo{" +
+            "event_id=" + event_id +
+            ", event_no='" + event_no + '\'' +
+            ", event_genus='" + event_genus + '\'' +
+            ", event_type='" + event_type + '\'' +
+            ", event_name='" + event_name + '\'' +
+            ", event_desc='" + event_desc + '\'' +
+            ", enable_state=" + enable_state +
+            ", event_level=" + event_level +
+            ", auto_release_interval=" + auto_release_interval +
+            ", guardPlan=" + guardPlan +
+            ", res_id=" + res_id +
+            ", dev_id=" + dev_id +
+            ", machine_id=" + machine_id +
+            ", svr_id=" + svr_id +
+            ", sourceId=" + sourceId +
+            ", iaagId=" + iaagId +
+            ", iaag_chn_id=" + iaag_chn_id +
+            ", eventLinkagelist=" + eventLinkagelist +
+            '}';
+  }
 }

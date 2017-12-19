@@ -17,6 +17,8 @@ import com.vorxsoft.ieye.microservice.WatchCallerInterface;
 import com.vorxsoft.ieye.proto.ReloadRequest;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -43,7 +45,7 @@ public class EventServerStart implements WatchCallerInterface {
   @Override
   public void WatchCaller(Watch.Watcher watch) {
     WatchResponse ret = watch.listen();
-    System.out.println("watcher response  " +ret);
+    System.out.println("watcher response  " + ret);
     for (int i = 0; i < ret.getEvents().size(); i++) {
       WatchEvent a = ret.getEvents().get(i);
       String key = a.getKeyValue().getKey().toString();
@@ -139,6 +141,11 @@ public class EventServerStart implements WatchCallerInterface {
   private VsIeyeClient cmsClient;
   private List<VsIAClient> iaagClients;
   IaagMap iaagMap;
+  private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
+
+  public static Logger getLogger() {
+    return logger;
+  }
 
   public IaagMap getIaagMap() {
     return iaagMap;
@@ -290,6 +297,7 @@ public class EventServerStart implements WatchCallerInterface {
       return;
     }
     for (ReloadRequest req : reqList) {
+      getLogger().info("config reload req:" + req);
       System.out.println("config reload req:" + req);
       switch (req.getLoadType()) {
         case REL_DEV_INFO:
@@ -461,28 +469,6 @@ public class EventServerStart implements WatchCallerInterface {
     }
   }
 
-  public List<String> getResIdResNo(String dev_no, String res_uid) throws SQLException {
-    PreparedStatement pstmt = conn.prepareStatement("select b.res_id,b.res_no,b.res_name from ti_device a join ti_resource b on a.dev_id=b.dev_id where a.dev_no = ? and b.res_uid = ?");
-    pstmt.setString(1, dev_no);
-    pstmt.setString(2, res_uid);
-    ResultSet rs = pstmt.executeQuery();
-    //ResultSet rs = st.executeQuery("select b.res_id,b.res_no from ti_device a join ti_resource b on a.dev_id=b.dev_id where a.dev_no='102' and b.res_uid='1'");
-    while (rs.next()) {
-      System.out.print(rs.getString(1));
-      System.out.print("  ");
-      System.out.println(rs.getString(2));
-      System.out.print("  ");
-      System.out.println(rs.getString(3));
-    }
-    List<String> a = new LinkedList<String>();
-    a.add(rs.getString(1));
-    a.add(rs.getString(2));
-    a.add(rs.getString(3));
-    rs.close();
-    pstmt.close();
-    return a;
-  }
-
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
@@ -495,8 +481,10 @@ public class EventServerStart implements WatchCallerInterface {
       @Override
       public void run() {
         System.err.println("*** shutting down gRPC server since JVM is shutting down");
+        getLogger().error("*** shutting down gRPC server since JVM is shutting down");
         EventServerStart.this.stop();
         System.err.println("*** server shut down");
+        getLogger().error("*** server shut down");
       }
     });
   }
@@ -508,8 +496,10 @@ public class EventServerStart implements WatchCallerInterface {
       server.awaitTermination(2, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
+      getLogger().error(e);
     } catch (SQLException e) {
       e.printStackTrace();
+      getLogger().error(e);
     }
   }
 
@@ -557,15 +547,19 @@ public class EventServerStart implements WatchCallerInterface {
     String blgAddress = myservice.Resolve("server_blg");
     if (blgAddress == null) {
       System.out.println("cannot resolve blg server  address");
+      simpleServerStart.getLogger().warn("cannot resolve blg server  address");
     } else {
       System.out.println("successful resolve blg server  address:" + blgAddress);
+      simpleServerStart.getLogger().info("successful resolve blg server  address:" + blgAddress);
       simpleServerStart.setBlgClient(new VsIeyeClient("blg", blgAddress));
     }
     String cmsAddress = myservice.Resolve("server_cms");
     if (cmsAddress == null) {
       System.out.println("cannot resolve cms server  address");
+      simpleServerStart.getLogger().warn("cannot resolve cms server  address");
     } else {
       System.out.println("successful resolve cms server  address:" + cmsAddress);
+      simpleServerStart.getLogger().info("successful resolve cms server  address:" + cmsAddress);
       simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
     }
 
@@ -577,19 +571,24 @@ public class EventServerStart implements WatchCallerInterface {
     List<String> iaagAdress = null;
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
+      simpleServerStart.getLogger().info("resolve all iaag address :" + iaagAdress);
       for (int i = 0; i < iaagAdress.size(); i++) {
         VsIAClient a = iaagMap.IaClinetInit(iaagAdress.get(i));
         if (a != null)
-          simpleServerStart.getIaagClients().add(a);
+          if (simpleServerStart.getIaagClients() == null) {
+            simpleServerStart.setIaagClients(new ArrayList<>());
+          }
+        simpleServerStart.getIaagClients().add(a);
       }
     } catch (Exception e) {
+      simpleServerStart.getLogger().error(e);
       e.printStackTrace();
     }
 
 
-
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
+    monitorProcess.setLogger(simpleServerStart.getLogger());
     monitorProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
     monitorProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
     monitorProcess.setName("monitorProcess");
@@ -602,6 +601,7 @@ public class EventServerStart implements WatchCallerInterface {
 
     //sio process
     AlarmProcess sioProcess = new AlarmProcess();
+    sioProcess.setLogger(simpleServerStart.getLogger());
     sioProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
     sioProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
     sioProcess.setName("sioProcess");
@@ -614,6 +614,7 @@ public class EventServerStart implements WatchCallerInterface {
 
     //ia process
     AlarmProcess iaProcess = new AlarmProcess();
+    iaProcess.setLogger(simpleServerStart.getLogger());
     iaProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
     iaProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
     iaProcess.setName("iaProcess");
@@ -626,6 +627,7 @@ public class EventServerStart implements WatchCallerInterface {
 
 //    //server process
 //    AlarmProcess serverProcess = new AlarmProcess();
+//    serverProcess.setLogger(simpleServerStart.getLogger());
 //    serverProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
 //    serverProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
 //    serverProcess.setName("serverProcess");
@@ -637,6 +639,7 @@ public class EventServerStart implements WatchCallerInterface {
 //serverProcess.mqInit(activemqIp, activemqPort);
 //    //device process
 //    AlarmProcess deviceProcess = new AlarmProcess();
+//    deviceProcess.setLogger(simpleServerStart.getLogger());
 //    deviceProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
 //    deviceProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
 //    deviceProcess.setName("deviceProcess");
@@ -657,14 +660,16 @@ public class EventServerStart implements WatchCallerInterface {
       try {
         simpleServerStart.updateConfig();
       } catch (SQLException e) {
+        simpleServerStart.getLogger().error(e);
         e.printStackTrace();
       } catch (JsonFormat.ParseException e) {
+        simpleServerStart.getLogger().error(e);
         e.printStackTrace();
       }
     }, 1l, ttl, TimeUnit.SECONDS);
 
     simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
-        simpleServerStart.getIaagMap().dispatch();
+      simpleServerStart.getIaagMap().dispatch();
     }, 1l, ttl, TimeUnit.SECONDS);
 
     TimeUnit.DAYS.sleep(365 * 2000);

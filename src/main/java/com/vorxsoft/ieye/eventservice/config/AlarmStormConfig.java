@@ -135,4 +135,12 @@ public class AlarmStormConfig {
   public AlarmStorm getAlarmStorm(String type){
     return alarmStormConfigList.get(type);
   }
+
+  @Override
+  public String toString() {
+    return "AlarmStormConfig{" +
+            "alarmStormConfigList=" + alarmStormConfigList +
+            ", FreshTime=" + FreshTime +
+            '}';
+  }
 }

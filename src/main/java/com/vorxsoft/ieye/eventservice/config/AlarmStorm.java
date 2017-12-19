@@ -76,4 +76,13 @@ public class AlarmStorm {
       return new AlarmStorm(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "AlarmStorm{" +
+            "stomId=" + stomId +
+            ", eventType='" + eventType + '\'' +
+            ", eventStom=" + eventStom +
+            '}';
+  }
 }

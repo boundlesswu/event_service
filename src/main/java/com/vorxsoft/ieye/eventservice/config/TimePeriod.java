@@ -73,4 +73,13 @@ public class TimePeriod{
       return new TimePeriod(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "TimePeriod{" +
+            "type=" + type +
+            ", st=" + st +
+            ", et=" + et +
+            '}';
+  }
 }

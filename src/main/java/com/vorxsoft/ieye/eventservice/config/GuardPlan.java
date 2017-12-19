@@ -288,4 +288,17 @@ public Date timestamp2datetime(Timestamp ts){
       return new GuardPlan(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "GuardPlan{" +
+            "guard_plan_id=" + guard_plan_id +
+            ", guard_plan_name='" + guard_plan_name + '\'' +
+            ", timeSchedule=" + timeSchedule +
+            ", time_schedule='" + time_schedule + '\'' +
+            ", guard_plan_type=" + guard_plan_type +
+            ", start_time=" + start_time +
+            ", end_time=" + end_time +
+            '}';
+  }
 }

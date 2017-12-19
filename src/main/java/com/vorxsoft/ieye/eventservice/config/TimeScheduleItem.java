@@ -66,4 +66,12 @@ public class TimeScheduleItem{
       return new TimeScheduleItem(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "TimeScheduleItem{" +
+            "dayOfWeek=" + dayOfWeek +
+            ", timePeriods=" + timePeriods +
+            '}';
+  }
 }

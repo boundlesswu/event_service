@@ -1123,4 +1123,24 @@ public class EventConfig {
       eventInfo.deleteLinkagebyId(id);
     }
   }
+
+  @Override
+  public String toString() {
+    return "EventConfig{" +
+            "monitorConfigList=" + monitorConfigList +
+            ", iaConfigList=" + iaConfigList +
+            ", sioConfigList=" + sioConfigList +
+            ", serverConfigList=" + serverConfigList +
+            ", deviceConfigList=" + deviceConfigList +
+            ", monitorConfigList2=" + monitorConfigList2 +
+            ", iaConfigList2=" + iaConfigList2 +
+            ", sioConfigList2=" + sioConfigList2 +
+            ", serverConfigList2=" + serverConfigList2 +
+            ", deviceConfigList2=" + deviceConfigList2 +
+            ", alarmStormConfig=" + alarmStormConfig +
+            ", listNum=" + listNum +
+            ", disListNum=" + disListNum +
+            ", freshTime=" + freshTime +
+            '}';
+  }
 }
