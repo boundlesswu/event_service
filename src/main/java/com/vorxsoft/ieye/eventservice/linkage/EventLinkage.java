@@ -253,4 +253,21 @@ public class EventLinkage {
     }
     return linkageBulder.build();
   }
+
+  @Override
+  public String toString() {
+    return "EventLinkage{" +
+            "linkage_id=" + linkage_id +
+            ", event_id=" + event_id +
+            ", linkage_type='" + linkage_type + '\'' +
+            ", arg1='" + arg1 + '\'' +
+            ", arg2='" + arg2 + '\'' +
+            ", arg3='" + arg3 + '\'' +
+            ", arg4='" + arg4 + '\'' +
+            ", arg5='" + arg5 + '\'' +
+            ", arg6='" + arg6 + '\'' +
+            ", arg7='" + arg7 + '\'' +
+            ", arg8='" + arg8 + '\'' +
+            '}';
+  }
 }
