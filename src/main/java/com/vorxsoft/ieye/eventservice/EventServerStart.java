@@ -6,6 +6,7 @@ import com.coreos.jetcd.watch.WatchResponse;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.EventConfig;
+import com.vorxsoft.ieye.eventservice.grpc.LogServiceClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
@@ -37,6 +38,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
+import static com.vorxsoft.ieye.proto.VSLogLevel.VSLogLevelInfo;
 
 /**
  * Created by Administrator on 2017/8/3 0003.
@@ -139,6 +141,7 @@ public class EventServerStart implements WatchCallerInterface {
 
   private VsIeyeClient blgClient;
   private VsIeyeClient cmsClient;
+  private LogServiceClient logServiceClient;
   private List<VsIAClient> iaagClients;
   IaagMap iaagMap;
   private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
@@ -155,6 +158,13 @@ public class EventServerStart implements WatchCallerInterface {
     this.iaagMap = iaagMap;
   }
 
+  public LogServiceClient getLogServiceClient() {
+    return logServiceClient;
+  }
+
+  public void setLogServiceClient(LogServiceClient logServiceClient) {
+    this.logServiceClient = logServiceClient;
+  }
 
   private ScheduledExecutorService getExecutor() {
     return executor_;
@@ -544,6 +554,20 @@ public class EventServerStart implements WatchCallerInterface {
     //simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
     //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
+    String logAddress = myservice.Resolve("server_log");
+    if(logAddress == null){
+      System.out.println("cannot resolve log server  address");
+      simpleServerStart.getLogger().warn("cannot resolve log server  address");
+    }else{
+      System.out.println("successful resolve log server  address:" + logAddress);
+      simpleServerStart.getLogger().info("successful resolve log server  address:" + logAddress);
+      simpleServerStart.setLogServiceClient(new LogServiceClient("log",logAddress));
+      simpleServerStart.getLogServiceClient().setHostNameIp(hostip);
+      simpleServerStart.getLogServiceClient().setpName(serviceName);
+      String logContent = "successful resolve log server  address:" + logAddress;
+      simpleServerStart.getLogServiceClient().sentVSLog(logContent,VSLogLevelInfo);
+    }
+
     String blgAddress = myservice.Resolve("server_blg");
     if (blgAddress == null) {
       System.out.println("cannot resolve blg server  address");
@@ -666,11 +690,11 @@ public class EventServerStart implements WatchCallerInterface {
         simpleServerStart.getLogger().error(e);
         e.printStackTrace();
       }
-    }, 1l, ttl, TimeUnit.SECONDS);
+    }, 1l, 1L, TimeUnit.SECONDS);
 
     simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
       simpleServerStart.getIaagMap().dispatch();
-    }, 1l, ttl, TimeUnit.SECONDS);
+    }, 1l, 1L, TimeUnit.SECONDS);
 
     TimeUnit.DAYS.sleep(365 * 2000);
   }

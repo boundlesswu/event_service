@@ -2,6 +2,7 @@ package com.vorxsoft.ieye.eventservice.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.vorxsoft.ieye.eventservice.grpc.GrpcClient;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -300,5 +301,25 @@ public Date timestamp2datetime(Timestamp ts){
             ", start_time=" + start_time +
             ", end_time=" + end_time +
             '}';
+  }
+
+  public void zero(){
+    this.guard_plan_id = 0;
+    this.guard_plan_name = "";
+    this.timeSchedule.zero();
+    this.time_schedule ="";
+    this.guard_plan_type = GuardPlanType.Permanent;
+    //this.start_time = 0;
+    //this.end_time = 0;
+  }
+  public void copy(GuardPlan other){
+    zero();
+    this.guard_plan_id = other.getGuard_plan_id();
+    this.guard_plan_name = other.getGuard_plan_name();
+    this.timeSchedule.copy(other.getTimeSchedule());
+    this.time_schedule = other.getTime_schedule();
+    this.guard_plan_type = other.getGuard_plan_type();
+    this.start_time = other.getStart_time();
+    this.end_time = other.getEnd_time();
   }
 }

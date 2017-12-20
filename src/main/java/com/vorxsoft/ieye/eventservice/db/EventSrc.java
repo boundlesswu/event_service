@@ -18,8 +18,6 @@ public abstract class EventSrc {
     this.tHappenTime = tHappenTime;
   }
 
-
-
   abstract public boolean insert2db(Connection conn) throws SQLException;
 
   public EventSrc() {

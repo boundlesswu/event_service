@@ -80,13 +80,17 @@ public class EventRecordMap {
     return req;
   }
 
-  public void clearRecord(){
-    Iterator<EventRecord> it = getEventRecords().iterator();
-    while(it.hasNext()) {
-      EventRecord record = it.next();
-      if(record.isProcessed()){
+  public void clearRecord() {
+    for (int i = 0; i < getEventRecords().size(); i++) {
+      EventRecord record = getEventRecords().get(i);
+      //System.out.println("event record :" + record);
+      if (record.isProcessed()) {
+        System.out.println("event record :" + record + "will delete");
         getEventRecords().remove(record);
+        i--;
       }
     }
   }
+
+
 }

@@ -270,4 +270,33 @@ public class EventLinkage {
             ", arg8='" + arg8 + '\'' +
             '}';
   }
+
+  public void zero(){
+   this.linkage_id = 0;
+    this.event_id = 0;
+    this.linkage_type = "";
+    this.arg1 = "";
+    this.arg2 = "";
+    this.arg3 = "";
+    this.arg4 = "";
+    this.arg5 = "";
+    this.arg6 = "";
+    this.arg7 = "";
+    this.arg8 = "";
+  }
+
+  public void copy(EventLinkage other){
+    zero();
+    this.linkage_id = other.getLinkage_id();
+    this.event_id =other.getEvent_id();
+    this.linkage_type = other.getLinkage_type();
+    this.arg1 = other.getArg1();
+    this.arg2 = other.getArg2();
+    this.arg3 = other.getArg3();
+    this.arg4 = other.getArg4();
+    this.arg5 = other.getArg5();
+    this.arg6 = other.getArg6();
+    this.arg7 = other.getArg7();
+    this.arg8 = other.getArg8();
+  }
 }

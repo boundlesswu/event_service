@@ -219,9 +219,10 @@ public class AlarmProcess implements Runnable {
         Thread.sleep((int) Math.random() * 10);
         processEvent();
         Thread.sleep((int) Math.random() * 10);
-        if (i % 20000 == 0) {
+        if (i % 200000 == 0) {
           //System.out.println("process :" + getName() + getProcessType() + "is running");
-          getLogger().debug("process :" + getName() + " " +getProcessType() + " is running");
+          getLogger().debug("process :" + getName() + " " +getProcessType() + " is running!!! "+
+                  Thread.currentThread().getName()+" " + Thread.currentThread().getId());
         }
       } catch (InterruptedException e) {
         e.printStackTrace();

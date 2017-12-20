@@ -11,23 +11,23 @@ import java.util.*;
 import static com.vorxsoft.ieye.eventservice.util.Constant.*;
 
 public class EventConfig {
-  public HashMap<Long, EventInfo> getMonitorConfigList() {
+  public HashMap<Integer, EventInfo> getMonitorConfigList() {
     return monitorConfigList;
   }
 
-  public HashMap<Long, EventInfo> getIaConfigList() {
+  public HashMap<Integer, EventInfo> getIaConfigList() {
     return iaConfigList;
   }
 
-  public HashMap<Long, EventInfo> getSioConfigList() {
+  public HashMap<Integer, EventInfo> getSioConfigList() {
     return sioConfigList;
   }
 
-  public HashMap<Long, EventInfo> getServerConfigList() {
+  public HashMap<Integer, EventInfo> getServerConfigList() {
     return serverConfigList;
   }
 
-  public HashMap<Long, EventInfo> getDeviceConfigList() {
+  public HashMap<Integer, EventInfo> getDeviceConfigList() {
     return deviceConfigList;
   }
 
@@ -51,23 +51,23 @@ public class EventConfig {
     return deviceConfigList2;
   }
 
-  public void setMonitorConfigList(HashMap<Long, EventInfo> monitorConfigList) {
+  public void setMonitorConfigList(HashMap<Integer, EventInfo> monitorConfigList) {
     this.monitorConfigList = monitorConfigList;
   }
 
-  public void setIaConfigList(HashMap<Long, EventInfo> iaConfigList) {
+  public void setIaConfigList(HashMap<Integer, EventInfo> iaConfigList) {
     this.iaConfigList = iaConfigList;
   }
 
-  public void setSioConfigList(HashMap<Long, EventInfo> sioConfigList) {
+  public void setSioConfigList(HashMap<Integer, EventInfo> sioConfigList) {
     this.sioConfigList = sioConfigList;
   }
 
-  public void setServerConfigList(HashMap<Long, EventInfo> serverConfigList) {
+  public void setServerConfigList(HashMap<Integer, EventInfo> serverConfigList) {
     this.serverConfigList = serverConfigList;
   }
 
-  public void setDeviceConfigList(HashMap<Long, EventInfo> deviceConfigList) {
+  public void setDeviceConfigList(HashMap<Integer, EventInfo> deviceConfigList) {
     this.deviceConfigList = deviceConfigList;
   }
 
@@ -94,23 +94,23 @@ public class EventConfig {
   public EventConfig() {
     this.monitorConfigList = new HashMap<>();
     this.iaConfigList = new HashMap<>();
-    this.sioConfigList= new HashMap<>();
-    this.serverConfigList= new HashMap<>();
-    this.deviceConfigList= new HashMap<>();
+    this.sioConfigList = new HashMap<>();
+    this.serverConfigList = new HashMap<>();
+    this.deviceConfigList = new HashMap<>();
 
-    this.monitorConfigList2= new HashMap<>();
-    this.iaConfigList2= new HashMap<>();
-    this.sioConfigList2= new HashMap<>();
-    this.serverConfigList2= new HashMap<>();
-    this.deviceConfigList2= new HashMap<>();
-    this.alarmStormConfig= new AlarmStormConfig();
+    this.monitorConfigList2 = new HashMap<>();
+    this.iaConfigList2 = new HashMap<>();
+    this.sioConfigList2 = new HashMap<>();
+    this.serverConfigList2 = new HashMap<>();
+    this.deviceConfigList2 = new HashMap<>();
+    this.alarmStormConfig = new AlarmStormConfig();
   }
 
-  private HashMap<Long, EventInfo> monitorConfigList;
-  private HashMap<Long, EventInfo> iaConfigList;
-  private HashMap<Long, EventInfo> sioConfigList;
-  private HashMap<Long, EventInfo> serverConfigList;
-  private HashMap<Long, EventInfo> deviceConfigList;
+  private HashMap<Integer, EventInfo> monitorConfigList;
+  private HashMap<Integer, EventInfo> iaConfigList;
+  private HashMap<Integer, EventInfo> sioConfigList;
+  private HashMap<Integer, EventInfo> serverConfigList;
+  private HashMap<Integer, EventInfo> deviceConfigList;
 
   private HashMap<MonitorConfigKey, EventInfo> monitorConfigList2;
   private HashMap<IaConfigKey, EventInfo> iaConfigList2;
@@ -118,7 +118,7 @@ public class EventConfig {
   private HashMap<ServerConfigKey, EventInfo> serverConfigList2;
   private HashMap<DeviceConfigKey, EventInfo> deviceConfigList2;
 
-  private AlarmStormConfig alarmStormConfig ;
+  private AlarmStormConfig alarmStormConfig;
 
   private int listNum;
   private int disListNum;
@@ -221,7 +221,7 @@ public class EventConfig {
     list.clear();
   }
 
-  public void clearConfigList(HashMap<Long, EventInfo> list) {
+  public void clearConfigList(HashMap<Integer, EventInfo> list) {
     Iterator iter = list.entrySet().iterator();
     while (iter.hasNext()) {
       Map.Entry entry = (Map.Entry) iter.next();
@@ -346,7 +346,7 @@ public class EventConfig {
       if (event_genus.equals(sGenusMonitor)) {
         String sql2 = "SELECT res_id FROM ti_event_monitor_ex WHERE event_id = ?";
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.setInt(1,event_id);
+        pstmt2.setInt(1, event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if (ret2.next()) {
           sourceId = ret2.getInt("res_id");
@@ -355,10 +355,10 @@ public class EventConfig {
                   event_type(event_type).res_id(res_id).build();
           eventInfo.setRes_id(res_id);
           if (getMonitorConfigList() == null)
-            monitorConfigList = new HashMap<Long, EventInfo>();
+            monitorConfigList = new HashMap<Integer, EventInfo>();
           if (getMonitorConfigList2() == null)
             monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
-          monitorConfigList.put((long) event_id, eventInfo);
+          monitorConfigList.put(event_id, eventInfo);
           monitorConfigList2.put(monitorConfigKey, eventInfo);
         }
         ret2.close();
@@ -366,17 +366,18 @@ public class EventConfig {
       } else if (event_genus.equals(sGenusSio)) {
         String sql2 = "SELECT res_id FROM ti_event_sio_ex WHERE event_id = ?";
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.setInt(1,event_id);
+        pstmt2.setInt(1, event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if (ret2.next()) {
           sourceId = ret2.getInt("res_id");
           res_id = ret2.getInt("res_id");
           SioConfigKey sioConfigKey = SioConfigKey.newBuilder().event_type(event_type).res_id(res_id).build();
+          eventInfo.setRes_id(res_id);
           if (getSioConfigList() == null)
-            sioConfigList = new HashMap<Long, EventInfo>();
+            sioConfigList = new HashMap<Integer, EventInfo>();
           if (getSioConfigList2() == null)
             sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
-          sioConfigList.put((long) event_id, eventInfo);
+          sioConfigList.put(event_id, eventInfo);
           sioConfigList2.put(sioConfigKey, eventInfo);
         }
         ret2.close();
@@ -384,22 +385,25 @@ public class EventConfig {
       } else if (event_genus.equals(sGenusIa)) {
         String sql2 = "SELECT res_id,svr_id,iaag_chn_id FROM ti_event_ia_ex WHERE event_id = ?";
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.setInt(1,event_id);
+        pstmt2.setInt(1, event_id);
         ResultSet ret2 = pstmt2.executeQuery();
         if (ret2.next()) {
           sourceId = ret2.getInt("res_id");
           res_id = ret2.getInt("res_id");
           iaag_chn_id = ret2.getInt("iaag_chn_id");
           iaagId = ret2.getInt("svr_id");
+          eventInfo.setRes_id(res_id);
           eventInfo.setIaag_chn_id(iaag_chn_id);
           eventInfo.setIaagId(iaagId);
+          eventInfo.setSvr_id(iaagId);
+          //eventInfo.setDev_id(dev_id);
           IaConfigKey iaConfigKey = IaConfigKey.newBuilder().event_type(event_type).iaag_chn_id(iaag_chn_id).
                   iaagId(iaagId).res_id(res_id).build();
           if (getIaConfigList() == null)
-            iaConfigList = new HashMap<Long, EventInfo>();
+            iaConfigList = new HashMap<Integer, EventInfo>();
           if (getIaConfigList2() == null)
             iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
-          iaConfigList.put((long) event_id, eventInfo);
+          iaConfigList.put(event_id, eventInfo);
           iaConfigList2.put(iaConfigKey, eventInfo);
         }
         ret2.close();
@@ -407,18 +411,18 @@ public class EventConfig {
       } else if (event_genus.equals(sGenusServer)) {
         String sql2 = "SELECT machine_id FROM ti_event_machine_ex WHERE event_id = ?";
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.setInt(1,event_id);
+        pstmt2.setInt(1, event_id);
         ResultSet ret2 = pstmt2.executeQuery();
-        if(ret2.next()) {
+        if (ret2.next()) {
           sourceId = ret2.getInt("machine_id");
           machine_id = ret2.getInt("machine_id");
           ServerConfigKey serverConfigKey = ServerConfigKey.newBuilder().
                   event_type(event_type).machine_id(machine_id).build();
           if (getServerConfigList() == null)
-            serverConfigList = new HashMap<Long, EventInfo>();
+            serverConfigList = new HashMap<Integer, EventInfo>();
           if (getServerConfigList2() == null)
             serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
-          serverConfigList.put((long) event_id, eventInfo);
+          serverConfigList.put(event_id, eventInfo);
           serverConfigList2.put(serverConfigKey, eventInfo);
         }
         ret2.close();
@@ -426,18 +430,18 @@ public class EventConfig {
       } else if (event_genus.equals(sGenusDeveice)) {
         String sql2 = "SELECT device_id FROM ti_event_device_ex WHERE event_id = ?";
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.setInt(1,event_id);
+        pstmt2.setInt(1, event_id);
         ResultSet ret2 = pstmt2.executeQuery();
-        if(ret2.next()) {
+        if (ret2.next()) {
           sourceId = ret2.getInt("device_id");
           dev_id = ret2.getInt("device_id");
           DeviceConfigKey deviceConfigKey = DeviceConfigKey.newBuilder().
                   event_type(event_type).dev_id(dev_id).build();
           if (getDeviceConfigList() == null)
-            deviceConfigList = new HashMap<Long, EventInfo>();
+            deviceConfigList = new HashMap<Integer, EventInfo>();
           if (getDeviceConfigList2() == null)
             deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
-          deviceConfigList.put((long) event_id, eventInfo);
+          deviceConfigList.put(event_id, eventInfo);
           deviceConfigList2.put(deviceConfigKey, eventInfo);
         }
         ret2.close();
@@ -517,7 +521,7 @@ public class EventConfig {
     EventInfo eventInfo = findEventInfo2(iter, id);
     if (eventInfo != null)
       return eventInfo;
-    iter = iaConfigList2.entrySet().iterator();
+    iter = sioConfigList2.entrySet().iterator();
     eventInfo = findEventInfo2(iter, id);
     if (eventInfo != null)
       return eventInfo;
@@ -525,11 +529,11 @@ public class EventConfig {
     eventInfo = findEventInfo2(iter, id);
     if (eventInfo != null)
       return eventInfo;
-    iter = iaConfigList2.entrySet().iterator();
+    iter = serverConfigList2.entrySet().iterator();
     eventInfo = findEventInfo2(iter, id);
     if (eventInfo != null)
       return eventInfo;
-    iter = iaConfigList2.entrySet().iterator();
+    iter = deviceConfigList2.entrySet().iterator();
     eventInfo = findEventInfo2(iter, id);
     return eventInfo;
   }
@@ -585,11 +589,11 @@ public class EventConfig {
     List<EventInfo> eventInfos1 = findEventListBylinkageId(iter, lingkageId);
     iter = iaConfigList2.entrySet().iterator();
     List<EventInfo> eventInfos2 = findEventListBylinkageId(iter, lingkageId);
-    iter = iaConfigList2.entrySet().iterator();
+    iter = sioConfigList2.entrySet().iterator();
     List<EventInfo> eventInfos3 = findEventListBylinkageId(iter, lingkageId);
-    iter = iaConfigList2.entrySet().iterator();
+    iter = serverConfigList2.entrySet().iterator();
     List<EventInfo> eventInfos4 = findEventListBylinkageId(iter, lingkageId);
-    iter = iaConfigList2.entrySet().iterator();
+    iter = deviceConfigList2.entrySet().iterator();
     List<EventInfo> eventInfos5 = findEventListBylinkageId(iter, lingkageId);
     eventInfos1.addAll(eventInfos2);
     eventInfos1.addAll(eventInfos3);
@@ -634,7 +638,7 @@ public class EventConfig {
     ResultSet ret = pstmt.executeQuery();
 
     List<EventLinkage> eventLinkages = new ArrayList();
-    while(ret.next()){
+    while (ret.next()) {
       int linkage_id;
       String linkage_type;
       String arg1;
@@ -704,7 +708,7 @@ public class EventConfig {
 
   //query db and create a eventInfo instance
   public EventInfo createEventInfoFromDB(Connection conn, int id) throws SQLException {
-    String sql = "SELECT event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,guard_plan_id " +
+    String sql = "SELECT event_no,event_genus,event_name,event_desc,event_level,auto_release_interval,event_type,ti_event.guard_plan_id " +
             "from ti_event inner JOIN ti_guard_plan on ti_event.guard_plan_id = ti_guard_plan.guard_plan_id" +
             " where ti_event.enable_state = 1 and event_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -723,7 +727,7 @@ public class EventConfig {
     String event_desc = ret.getString("event_desc");
     int event_level = ret.getInt("event_level");
     int auto_release_interval = ret.getInt("auto_release_interval");
-    int guard_plan_id = ret.getInt("guard_plan_id;");
+    int guard_plan_id = ret.getInt("guard_plan_id");
     ret.close();
     pstmt.close();
     GuardPlan guardPlan = createGuardPlanFromDB(conn, guard_plan_id);
@@ -763,7 +767,7 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         res_id = ret.getInt("res_id");
         eventInfo.setRes_id(res_id);
       }
@@ -774,7 +778,7 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         res_id = ret.getInt("res_id");
         eventInfo.setRes_id(res_id);
       }
@@ -785,7 +789,7 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         res_id = ret.getInt("res_id");
         iaag_chn_id = ret.getInt("iaag_chn_id");
         iaagId = ret.getInt("svr_id");
@@ -800,7 +804,7 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         machine_id = ret.getInt("machine_id");
         eventInfo.setMachine_id(machine_id);
       }
@@ -811,7 +815,7 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         dev_id = ret.getInt("device_id");
         eventInfo.setDev_id(dev_id);
       }
@@ -835,15 +839,15 @@ public class EventConfig {
     PreparedStatement pstmt = conn.prepareStatement(sql);
     pstmt.setInt(1, id);
     ResultSet ret = pstmt.executeQuery();
-    String event_no ="" ;
-    String event_genus ="";
-    String event_type="";
-    String event_name="";
-    String event_desc="";
-    int event_level=0;
-    int auto_release_interval =0;
-    int guard_plan_id=0;
-    if(ret.next()) {
+    String event_no = "";
+    String event_genus = "";
+    String event_type = "";
+    String event_name = "";
+    String event_desc = "";
+    int event_level = 0;
+    int auto_release_interval = 0;
+    int guard_plan_id = 0;
+    if (ret.next()) {
       event_no = ret.getString("event_no");
       event_genus = ret.getString("event_genus");
       event_type = ret.getString("event_type");
@@ -852,7 +856,7 @@ public class EventConfig {
       event_level = ret.getInt("event_level");
       auto_release_interval = ret.getInt("auto_release_interval");
       guard_plan_id = ret.getInt("guard_plan_id;");
-    }else{
+    } else {
       ret.close();
       pstmt.close();
       return null;
@@ -898,16 +902,16 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         res_id = ret.getInt("res_id");
         eventInfo.setRes_id(res_id);
         monitorConfigKey.setEvent_type(event_type);
         monitorConfigKey.setRes_id(res_id);
         if (getMonitorConfigList() == null)
-          monitorConfigList = new HashMap<Long, EventInfo>();
+          monitorConfigList = new HashMap<Integer, EventInfo>();
         if (getMonitorConfigList2() == null)
           monitorConfigList2 = new HashMap<MonitorConfigKey, EventInfo>();
-        monitorConfigList.put((long) id, eventInfo);
+        monitorConfigList.put( id, eventInfo);
         monitorConfigList2.put(monitorConfigKey, eventInfo);
       }
       ret.close();
@@ -918,15 +922,15 @@ public class EventConfig {
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
       res_id = ret.getInt("res_id");
-      if(ret.next()) {
+      if (ret.next()) {
         eventInfo.setRes_id(res_id);
         sioConfigKey.setEvent_type(event_type);
         sioConfigKey.setRes_id(res_id);
         if (getSioConfigList() == null)
-          sioConfigList = new HashMap<Long, EventInfo>();
+          sioConfigList = new HashMap<Integer, EventInfo>();
         if (getSioConfigList2() == null)
           sioConfigList2 = new HashMap<SioConfigKey, EventInfo>();
-        sioConfigList.put((long) id, eventInfo);
+        sioConfigList.put( id, eventInfo);
         sioConfigList2.put(sioConfigKey, eventInfo);
       }
       ret.close();
@@ -936,7 +940,7 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         res_id = ret.getInt("res_id");
         iaag_chn_id = ret.getInt("iaag_chn_id");
         iaagId = ret.getInt("svr_id");
@@ -948,10 +952,10 @@ public class EventConfig {
         iaConfigKey.setIaagId(iaagId);
         iaConfigKey.setRes_id(res_id);
         if (getIaConfigList() == null)
-          iaConfigList = new HashMap<Long, EventInfo>();
+          iaConfigList = new HashMap<Integer, EventInfo>();
         if (getIaConfigList2() == null)
           iaConfigList2 = new HashMap<IaConfigKey, EventInfo>();
-        iaConfigList.put((long) id, eventInfo);
+        iaConfigList.put( id, eventInfo);
         iaConfigList2.put(iaConfigKey, eventInfo);
       }
       ret.close();
@@ -961,16 +965,16 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         machine_id = ret.getInt("machine_id");
         eventInfo.setMachine_id(machine_id);
         serverConfigKey.setEvent_type(event_type);
         serverConfigKey.setMachine_id(machine_id);
         if (getServerConfigList() == null)
-          serverConfigList = new HashMap<Long, EventInfo>();
+          serverConfigList = new HashMap<Integer, EventInfo>();
         if (getServerConfigList2() == null)
           serverConfigList2 = new HashMap<ServerConfigKey, EventInfo>();
-        serverConfigList.put((long) id, eventInfo);
+        serverConfigList.put( id, eventInfo);
         serverConfigList2.put(serverConfigKey, eventInfo);
       }
       ret.close();
@@ -980,16 +984,16 @@ public class EventConfig {
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
-      if(ret.next()) {
+      if (ret.next()) {
         dev_id = ret.getInt("device_id");
         eventInfo.setDev_id(dev_id);
         deviceConfigKey.setEvent_type(event_type);
         deviceConfigKey.setDev_id(dev_id);
         if (getDeviceConfigList() == null)
-          deviceConfigList = new HashMap<Long, EventInfo>();
+          deviceConfigList = new HashMap<Integer, EventInfo>();
         if (getDeviceConfigList2() == null)
           deviceConfigList2 = new HashMap<DeviceConfigKey, EventInfo>();
-        deviceConfigList.put((long) id, eventInfo);
+        deviceConfigList.put( id, eventInfo);
         deviceConfigList2.put(deviceConfigKey, eventInfo);
       }
       ret.close();
@@ -1000,46 +1004,87 @@ public class EventConfig {
     }
     return eventInfo;
   }
-
+  public EventInfo addEventInfo(EventInfo eventInfo) throws SQLException {
+    if (eventInfo != null) {
+      String event_genus = eventInfo.getEvent_genus();
+      if (event_genus.equals(sGenusMonitor)) {
+        getMonitorConfigList().put(eventInfo.getEvent_id(), eventInfo);
+        getMonitorConfigList2().put(eventInfo.getMonitorConfigKey(), eventInfo);
+      } else if (event_genus.equals(sGenusSio)) {
+        getSioConfigList().put(eventInfo.getEvent_id(), eventInfo);
+        getSioConfigList2().put(eventInfo.getSioConfigKey(), eventInfo);
+      } else if (event_genus.equals(sGenusIa)) {
+        getIaConfigList().put(eventInfo.getEvent_id(), eventInfo);
+        getIaConfigList2().put(eventInfo.getIaConfigKey(), eventInfo);
+      } else if (event_genus.equals(sGenusServer)) {
+        getServerConfigList().put(eventInfo.getEvent_id(), eventInfo);
+        getServerConfigList2().put(eventInfo.getServerConfigKey(), eventInfo);
+      } else if (event_genus.equals(sGenusDeveice)) {
+        getDeviceConfigList().put(eventInfo.getEvent_id(), eventInfo);
+        getDeviceConfigList2().put(eventInfo.getDeviceConfigKey(), eventInfo);
+      } else {
+        System.out.println("error event_genus :" + event_genus);
+        return null;
+      }
+      return eventInfo;
+    }
+    return null;
+  }
   public void updateEventInfo(Connection conn, int id) {
     EventInfo eventInfo1 = findEventInfo(id);
     EventInfo eventInfo2 = findEventInfo2(id);
     try {
+      deleteEventInfo(eventInfo1);
+      if(eventInfo1 != eventInfo2){
+        deleteEventInfo(eventInfo2);
+      }
       EventInfo eventInfo3 = createEventInfoFromDB(conn, id);
       if (eventInfo3 == null) {
         System.out.println("error event id:" + id + "no event config found in db");
         return;
       }
-      eventInfo1 = eventInfo3;
+      if(addEventInfo(eventInfo3) == null){
+        System.out.println("failed add event id:" + id + " to map");
+        return;
+      }
+
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
-
-  public void deleteEventInfo(int id) {
-    EventInfo eventInfo1 = findEventInfo(id);
-    EventInfo eventInfo2 = findEventInfo2(id);
-    if (eventInfo1 != null) {
-      String event_genus = eventInfo1.getEvent_genus();
+  public void deleteEventInfo(EventInfo eventInfo) {
+    if (eventInfo != null) {
+      String event_genus = eventInfo.getEvent_genus();
       if (event_genus.equals(sGenusMonitor)) {
-        getMonitorConfigList().remove(eventInfo1.getEvent_id());
-        getMonitorConfigList2().remove(eventInfo2.getMonitorConfigKey());
+        getMonitorConfigList().remove(eventInfo.getEvent_id());
+        getMonitorConfigList2().remove(eventInfo.getMonitorConfigKey());
       } else if (event_genus.equals(sGenusSio)) {
-        getSioConfigList().remove(eventInfo1.getEvent_id());
-        getSioConfigList2().remove(eventInfo2.getSioConfigKey());
+        getSioConfigList2().remove(eventInfo.getSioConfigKey());
+        getSioConfigList().remove(eventInfo.getEvent_id());
       } else if (event_genus.equals(sGenusIa)) {
-        getIaConfigList().remove(eventInfo1.getEvent_id());
-        getIaConfigList2().remove(eventInfo2.getIaConfigKey());
+        getIaConfigList().remove(eventInfo.getEvent_id());
+        getIaConfigList2().remove(eventInfo.getIaConfigKey());
       } else if (event_genus.equals(sGenusServer)) {
-        getServerConfigList().remove(eventInfo1.getEvent_id());
-        getServerConfigList2().remove(eventInfo2.getServerConfigKey());
+        getServerConfigList().remove(eventInfo.getEvent_id());
+        getServerConfigList2().remove(eventInfo.getServerConfigKey());
       } else if (event_genus.equals(sGenusDeveice)) {
-        getDeviceConfigList().remove(eventInfo1.getEvent_id());
-        getDeviceConfigList2().remove(eventInfo2.getDeviceConfigKey());
+        getDeviceConfigList().remove(eventInfo.getEvent_id());
+        getDeviceConfigList2().remove(eventInfo.getDeviceConfigKey());
       } else {
         System.out.println("error event_genus :" + event_genus);
         return;
       }
+      eventInfo.zero();
+    }
+  }
+  public void deleteEventInfo(int id) {
+    EventInfo eventInfo1 = findEventInfo(id);
+    EventInfo eventInfo2 = findEventInfo2(id);
+    if(eventInfo1 == eventInfo2){
+      deleteEventInfo(eventInfo1);
+    }else{
+      deleteEventInfo(eventInfo1);
+      deleteEventInfo(eventInfo2);
     }
   }
 

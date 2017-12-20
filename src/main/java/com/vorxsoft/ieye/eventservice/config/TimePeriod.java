@@ -82,4 +82,9 @@ public class TimePeriod{
             ", et=" + et +
             '}';
   }
+  public void copy(TimePeriod other){
+    setEt(other.getEt());
+    setSt(other.getSt());
+    setType(other.getType());
+  }
 }

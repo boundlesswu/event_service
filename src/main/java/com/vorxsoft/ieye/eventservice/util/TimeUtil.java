@@ -2,6 +2,8 @@ package com.vorxsoft.ieye.eventservice.util;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TimeUtil {
   static public String timestmap2string(Timestamp t){
@@ -12,4 +14,14 @@ public class TimeUtil {
     System.out.println(s);
     return Timestamp.valueOf(s);
   }
+  static public  String getDateTimeNs(){
+    String msg="";
+    Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss.SSS");
+    msg += sdf.format(date);
+    System.out.println(msg);
+    return msg;
+  }
+
+
 }

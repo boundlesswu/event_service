@@ -52,4 +52,27 @@ public class TimeSchedule{
             "timeScheduleItems=" + timeScheduleItems +
             '}';
   }
+
+  public void zero(){
+    //private List<TimeScheduleItem> timeScheduleItems = new
+    if(getTimeScheduleItems() != null){
+      for (int i = 0; i < getTimeScheduleItems().size(); i++) {
+        getTimeScheduleItems().get(i).zero();
+        getTimeScheduleItems().remove(i);
+        i--;
+      }
+    }else{
+      setTimeScheduleItems(new ArrayList<>());
+    }
+  }
+
+  public void copy(TimeSchedule other){
+    zero();
+    if(other.getTimeScheduleItems()!=null)
+    for (int i = 0; i < other.getTimeScheduleItems().size(); i++) {
+      TimeScheduleItem timeScheduleItem = new TimeScheduleItem();
+      timeScheduleItem.copy(other.getTimeScheduleItems().get(i));
+      getTimeScheduleItems().add(timeScheduleItem);
+    }
+  }
 }
