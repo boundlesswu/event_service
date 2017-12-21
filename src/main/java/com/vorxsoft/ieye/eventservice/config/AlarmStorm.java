@@ -1,5 +1,7 @@
 package com.vorxsoft.ieye.eventservice.config;
 
+import com.vorxsoft.ieye.eventservice.redis.AlarmStormInfo;
+
 public class AlarmStorm {
   private int stomId;
   private String eventType;
@@ -85,4 +87,17 @@ public class AlarmStorm {
             ", eventStom=" + eventStom +
             '}';
   }
+
+  public void zero() {
+    this.stomId = 0;
+    this.eventStom = 0;
+    this.eventType = "";
+  }
+
+  public void copy(AlarmStorm other) {
+    this.stomId = other.getStomId();
+    this.eventType = other.getEventType();
+    this.eventStom = other.getEventStom();
+  }
+
 }

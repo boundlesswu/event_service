@@ -35,11 +35,11 @@ public class AlarmStormConfig {
     int stom_id = 0;
     String event_type = null;
     int event_stom = 0;
-    AlarmStorm a = new AlarmStorm();
     while(ret.next()) {
       stom_id = ret.getInt("stom_id");
       event_type = ret.getString("event_type");
       event_stom = ret.getInt("event_stom");
+      AlarmStorm a = new AlarmStorm();
       a.setStomId(stom_id);
       a.setEventType(event_type);
       a.setEventStom(event_stom);
@@ -142,5 +142,18 @@ public class AlarmStormConfig {
             "alarmStormConfigList=" + alarmStormConfigList +
             ", FreshTime=" + FreshTime +
             '}';
+  }
+
+  public void zero(){
+    if(getAlarmStormConfigList()!=null){
+
+    }
+    setFreshTime(0L);
+//    private HashMap<String,AlarmStorm> alarmStormConfigList;
+//
+//    public Long getFreshTime() {
+//      return FreshTime;
+//    }
+
   }
 }

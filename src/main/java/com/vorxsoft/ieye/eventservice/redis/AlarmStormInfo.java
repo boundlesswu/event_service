@@ -1,6 +1,6 @@
 package com.vorxsoft.ieye.eventservice.redis;
 
-class AlarmStormInfo {
+public class AlarmStormInfo {
   private String event_type;
   private int resourceId;
 

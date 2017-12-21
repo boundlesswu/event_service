@@ -88,8 +88,8 @@ public class TimeScheduleItem{
   }
 
   public void copy(TimeScheduleItem other){
-    setDayOfWeek(other.getDayOfWeek());
     zero();
+    setDayOfWeek(other.getDayOfWeek());
     if(other.getTimePeriods()!=null){
       for (int i = 0; i < other.getTimePeriods().size(); i++) {
         TimePeriod timePeriod  = new TimePeriod();

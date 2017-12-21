@@ -6,6 +6,7 @@ import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.mq.Publisher;
+import com.vorxsoft.ieye.eventservice.redis.AlarmStormInfo;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
@@ -372,21 +373,26 @@ public class AlarmProcess implements Runnable {
           getLogger().info("alarm matching event_id" + eventInfo.toString());
           // send to event queue
           insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
-        } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(Integer.parseInt(happenTime))) {
+        } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(eventInfo)) {
           System.out.println("define storm time  <=  :");
-          getLogger().info("define storm time  <=  :");
+          getLogger().info("define storm time  <=  :event_type:" + evenType +
+                  "happenTime" + happenTime + " extraContent" + extraContent +
+                  " resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
+                  " machineId:" + machineId + " deviceId:" + deviceId);
           getLogger().info("alarm matching event_id" + eventInfo.toString());
           // send to event queue
           insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
-          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
+          alarmStormRecordMap.update(TimeUtil.string2timestamplong(happenTime),alarmStorm.getStomId(),eventInfo);
         } else {
           System.out.println("define storm time  >  :");
-          getLogger().warn("define storm time  >  :");
+          getLogger().warn("define storm time  >  ::event_type:" + evenType +
+          "happenTime" + happenTime + " extraContent" + extraContent +
+                  " resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
+                  " machineId:" + machineId + " deviceId:" + deviceId);
           getLogger().info("alarm not matching event_id" + eventInfo.toString());
           //no event happen,insert into tl_event_src_* table
           insertSrcLogList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId);
-          alarmStormRecordMap.add(evenType, resourceId, Integer.parseInt(happenTime), extraContent);
-
+          alarmStormRecordMap.update(TimeUtil.string2timestamplong(happenTime),alarmStorm.getStomId(),eventInfo);
         }
       }
     }
