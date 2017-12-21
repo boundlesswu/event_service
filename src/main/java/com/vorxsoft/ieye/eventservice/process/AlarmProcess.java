@@ -392,7 +392,7 @@ public class AlarmProcess implements Runnable {
           getLogger().info("alarm not matching event_id" + eventInfo.toString());
           //no event happen,insert into tl_event_src_* table
           insertSrcLogList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId);
-          alarmStormRecordMap.update(TimeUtil.string2timestamplong(happenTime),alarmStorm.getStomId(),eventInfo);
+          //alarmStormRecordMap.update(TimeUtil.string2timestamplong(happenTime),alarmStorm.getStomId(),eventInfo);
         }
       }
     }
