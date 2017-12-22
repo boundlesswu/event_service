@@ -77,18 +77,17 @@ public class AlarmStormConfig {
     alarmStorm = null;
   }
 
-  public void updateAlarmStorm(Connection conn,int id) throws SQLException {
+  public AlarmStorm updateAlarmStorm(Connection conn,int id) throws SQLException {
     AlarmStorm alarmStorm =  createAlarmStormFromDB(conn,id);
     if(alarmStorm == null){
-      return;
+      return null;
     }
     AlarmStorm alarmStorm2 =  findAlarmStorm(id);
     if(alarmStorm2 == null){
-      return ;
+      return null;
     }
-    getAlarmStormConfigList().remove(alarmStorm2);
-    getAlarmStormConfigList().put(alarmStorm.getEventType(),alarmStorm);
-    alarmStorm2 = null;
+    alarmStorm2.copy(alarmStorm);
+    return alarmStorm2;
   }
 
   void addAlarmStorm(Connection conn,int id) throws SQLException {
@@ -146,14 +145,32 @@ public class AlarmStormConfig {
 
   public void zero(){
     if(getAlarmStormConfigList()!=null){
-
+      Iterator iter = getAlarmStormConfigList().entrySet().iterator();
+        while (iter.hasNext()) {
+          Map.Entry entry = (Map.Entry) iter.next();
+          AlarmStorm alarmStorm = (AlarmStorm) entry.getValue();
+          getAlarmStormConfigList().remove(alarmStorm);
+          alarmStorm.zero();
+        }
     }
     setFreshTime(0L);
-//    private HashMap<String,AlarmStorm> alarmStormConfigList;
-//
-//    public Long getFreshTime() {
-//      return FreshTime;
-//    }
+  }
 
+  public void copy(AlarmStormConfig other){
+    zero();
+    if(getAlarmStormConfigList() == null){
+      setAlarmStormConfigList(new HashMap<>());
+    }
+    if(other.getAlarmStormConfigList()!=null){
+      Iterator iter = other.getAlarmStormConfigList().entrySet().iterator();
+      while (iter.hasNext()) {
+        Map.Entry entry = (Map.Entry) iter.next();
+        AlarmStorm alarmStorm = (AlarmStorm) entry.getValue();
+        AlarmStorm a = new AlarmStorm();
+        a.copy(alarmStorm);
+        getAlarmStormConfigList().put(a.getEventType(), a);
+      }
+    }
+    setFreshTime(other.getFreshTime());
   }
 }

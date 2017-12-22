@@ -962,9 +962,11 @@ public class EventConfig {
     }
   }
 
-  public void deleteGuardPlay(Connection conn, int id) {
+  public void deleteGuardPlan(Connection conn, int id) {
     List<EventInfo> eventInfos = findEventListByGuardId(id);
     for (EventInfo eventInfo : eventInfos) {
+      GuardPlan guardPlan = eventInfo.getGuardPlan();
+      guardPlan.zero();
       eventInfo.setGuardPlan(null);
     }
   }
@@ -980,17 +982,7 @@ public class EventConfig {
       List<EventLinkage> eventLinkages = eventInfo.getEventLinkagelist();
       for (EventLinkage eventLinkage1 : eventLinkages) {
         if (eventLinkage1.getLinkage_id() == eventLinkage.getLinkage_id()) {
-          eventLinkage1.setEvent_id(eventLinkage.getEvent_id());
-          eventLinkage1.setLinkage_id(eventLinkage.getLinkage_id());
-          eventLinkage1.setLinkage_type(eventLinkage.getLinkage_type());
-          eventLinkage1.setArg1(eventLinkage.getArg1());
-          eventLinkage1.setArg2(eventLinkage.getArg2());
-          eventLinkage1.setArg3(eventLinkage.getArg3());
-          eventLinkage1.setArg4(eventLinkage.getArg4());
-          eventLinkage1.setArg5(eventLinkage.getArg5());
-          eventLinkage1.setArg6(eventLinkage.getArg6());
-          eventLinkage1.setArg7(eventLinkage.getArg7());
-          eventLinkage1.setArg8(eventLinkage.getArg8());
+          eventLinkage1.copy(eventLinkage);
         }
       }
     }

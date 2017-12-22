@@ -269,6 +269,7 @@ public class AlarmProcess implements Runnable {
     int resourceId = 0;
     String happenTime = "";
     String extraContent = "";
+    int iaag_chn_id= 0;
     int iaadId = 0;
     int iauId = 0;
     int machineId = 0;
@@ -293,7 +294,8 @@ public class AlarmProcess implements Runnable {
         resourceId = Integer.parseInt(map.get("resourceId"));
         iaadId = Integer.parseInt(map.get("iaagId"));
         iauId = Integer.parseInt(map.get("iauId"));
-        IaConfigKey iaConfigKey = new IaConfigKey(evenType, resourceId, iaadId, getIaagMap().getIaag_chn_id(iaadId, resourceId));
+        iaag_chn_id =  (getIaagMap()==null)? 0 : getIaagMap().getIaag_chn_id(iaadId, resourceId);
+        IaConfigKey iaConfigKey = new IaConfigKey(evenType, resourceId, iaadId,iaag_chn_id);
         eventInfo = eventConfig.getIaConfig(iaConfigKey);
       } else if (processType == ProcessServerType) {
         machineId = Integer.parseInt(map.get("machineId"));
@@ -310,13 +312,13 @@ public class AlarmProcess implements Runnable {
       jedis.del(keyStr);
       if (eventInfo == null) {
         getLogger().warn("No event config for alarm evenType:" + evenType +
-                "happenTime" + happenTime + "extraContent" + extraContent +
-                "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                "machineId:" + machineId + " deviceId:" + deviceId);
+                " happenTime " + happenTime + " extraContent: " + extraContent +
+                " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                " machineId: " + machineId + " deviceId: " + deviceId + " iaag_chn_id: " +iaag_chn_id);
         System.out.println("No event config for alarm evenType:" + evenType +
-                "happenTime" + happenTime + "extraContent" + extraContent +
-                "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                "machineId:" + machineId + " deviceId:" + deviceId);
+                " happenTime " + happenTime + " extraContent " + extraContent +
+                " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                " machineId: " + machineId + " deviceId: " + deviceId + " iaag_chn_id: " +iaag_chn_id);
         //no event happen,insert into tl_event_src_monitor table
         insertSrcLogList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId);
         continue;
@@ -325,36 +327,32 @@ public class AlarmProcess implements Runnable {
       if (guardPlan == null || !guardPlan.isInGuardPlan(happenTime)) {
         if (guardPlan == null) {
           getLogger().warn("No guard plan  config for alarm evenType:" + evenType +
-                  "happenTime" + happenTime + "extraContent" + extraContent +
-                  "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                  "machineId:" + machineId + " deviceId:" + deviceId);
+                  " happenTime: " + happenTime + " extraContent: " + extraContent +
+                  " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                  " machineId: " + machineId + " deviceId: " + deviceId + " iaag_chn_id: " + iaag_chn_id);
         } else if (!guardPlan.isInGuardPlan(happenTime)) {
           getLogger().warn("guard plan :" + guardPlan.toString());
           getLogger().warn("alarm info is  evenType:" + evenType +
-                  "happenTime" + happenTime + "extraContent" + extraContent +
-                  "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                  "machineId:" + machineId + " deviceId:" + deviceId);
+                  " happenTime: " + happenTime + " extraContent: " + extraContent +
+                  " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                  " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
           getLogger().warn("alarm is not in guard plan");
         }
-        System.out.println("No guard plan  config for alarm evenType:" + evenType +
-                "happenTime" + happenTime + "extraContent" + extraContent +
-                "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                "machineId:" + machineId + " deviceId:" + deviceId);
         //no event happen,insert into tl_event_src_* table
         insertSrcLogList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId);
         continue;
       }
       AlarmStorm alarmStorm = getEventConfig().getAlarmStormConfig().getAlarmStorm(evenType);
       if (alarmStorm == null) {
-        getLogger().info("no alarm storm config for alarm evenType:" + evenType +
-                "happenTime" + happenTime + "extraContent" + extraContent +
-                "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                "machineId:" + machineId + " deviceId:" + deviceId);
+        getLogger().info("no alarm storm config for alarm evenType: " + evenType +
+                " happenTime: " + happenTime + " extraContent: " + extraContent +
+                " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
         getLogger().info("alarm matching event_id" + eventInfo.toString());
         System.out.println("no alarm storm config for alarm evenType:" + evenType +
-                "happenTime" + happenTime + "extraContent" + extraContent +
-                "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                "machineId:" + machineId + " deviceId:" + deviceId);
+                " happenTime: " + happenTime + " extraContent: " + extraContent +
+                " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
         System.out.println("send to event queue");
         // send to event queue
         insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
@@ -362,23 +360,23 @@ public class AlarmProcess implements Runnable {
         int stom_time = alarmStorm.getEventStom();
         if (stom_time == 0) {
           System.out.println("storm time == 0 no alarm storm config of event_type:" + evenType +
-                  "happenTime" + happenTime + "extraContent" + extraContent +
-                  "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                  "machineId:" + machineId + " deviceId:" + deviceId);
+                  " happenTime: " + happenTime + " extraContent: " + extraContent +
+                  " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                  " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
           System.out.println("send to event queue");
           getLogger().info("storm time == 0 no alarm storm config of event_type:" + evenType +
-                  "happenTime" + happenTime + "extraContent" + extraContent +
-                  "resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                  "machineId:" + machineId + " deviceId:" + deviceId);
+                  " happenTime: " + happenTime + " extraContent: " + extraContent +
+                  " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                  " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
           getLogger().info("alarm matching event_id" + eventInfo.toString());
           // send to event queue
           insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
         } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(eventInfo)) {
           System.out.println("define storm time  <=  :");
           getLogger().info("define storm time  <=  :event_type:" + evenType +
-                  "happenTime" + happenTime + " extraContent" + extraContent +
-                  " resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                  " machineId:" + machineId + " deviceId:" + deviceId);
+                  " happenTime: " + happenTime + " extraContent: " + extraContent +
+                  " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                  " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
           getLogger().info("alarm matching event_id" + eventInfo.toString());
           // send to event queue
           insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
@@ -386,9 +384,9 @@ public class AlarmProcess implements Runnable {
         } else {
           System.out.println("define storm time  >  :");
           getLogger().warn("define storm time  >  ::event_type:" + evenType +
-          "happenTime" + happenTime + " extraContent" + extraContent +
-                  " resourceId:" + resourceId + " iaadId:" + iaadId + " iauId" + iauId +
-                  " machineId:" + machineId + " deviceId:" + deviceId);
+                  " happenTime: " + happenTime + " extraContent: " + extraContent +
+                  " resourceId: " + resourceId + " iaagId: " + iaadId + " iauId: " + iauId +
+                  " machineId: " + machineId + " deviceId: " + deviceId+ " iaag_chn_id: " + iaag_chn_id);
           getLogger().info("alarm not matching event_id" + eventInfo.toString());
           //no event happen,insert into tl_event_src_* table
           insertSrcLogList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId);

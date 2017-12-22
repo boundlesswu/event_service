@@ -11,7 +11,6 @@ import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
 import com.vorxsoft.ieye.eventservice.util.IaagMap;
-import com.vorxsoft.ieye.eventservice.util.IaagMapItem;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
@@ -359,7 +358,7 @@ public class EventServerStart implements WatchCallerInterface {
               break;
             case OA_DEL:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                getEventConfig().deleteGuardPlay(conn, req.getIdList(j));
+                getEventConfig().deleteGuardPlan(conn, req.getIdList(j));
               }
               break;
             case OA_QUR:
@@ -409,12 +408,12 @@ public class EventServerStart implements WatchCallerInterface {
               break;
             case OA_MOD:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                //getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+                getEventConfig().updateLinkage(conn, req.getIdList(j));
               }
               break;
             case OA_DEL:
               for (int j = 0; j < req.getIdListList().size(); j++) {
-                //getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+                getEventConfig().deleteLinkage(req.getIdList(j));
               }
               break;
             case OA_QUR:
@@ -596,13 +595,13 @@ public class EventServerStart implements WatchCallerInterface {
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
       simpleServerStart.getLogger().info("resolve all iaag address :" + iaagAdress);
+      if (simpleServerStart.getIaagClients() == null) {
+        simpleServerStart.setIaagClients(new ArrayList<>());
+      }
       for (int i = 0; i < iaagAdress.size(); i++) {
         VsIAClient a = iaagMap.IaClinetInit(iaagAdress.get(i));
         if (a != null)
-          if (simpleServerStart.getIaagClients() == null) {
-            simpleServerStart.setIaagClients(new ArrayList<>());
-          }
-        simpleServerStart.getIaagClients().add(a);
+          simpleServerStart.getIaagClients().add(a);
       }
     } catch (Exception e) {
       simpleServerStart.getLogger().error(e);

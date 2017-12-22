@@ -371,7 +371,7 @@ public class EventInfo {
     while (it.hasNext()) {
       EventLinkage x = it.next();
       if (x.getLinkage_id() == id) {
-        it.remove();
+        getEventLinkagelist().remove(x);
         return;
       }
     }
