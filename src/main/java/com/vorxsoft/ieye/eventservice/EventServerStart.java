@@ -140,10 +140,11 @@ public class EventServerStart implements WatchCallerInterface {
 
   private VsIeyeClient blgClient;
   private VsIeyeClient cmsClient;
-  private LogServiceClient logServiceClient;
+
   private List<VsIAClient> iaagClients;
   IaagMap iaagMap;
   private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
+  private LogServiceClient logServiceClient;
 
   public static Logger getLogger() {
     return logger;
