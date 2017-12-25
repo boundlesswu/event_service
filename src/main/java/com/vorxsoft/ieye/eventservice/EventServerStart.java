@@ -56,6 +56,7 @@ public class EventServerStart implements WatchCallerInterface {
   public void WatchCaller(Watch.Watcher watch) {
     WatchResponse ret = watch.listen();
     System.out.println("watcher response  " + ret);
+    getLogger().info("watcher response  " + ret);
     for (int i = 0; i < ret.getEvents().size(); i++) {
       WatchEvent a = ret.getEvents().get(i);
       String key = a.getKeyValue().getKey().toString();
@@ -113,12 +114,16 @@ public class EventServerStart implements WatchCallerInterface {
             if (client != null) {
               client.shut();
               getIaagClients().remove(client);
-              //
-              getIaagMap().getIaags().
             } else {
               getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
             }
-
+            IaagMapItem b = getIaagMap().findIaagMapItem(address);
+            if (b != null) {
+              b.setClient(client);
+              getIaagMap().getIaags().remove(b);
+            } else {
+              getLogger().error("server_iaag :" + address + " client not found in IaagMap");
+            }
           }
           break;
         case UNRECOGNIZED:
