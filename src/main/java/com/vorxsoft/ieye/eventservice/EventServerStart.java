@@ -37,6 +37,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.BlgType;
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.CmsType;
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.LogType;
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 import static com.vorxsoft.ieye.proto.VSLogLevel.VSLogLevelInfo;
 
@@ -69,13 +72,23 @@ public class EventServerStart implements WatchCallerInterface {
       switch (a.getEventType()) {
         case PUT:
           if (name.equals("server_cms")) {
+            //cms client is not exist
+            if (getCmsClient() == null || getCmsClient().getManagedChannel().isShutdown()) {
+              setCmsClient(address);
+            }
             //update cms grpc client and  synchronize to process threads
           }
           if (name.equals("server_blg")) {
             //update blg grpc client and  synchronize to process threads
+            if (getBlgClient() == null || getBlgClient().getManagedChannel().isShutdown()) {
+              setBlgClient(address);
+            }
           }
           if (name.equals("server_log")) {
             //update log grpc client and  synchronize to process threads
+            if (getLogServiceClient() == null || getLogServiceClient().getManagedChannel().isShutdown()) {
+              setLogServiceClient(address);
+            }
           }
           if (name.equals("server_iaag")) {
             //update cms grpc client
@@ -84,8 +97,7 @@ public class EventServerStart implements WatchCallerInterface {
               client = addVsIAClient(address);
             } else {
               client.shut();
-              client.setIP(ip);
-              client.setPORT(port);
+              client.setAddress(address);
               client.init();
             }
             //redispatch
@@ -101,40 +113,57 @@ public class EventServerStart implements WatchCallerInterface {
         case DELETE:
           if (name.equals("server_cms")) {
             //clear cms grpc client and  synchronize to process threads
+            if (getCmsClient() != null) {
+              if (address.equals(getCmsClient().getIP() + ":" + getCmsClient().getPORT())) {
+                getCmsClient().shut();
+                //setCmsClient(null);
+              }
+            }
           }
           if (name.equals("server_blg")) {
             //clear blg grpc client and  synchronize to process threads
-          }
-          if (name.equals("server_log")) {
-            //clear log grpc client and  synchronize to process threads
-          }
-          if (name.equals("server_iaag")) {
-            //clear cms grpc client
-            VsIAClient client = findIaagClient(address);
-            if (client != null) {
-              client.shut();
-              getIaagClients().remove(client);
-            } else {
-              getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
+            if (getBlgClient() != null) {
+              if (address.equals(getBlgClient().getIP() + ":" + getBlgClient().getPORT())) {
+                getBlgClient().shut();
+                //setBlgClient(null);
+              }
             }
-            IaagMapItem b = getIaagMap().findIaagMapItem(address);
-            if (b != null) {
-              b.setClient(client);
-              getIaagMap().getIaags().remove(b);
-            } else {
-              getLogger().error("server_iaag :" + address + " client not found in IaagMap");
+            if (name.equals("server_log")) {
+              //clear log grpc client and  synchronize to process threads
+              if (getLogServiceClient() != null) {
+                if (address.equals(getLogServiceClient().getIP() + ":" + getLogServiceClient().getPORT())) {
+                  getLogServiceClient().shut();
+                  //setLogServiceClient(null);
+                }
+              }
             }
+            if (name.equals("server_iaag")) {
+              //clear cms grpc client
+              VsIAClient client = findIaagClient(address);
+              if (client != null) {
+                client.shut();
+                getIaagClients().remove(client);
+              } else {
+                getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
+              }
+              IaagMapItem b = getIaagMap().findIaagMapItem(address);
+              if (b != null) {
+                b.setClient(null);
+                getIaagMap().getIaags().remove(b);
+              } else {
+                getLogger().error("server_iaag :" + address + " client not found in IaagMap");
+              }
+            }
+            break;
+            case UNRECOGNIZED:
+              break;
           }
-          break;
-        case UNRECOGNIZED:
-          break;
-      }
 //      KeyValue keyVal = a.getKeyValue();
 //      String key = a.getKeyValue().getKey().toString();
 //      String value = a.getKeyValue().getKey
 
+      }
     }
-  }
 
   public EventConfig getEventConfig() {
     return eventConfig;
@@ -210,6 +239,10 @@ public class EventServerStart implements WatchCallerInterface {
     this.logServiceClient = logServiceClient;
   }
 
+  public void setLogServiceClient(String address) {
+    setXXXClient(LogType, address);
+  }
+
   private ScheduledExecutorService getExecutor() {
     return executor_;
   }
@@ -219,10 +252,74 @@ public class EventServerStart implements WatchCallerInterface {
     this.blgClient = blgClient;
   }
 
+  public void setBlgClient(String address) {
+    setXXXClient(BlgType, address);
+  }
+
+  enum ClientType {
+    BlgType, CmsType, LogType
+  }
+
+  public void setXXXClient(ClientType type, String address) {
+    if (address == null) {
+      String tmp = "cannot resolve " +
+          ((type == BlgType) ? " blg " : ((type == CmsType) ? " cms " : (type == LogType) ? " log " : " "))
+          + "server address";
+      System.out.println(tmp);
+      getLogger().warn(tmp);
+      return;
+    }
+    switch (type) {
+      case CmsType:
+        String tmp = "successful resolve cms server  address:";
+        System.out.println(tmp + address);
+        getLogger().info(tmp + address);
+        if (getCmsClient() == null) {
+          setCmsClient(new VsIeyeClient("cms", address));
+        } else {
+          getCmsClient().shut();
+          getCmsClient().setAddress(address);
+          getCmsClient().init();
+        }
+        break;
+      case BlgType:
+        tmp = "successful resolve blg server  address:";
+        System.out.println(tmp + address);
+        getLogger().info(tmp + address);
+        if (getBlgClient() == null) {
+          setBlgClient(new VsIeyeClient("blg", address));
+        } else {
+          getBlgClient().shut();
+          getBlgClient().setAddress(address);
+          getBlgClient().init();
+        }
+        break;
+      case LogType:
+        System.out.println("successful resolve log server  address:" + address);
+        getLogger().info("successful resolve log server  address:" + address);
+        if (getLogServiceClient() == null) {
+          setLogServiceClient(new LogServiceClient("log", address));
+        } else {
+          getLogServiceClient().shut();
+          getLogServiceClient().setAddress(address);
+          getLogServiceClient().init();
+        }
+        getLogServiceClient().setHostNameIp(hostip);
+        getLogServiceClient().setpName(serviceName);
+        String logContent = "successful resolve log server  address:" + address;
+        getLogServiceClient().sentVSLog(logContent, VSLogLevelInfo);
+        break;
+    }
+  }
+
+
   public void setCmsClient(VsIeyeClient cmsClient) {
     this.cmsClient = cmsClient;
   }
 
+  public void setCmsClient(String address) {
+    setXXXClient(CmsType, address);
+  }
 
   public void getConfigPath() throws FileNotFoundException {
     String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
@@ -525,9 +622,9 @@ public class EventServerStart implements WatchCallerInterface {
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-            .addService(new EventServer(redisIP, redisPort).bindService())
-            .addService(new EventServer2(redisIP, redisPort).bindService())
-            .build();
+        .addService(new EventServer(redisIP, redisPort).bindService())
+        .addService(new EventServer2(redisIP, redisPort).bindService())
+        .build();
     server.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -608,37 +705,14 @@ public class EventServerStart implements WatchCallerInterface {
     //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
     String logAddress = myservice.Resolve("server_log");
-    if (logAddress == null) {
-      System.out.println("cannot resolve log server  address");
-      simpleServerStart.getLogger().warn("cannot resolve log server  address");
-    } else {
-      System.out.println("successful resolve log server  address:" + logAddress);
-      simpleServerStart.getLogger().info("successful resolve log server  address:" + logAddress);
-      simpleServerStart.setLogServiceClient(new LogServiceClient("log", logAddress));
-      simpleServerStart.getLogServiceClient().setHostNameIp(hostip);
-      simpleServerStart.getLogServiceClient().setpName(serviceName);
-      String logContent = "successful resolve log server  address:" + logAddress;
-      simpleServerStart.getLogServiceClient().sentVSLog(logContent, VSLogLevelInfo);
-    }
+    simpleServerStart.setLogServiceClient(logAddress);
 
     String blgAddress = myservice.Resolve("server_blg");
-    if (blgAddress == null) {
-      System.out.println("cannot resolve blg server  address");
-      simpleServerStart.getLogger().warn("cannot resolve blg server  address");
-    } else {
-      System.out.println("successful resolve blg server  address:" + blgAddress);
-      simpleServerStart.getLogger().info("successful resolve blg server  address:" + blgAddress);
-      simpleServerStart.setBlgClient(new VsIeyeClient("blg", blgAddress));
-    }
+    simpleServerStart.setBlgClient(blgAddress);
+
+
     String cmsAddress = myservice.Resolve("server_cms");
-    if (cmsAddress == null) {
-      System.out.println("cannot resolve cms server  address");
-      simpleServerStart.getLogger().warn("cannot resolve cms server  address");
-    } else {
-      System.out.println("successful resolve cms server  address:" + cmsAddress);
-      simpleServerStart.getLogger().info("successful resolve cms server  address:" + cmsAddress);
-      simpleServerStart.setCmsClient(new VsIeyeClient("cms", cmsAddress));
-    }
+    simpleServerStart.setCmsClient(cmsAddress);
 
     IaagMap iaagMap = new IaagMap();
     iaagMap.setConn(simpleServerStart.getConn());

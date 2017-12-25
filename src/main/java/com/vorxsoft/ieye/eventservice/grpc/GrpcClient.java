@@ -80,4 +80,9 @@ public abstract class  GrpcClient {
       getManagedChannel().shutdown();
     }
   }
+  public void setAddress(String address){
+    String[] a = address.split(":");
+    this.IP = a[0];
+    this.PORT = Integer.parseInt(a[1]);
+  }
 }
