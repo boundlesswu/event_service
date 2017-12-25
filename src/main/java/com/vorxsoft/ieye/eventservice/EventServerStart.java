@@ -43,6 +43,13 @@ import static com.vorxsoft.ieye.proto.VSLogLevel.VSLogLevelInfo;
  * Created by Administrator on 2017/8/3 0003.
  */
 public class EventServerStart implements WatchCallerInterface {
+
+  public VsIAClient addVsIAClient(String address) {
+    VsIAClient a = iaagMap.IaClinetInit(address);
+    if (a != null)
+      getIaagClients().add(a);
+    return a;
+  }
   @Override
   public void WatchCaller(Watch.Watcher watch) {
     WatchResponse ret = watch.listen();
@@ -53,6 +60,9 @@ public class EventServerStart implements WatchCallerInterface {
       String[] akey = key.split("/");
       String name = akey[1];
       String address = akey[3];
+      String[] aa = address.split(":");
+      String ip = aa[0];
+      int port = Integer.parseInt(aa[1]);
       switch (a.getEventType()) {
         case PUT:
           if (name.equals("server_cms")) {
@@ -66,6 +76,17 @@ public class EventServerStart implements WatchCallerInterface {
           }
           if (name.equals("server_iaag")) {
             //update cms grpc client
+            VsIAClient client = findIaagClient(address);
+            if(client == null){
+              client  = addVsIAClient(address);
+            }else{
+              client.shut();
+              client.setIP(ip);
+              client.setPORT(port);
+              client.init();
+            }
+            //redispatch
+            getIaagMap().getIaags().
           }
           break;
         case DELETE:
@@ -80,6 +101,16 @@ public class EventServerStart implements WatchCallerInterface {
           }
           if (name.equals("server_iaag")) {
             //clear cms grpc client
+            VsIAClient client = findIaagClient(address);
+            if(client != null){
+              client.shut();
+              getIaagClients().remove(client);
+              //
+              getIaagMap().getIaags().
+            }else{
+              getLogger().error("server_iaag :" + address +" client not found in VsIAClients");
+            }
+
           }
           break;
         case UNRECOGNIZED:
@@ -268,7 +299,6 @@ public class EventServerStart implements WatchCallerInterface {
         }
         //System.out.println("=====结束遍历某一本书=====");
       }
-
     } catch (DocumentException e) {
       e.printStackTrace();
     }
@@ -517,11 +547,9 @@ public class EventServerStart implements WatchCallerInterface {
     return blgClient;
   }
 
-
   public VsIeyeClient getCmsClient() {
     return cmsClient;
   }
-
 
   public List<VsIAClient> getIaagClients() {
     return iaagClients;
@@ -529,6 +557,18 @@ public class EventServerStart implements WatchCallerInterface {
 
   public void setIaagClients(List<VsIAClient> iaagClients) {
     this.iaagClients = iaagClients;
+  }
+
+  public VsIAClient findIaagClient(String address){
+    if(getIaagClients() == null){
+      return null;
+    }
+    for(VsIAClient vsIAClient : getIaagClients()){
+      if(address.equals(vsIAClient.getIP()+":"+vsIAClient.getPORT()){
+        return vsIAClient;
+      }
+    }
+    return null;
   }
 
   public static void main(String[] args) throws Exception {
