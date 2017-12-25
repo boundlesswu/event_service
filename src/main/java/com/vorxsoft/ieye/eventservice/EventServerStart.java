@@ -11,6 +11,7 @@ import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
 import com.vorxsoft.ieye.eventservice.util.IaagMap;
+import com.vorxsoft.ieye.eventservice.util.IaagMapItem;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
@@ -50,6 +51,7 @@ public class EventServerStart implements WatchCallerInterface {
       getIaagClients().add(a);
     return a;
   }
+
   @Override
   public void WatchCaller(Watch.Watcher watch) {
     WatchResponse ret = watch.listen();
@@ -77,16 +79,22 @@ public class EventServerStart implements WatchCallerInterface {
           if (name.equals("server_iaag")) {
             //update cms grpc client
             VsIAClient client = findIaagClient(address);
-            if(client == null){
-              client  = addVsIAClient(address);
-            }else{
+            if (client == null) {
+              client = addVsIAClient(address);
+            } else {
               client.shut();
               client.setIP(ip);
               client.setPORT(port);
               client.init();
             }
             //redispatch
-            getIaagMap().getIaags().
+            IaagMapItem b = getIaagMap().findIaagMapItem(address);
+            if (b != null) {
+              b.setClient(client);
+              b.redispatch(getConn());
+            } else {
+              //re read  iaag and
+            }
           }
           break;
         case DELETE:
@@ -102,13 +110,13 @@ public class EventServerStart implements WatchCallerInterface {
           if (name.equals("server_iaag")) {
             //clear cms grpc client
             VsIAClient client = findIaagClient(address);
-            if(client != null){
+            if (client != null) {
               client.shut();
               getIaagClients().remove(client);
               //
               getIaagMap().getIaags().
-            }else{
-              getLogger().error("server_iaag :" + address +" client not found in VsIAClients");
+            } else {
+              getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
             }
 
           }
@@ -559,12 +567,12 @@ public class EventServerStart implements WatchCallerInterface {
     this.iaagClients = iaagClients;
   }
 
-  public VsIAClient findIaagClient(String address){
-    if(getIaagClients() == null){
+  public VsIAClient findIaagClient(String address) {
+    if (getIaagClients() == null) {
       return null;
     }
-    for(VsIAClient vsIAClient : getIaagClients()){
-      if(address.equals(vsIAClient.getIP()+":"+vsIAClient.getPORT()){
+    for (VsIAClient vsIAClient : getIaagClients()) {
+      if (address.equals(vsIAClient.getIP() + ":" + vsIAClient.getPORT()) {
         return vsIAClient;
       }
     }
@@ -595,17 +603,17 @@ public class EventServerStart implements WatchCallerInterface {
     //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
 
     String logAddress = myservice.Resolve("server_log");
-    if(logAddress == null){
+    if (logAddress == null) {
       System.out.println("cannot resolve log server  address");
       simpleServerStart.getLogger().warn("cannot resolve log server  address");
-    }else{
+    } else {
       System.out.println("successful resolve log server  address:" + logAddress);
       simpleServerStart.getLogger().info("successful resolve log server  address:" + logAddress);
-      simpleServerStart.setLogServiceClient(new LogServiceClient("log",logAddress));
+      simpleServerStart.setLogServiceClient(new LogServiceClient("log", logAddress));
       simpleServerStart.getLogServiceClient().setHostNameIp(hostip);
       simpleServerStart.getLogServiceClient().setpName(serviceName);
       String logContent = "successful resolve log server  address:" + logAddress;
-      simpleServerStart.getLogServiceClient().sentVSLog(logContent,VSLogLevelInfo);
+      simpleServerStart.getLogServiceClient().sentVSLog(logContent, VSLogLevelInfo);
     }
 
     String blgAddress = myservice.Resolve("server_blg");
