@@ -177,7 +177,6 @@ public class IaagMap {
     IaagMapItem iaagMapItem = findIaagMapItem(address);
     if(iaagMapItem ==  null) return null;
     iaagMapItem.shutClient();
-    iaagMapItem.createClient();
     return iaagMapItem.createClient();
   }
 

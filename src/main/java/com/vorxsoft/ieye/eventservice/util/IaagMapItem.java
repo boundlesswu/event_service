@@ -55,13 +55,13 @@ public class IaagMapItem {
           } else if (channal.getCmdType() == IACMDType.Stop) {
             resInfos2.add(a);
           }
-        } else {
-          ResInfo a = channal.convert2ResInfo(conn);
-          if (channal.getCmdType() == IACMDType.Start) {
-            resInfos.add(a);
-          } else if (channal.getCmdType() == IACMDType.Stop) {
-            resInfos2.add(a);
-          }
+        }
+      } else {
+        ResInfo a = channal.convert2ResInfo(conn);
+        if (channal.getCmdType() == IACMDType.Start) {
+          resInfos.add(a);
+        } else if (channal.getCmdType() == IACMDType.Stop) {
+          resInfos2.add(a);
         }
       }
     }
@@ -158,14 +158,16 @@ public class IaagMapItem {
     return (getIaus() == null) ? null : getIaus().get(dev_id);
   }
 
-  public void shutClient(){
-    if(getClient() != null){
+  public void shutClient() {
+    if (getClient() != null) {
       getClient().shut();
       setClient(null);
     }
   }
-  public  VsIAClient createClient(){
-    VsIAClient vsIAClient = new VsIAClient(getIaagInfo().getSvr_name(),getIaagInfo().getIp_intranet(),getIaagInfo().getPort_intranet());
+
+  public VsIAClient createClient() {
+    //VsIAClient vsIAClient = new VsIAClient(getIaagInfo().getSvr_name(),getIaagInfo().getIp_intranet(),getIaagInfo().getPort_intranet());
+    VsIAClient vsIAClient = new VsIAClient(getIaagInfo().getSvr_name(), getIaagInfo().getIp_intranet(), getIaagInfo().getPort_intranet() + 2);
     setClient(vsIAClient);
     return vsIAClient;
   }
