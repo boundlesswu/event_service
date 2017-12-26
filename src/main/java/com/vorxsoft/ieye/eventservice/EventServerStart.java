@@ -1,12 +1,25 @@
 package com.vorxsoft.ieye.eventservice;
 
 import com.coreos.jetcd.Watch;
+import com.coreos.jetcd.watch.WatchEvent;
+import com.coreos.jetcd.watch.WatchResponse;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.googlecode.protobuf.format.JsonFormat;
+import com.vorxsoft.ieye.eventservice.config.EventConfig;
+import com.vorxsoft.ieye.eventservice.grpc.LogServiceClient;
+import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
+import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
+import com.vorxsoft.ieye.eventservice.util.IaagMap;
+import com.vorxsoft.ieye.eventservice.util.IaagMapItem;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
+import com.vorxsoft.ieye.proto.ReloadRequest;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -24,46 +37,295 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.BlgType;
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.CmsType;
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.LogType;
+import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
+import static com.vorxsoft.ieye.proto.VSLogLevel.VSLogLevelInfo;
+
 /**
  * Created by Administrator on 2017/8/3 0003.
  */
 public class EventServerStart implements WatchCallerInterface {
+
+  public VsIAClient addVsIAClient(String address) {
+    VsIAClient a = iaagMap.IaClinetInit(address);
+    if (a != null)
+      getIaagClients().add(a);
+    return a;
+  }
+
   @Override
   public void WatchCaller(Watch.Watcher watch) {
-    System.out.println("watcher response  " + watch.listen());
+    WatchResponse ret = watch.listen();
+    System.out.println("watcher response  " + ret);
+    getLogger().info("watcher response  " + ret);
+    for (int i = 0; i < ret.getEvents().size(); i++) {
+      WatchEvent a = ret.getEvents().get(i);
+      String key = a.getKeyValue().getKey().toString();
+      String[] akey = key.split("/");
+      String name = akey[1];
+      String address = akey[3];
+      String[] aa = address.split(":");
+      String ip = aa[0];
+      int port = Integer.parseInt(aa[1]);
+      switch (a.getEventType()) {
+        case PUT:
+          if (name.equals("server_cms")) {
+            //cms client is not exist
+            if (getCmsClient() == null || getCmsClient().getManagedChannel().isShutdown()) {
+              setCmsClient(address);
+            }
+            //update cms grpc client and  synchronize to process threads
+          }
+          if (name.equals("server_blg")) {
+            //update blg grpc client and  synchronize to process threads
+            if (getBlgClient() == null || getBlgClient().getManagedChannel().isShutdown()) {
+              setBlgClient(address);
+            }
+          }
+          if (name.equals("server_log")) {
+            //update log grpc client and  synchronize to process threads
+            if (getLogServiceClient() == null || getLogServiceClient().getManagedChannel().isShutdown()) {
+              setLogServiceClient(address);
+            }
+          }
+          if (name.equals("server_iaag")) {
+            //update cms grpc client
+            VsIAClient client = findIaagClient(address);
+            if (client == null) {
+              client = addVsIAClient(address);
+            } else {
+              client.shut();
+              client.setAddress(address);
+              client.init();
+            }
+            //redispatch
+            IaagMapItem b = getIaagMap().findIaagMapItem(address);
+            if (b != null) {
+              b.setClient(client);
+              b.redispatch(getConn());
+            } else {
+              //re read  iaag and
+            }
+          }
+          break;
+        case DELETE:
+          if (name.equals("server_cms")) {
+            //clear cms grpc client and  synchronize to process threads
+            if (getCmsClient() != null) {
+              if (address.equals(getCmsClient().getIP() + ":" + getCmsClient().getPORT())) {
+                getCmsClient().shut();
+                //setCmsClient(null);
+              }
+            }
+          }
+          if (name.equals("server_blg")) {
+            //clear blg grpc client and  synchronize to process threads
+            if (getBlgClient() != null) {
+              if (address.equals(getBlgClient().getIP() + ":" + getBlgClient().getPORT())) {
+                getBlgClient().shut();
+                //setBlgClient(null);
+              }
+            }
+            if (name.equals("server_log")) {
+              //clear log grpc client and  synchronize to process threads
+              if (getLogServiceClient() != null) {
+                if (address.equals(getLogServiceClient().getIP() + ":" + getLogServiceClient().getPORT())) {
+                  getLogServiceClient().shut();
+                  //setLogServiceClient(null);
+                }
+              }
+            }
+            if (name.equals("server_iaag")) {
+              //clear cms grpc client
+              VsIAClient client = findIaagClient(address);
+              if (client != null) {
+                client.shut();
+                getIaagClients().remove(client);
+              } else {
+                getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
+              }
+              IaagMapItem b = getIaagMap().findIaagMapItem(address);
+              if (b != null) {
+                b.setClient(null);
+                getIaagMap().getIaags().remove(b);
+              } else {
+                getLogger().error("server_iaag :" + address + " client not found in IaagMap");
+              }
+            }
+            break;
+            case UNRECOGNIZED:
+              break;
+          }
+//      KeyValue keyVal = a.getKeyValue();
+//      String key = a.getKeyValue().getKey().toString();
+//      String value = a.getKeyValue().getKey
+
+      }
+    }
+
+  public EventConfig getEventConfig() {
+    return eventConfig;
   }
-  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);;
+
+  public void setEventConfig(EventConfig eventConfig) {
+    this.eventConfig = eventConfig;
+  }
+
+  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);
+  ;
   public long count = 0;
-  public Connection conn=null;
-  //public Statement st = null;
+
+  public Connection getConn() {
+    return conn;
+  }
+
+  public void setConn(Connection conn) {
+    this.conn = conn;
+  }
+
+  private EventConfig eventConfig = new EventConfig();
+  private String redisName;
+  private String activemqName;
+  private static String activemqIp;
+  private static int activemqPort;
+  private Connection conn;
   private static int PORT = 9999;
   private Server server;
   private static String hostip;
-  private static int ttl = 10;
+  private static int ttl = 30;
   private static String dbname;
   private static String dbAddress;
-  private static String dbUrl=null;
-  private static String dbUser=null;
-  private static String dbPasswd=null;
-  private static String driverClassName=null;
-  private static String serviceName;
+  private static String dbUrl = null;
+  private static String dbUser = null;
+  private static String dbPasswd = null;
+  private static String driverClassName = null;
+  private static String serviceName = "server_ems";
   private static String registerCenterName;
   private static String registerCenterAddress = "http://192.168.20.251:2379";
   private static String mqName;
-  private static String mqIP;
-  private static int mqPort;
+  private static String redisIP;
+  private static int redisPort;
   private Jedis jedis;
   private InputStream cfgFile;
-  private final  String cfgFileName = "event_service.xml";
-  private ScheduledExecutorService getExecutor(){
-    return  executor_;
+  private final String cfgFileName = "event_service.xml";
+
+  private VsIeyeClient blgClient;
+  private VsIeyeClient cmsClient;
+
+  private List<VsIAClient> iaagClients;
+  IaagMap iaagMap;
+  private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
+  private LogServiceClient logServiceClient;
+
+  public static Logger getLogger() {
+    return logger;
+  }
+
+  public IaagMap getIaagMap() {
+    return iaagMap;
+  }
+
+  public void setIaagMap(IaagMap iaagMap) {
+    this.iaagMap = iaagMap;
+  }
+
+  public LogServiceClient getLogServiceClient() {
+    return logServiceClient;
+  }
+
+  public void setLogServiceClient(LogServiceClient logServiceClient) {
+    this.logServiceClient = logServiceClient;
+  }
+
+  public void setLogServiceClient(String address) {
+    setXXXClient(LogType, address);
+  }
+
+  private ScheduledExecutorService getExecutor() {
+    return executor_;
+  }
+
+
+  public void setBlgClient(VsIeyeClient blgClient) {
+    this.blgClient = blgClient;
+  }
+
+  public void setBlgClient(String address) {
+    setXXXClient(BlgType, address);
+  }
+
+  enum ClientType {
+    BlgType, CmsType, LogType
+  }
+
+  public void setXXXClient(ClientType type, String address) {
+    if (address == null) {
+      String tmp = "cannot resolve " +
+          ((type == BlgType) ? " blg " : ((type == CmsType) ? " cms " : (type == LogType) ? " log " : " "))
+          + "server address";
+      System.out.println(tmp);
+      getLogger().warn(tmp);
+      return;
+    }
+    switch (type) {
+      case CmsType:
+        String tmp = "successful resolve cms server  address:";
+        System.out.println(tmp + address);
+        getLogger().info(tmp + address);
+        if (getCmsClient() == null) {
+          setCmsClient(new VsIeyeClient("cms", address));
+        } else {
+          getCmsClient().shut();
+          getCmsClient().setAddress(address);
+          getCmsClient().init();
+        }
+        break;
+      case BlgType:
+        tmp = "successful resolve blg server  address:";
+        System.out.println(tmp + address);
+        getLogger().info(tmp + address);
+        if (getBlgClient() == null) {
+          setBlgClient(new VsIeyeClient("blg", address));
+        } else {
+          getBlgClient().shut();
+          getBlgClient().setAddress(address);
+          getBlgClient().init();
+        }
+        break;
+      case LogType:
+        System.out.println("successful resolve log server  address:" + address);
+        getLogger().info("successful resolve log server  address:" + address);
+        if (getLogServiceClient() == null) {
+          setLogServiceClient(new LogServiceClient("log", address));
+        } else {
+          getLogServiceClient().shut();
+          getLogServiceClient().setAddress(address);
+          getLogServiceClient().init();
+        }
+        getLogServiceClient().setHostNameIp(hostip);
+        getLogServiceClient().setpName(serviceName);
+        String logContent = "successful resolve log server  address:" + address;
+        getLogServiceClient().sentVSLog(logContent, VSLogLevelInfo);
+        break;
+    }
+  }
+
+
+  public void setCmsClient(VsIeyeClient cmsClient) {
+    this.cmsClient = cmsClient;
+  }
+
+  public void setCmsClient(String address) {
+    setXXXClient(CmsType, address);
   }
 
   public void getConfigPath() throws FileNotFoundException {
     String tmp = String.valueOf(this.getClass().getClassLoader().getResource(cfgFileName));
-    System.out.println("tmp:"+tmp);
-    if(tmp.startsWith("jar"))
-      cfgFile=new FileInputStream(new File(System.getProperty("user.dir")+File.separator+cfgFileName));
+    System.out.println("tmp:" + tmp);
+    if (tmp.startsWith("jar"))
+      cfgFile = new FileInputStream(new File(System.getProperty("user.dir") + File.separator + cfgFileName));
     else
       cfgFile = this.getClass().getClassLoader().getResourceAsStream(cfgFileName);
   }
@@ -74,9 +336,9 @@ public class EventServerStart implements WatchCallerInterface {
     getConfigPath();
     SAXReader reader = new SAXReader();
     try {
-      System.out.println("cfg file is:"+cfgFile);
+      System.out.println("cfg file is:" + cfgFile);
       // 通过reader对象的read方法加载books.xml文件,获取docuemnt对象。
-           //Document document = reader.read(new File(cfgFile));
+      //Document document = reader.read(new File(cfgFile));
       Document document = reader.read(cfgFile);
       // 通过document对象获取根节点bookstore
       Element bookStore = document.getRootElement();
@@ -128,174 +390,251 @@ public class EventServerStart implements WatchCallerInterface {
             else if (lname.equals("address"))
               registerCenterAddress = lvalue;
           }
-          if (tname.equals("mq")) {
+          if (tname.equals("redis")) {
             if (lname.equals("name"))
-              mqName = lvalue;
+              redisName = lvalue;
             else if (lname.equals("ip"))
-              mqIP = lvalue;
+              redisIP = lvalue;
             else if (lname.equals("port"))
-              mqPort = Integer.parseInt(lvalue);
+              redisPort = Integer.parseInt(lvalue);
+          }
+          if (tname.equals("activemq")) {
+            if (lname.equals("name"))
+              activemqName = lvalue;
+            else if (lname.equals("ip"))
+              activemqIp = lvalue;
+            else if (lname.equals("port"))
+              activemqPort = Integer.parseInt(lvalue);
           }
         }
         //System.out.println("=====结束遍历某一本书=====");
       }
-
     } catch (DocumentException e) {
       e.printStackTrace();
     }
   }
-  public void dbInit() throws SQLException, ClassNotFoundException {
-    dbUrl = "jdbc:"+dbname+"://"+dbAddress;
-    System.out.println("db url :" + dbUrl);
-    Class.forName(driverClassName);
-    conn = DriverManager.getConnection(dbUrl,dbUser,dbPasswd);
-    //st = conn.createStatement();
-  }
-  public void mqInit(){
-    jedis  = new  Jedis(mqIP, mqPort);
-  }
 
-  public void alarm2event() throws SQLException {
-    Set<String> set = jedis.keys("alarm_" +"*");
-    Iterator<String> it = set.iterator();
-    while(it.hasNext()){
-      String keyStr = it.next();
-      System.out.println(keyStr);
-      Map<String, String> map = jedis.hgetAll(keyStr);
-      Map<String, String> emap = alrrmMap2Eventmap(map);
-      jedis.del(keyStr);
-      count++;
-      String key = emap.get("event_type") + count;
-      jedis.hmset(key,map);
+  public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
+    Set<String> set = jedis.keys("reload_config_req*");
+    if (set == null || set.size() == 0) {
+      return null;
     }
-  }
-
-  public void travel(){
-    getExecutor().scheduleAtFixedRate(()->{
-      try {
-        alarm2event();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    },1l,1L, TimeUnit.SECONDS);
-    getExecutor().scheduleAtFixedRate(()->{
-      try {
-        event2db();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    },1l,2L, TimeUnit.SECONDS);
-  }
-  public void event2db() throws SQLException {
-    event2db("event_monitor");
-    event2db("event_sio");
-  }
-
-  public void event2db(String evenType) throws SQLException {
-    Set<String> set = jedis.keys(evenType + "*");
     Iterator<String> it = set.iterator();
+    List<ReloadRequest> reloadRequestList = new ArrayList<>();
     while (it.hasNext()) {
       String keyStr = it.next();
-      System.out.println(keyStr);
-      Map<String, String> map = jedis.hgetAll(keyStr);
-      String res_id = map.get("res_id");
-      String res_name = map.get("res_name");
-      String happen_time = map.get("happen_time");
-      String sql=null;
-      if(evenType.equals("event_monitor")){
-        sql = "insert into tl_event_src_monitor(event_type,res_id,res_name,happen_time) values('event_monitor',?,?,?)";
-      }else if(evenType.equals("event_sio")){
-        sql = "insert into tl_event_src_sio(event_type,res_id,res_name,happen_time) values('event_monitor',?,?,?)";
+      String a = jedis.hget(keyStr, "req");
+      if (a == null || a.length() == 0) {
+        System.out.println("wrong redis hash,and key:" + keyStr);
+      } else {
+        try {
+          ReloadRequest.Builder builder = ReloadRequest.newBuilder();
+          com.google.protobuf.util.JsonFormat.parser().merge(a, builder);
+          ReloadRequest req = builder.build();
+          reloadRequestList.add(req);
+        } catch (InvalidProtocolBufferException e) {
+          e.printStackTrace();
+        }
       }
-      PreparedStatement pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, res_id);
-      pstmt.setString(2, res_name);
-      pstmt.setString(3, happen_time);
-      if (pstmt.executeUpdate() > 0) {
-        jedis.del(keyStr);
+      jedis.del(keyStr);
+    }
+    return reloadRequestList;
+  }
+
+  public void updateConfig() throws SQLException, JsonFormat.ParseException {
+    List<ReloadRequest> reqList = getReloadRequest();
+    if (reqList == null) {
+      return;
+    }
+    for (ReloadRequest req : reqList) {
+      getLogger().info("config reload req:" + req);
+      System.out.println("config reload req:" + req);
+      switch (req.getLoadType()) {
+        case REL_DEV_INFO:
+          break;
+        case REL_RES_INFO:
+          break;
+        case REL_REC_PLAN:
+          break;
+        case REL_REC_TIME:
+          break;
+        case REL_REC_CAM:
+          break;
+        case REL_EVENT_INFO:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().addEventInfo(conn, req.getIdList(j));
+              }
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateEventInfo(conn, req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteEventInfo(req.getIdList(j));
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+            default:
+              break;
+          }
+          break;
+        case REL_EVENT_GUARD:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              //guard play add ,and event is or not add or modify?
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateGuardPlan(conn, req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteGuardPlan(conn, req.getIdList(j));
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+              break;
+          }
+          break;
+        case REL_EVENT_CONTACTS:
+          break;
+        case REL_EVENT_STORM:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+              }
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateAlarmStorm(conn, req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteAlarmStorm(req.getIdList(j));
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+            default:
+              break;
+          }
+          break;
+        case REL_EVENT_LINKAGE:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                //getEventConfig().addAlarmStorm(conn, req.getIdList(j));
+              }
+              break;
+            case OA_MOD:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().updateLinkage(conn, req.getIdList(j));
+              }
+              break;
+            case OA_DEL:
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+                getEventConfig().deleteLinkage(req.getIdList(j));
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+              break;
+          }
+          break;
+        //  需要判断级联删除后，事件配置是否修改
+        case REL_EVENT_CAM:
+          switch (req.getEmAct()) {
+            case OA_ADD:
+              //无增加情况出现
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+              }
+              break;
+            case OA_MOD:
+              //修改时候 id无效
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+              }
+              break;
+            case OA_DEL:
+              //删除时候 id是有效的
+              for (int j = 0; j < req.getIdListList().size(); j++) {
+              }
+              break;
+            case OA_QUR:
+            case OA_ON:
+            case OA_OFF:
+            case OA_OTHER:
+            case OA_ALL_ISSUE:
+            case UNRECOGNIZED:
+              break;
+          }
+          break;
       }
-      pstmt.close();
     }
   }
 
-  public String evenType2string(int type){
-    if( (type == 1) ||((type > 100)&&(type < 200))) { //VSEventTypeMonitor
+  public void dbInit() throws SQLException, ClassNotFoundException {
+    dbUrl = "jdbc:" + dbname + "://" + dbAddress;
+    System.out.println("db url :" + dbUrl);
+    Class.forName(driverClassName);
+    conn = DriverManager.getConnection(dbUrl, dbUser, dbPasswd);
+    //st = conn.createStatement();
+  }
+
+  public void redisInit() {
+    jedis = new Jedis(redisIP, redisPort);
+  }
+
+  public String evenType2string(int type) {
+    if ((type == 1) || ((type > 100) && (type < 200))) { //VSEventTypeMonitor
       return "event_monitor";
-    }else if ((type == 2) ||((type > 200)&&(type < 300))) { //VSEventTypeDigitalIO
+    } else if ((type == 2) || ((type > 200) && (type < 300))) { //VSEventTypeDigitalIO
       return "event_sio";
-    }else {
+    } else {
       return null;
     }
   }
-  public List<String> getResIdResNo(String dev_no,String res_uid) throws SQLException {
-    PreparedStatement pstmt = conn.prepareStatement("select b.res_id,b.res_no,b.res_name from ti_device a join ti_resource b on a.dev_id=b.dev_id where a.dev_no = ? and b.res_uid = ?");
-    pstmt.setString(1, dev_no);
-    pstmt.setString(2, res_uid);
-    ResultSet rs = pstmt.executeQuery();
-    //ResultSet rs = st.executeQuery("select b.res_id,b.res_no from ti_device a join ti_resource b on a.dev_id=b.dev_id where a.dev_no='102' and b.res_uid='1'");
-    while (rs.next()) {
-      System.out.print(rs.getString(1));
-      System.out.print("  ");
-      System.out.println(rs.getString(2));
-      System.out.print("  ");
-      System.out.println(rs.getString(3));
-    }
-    List<String> a = new LinkedList<String>();
-    a.add(rs.getString(1));
-    a.add(rs.getString(2));
-    a.add(rs.getString(3));
-    rs.close();
-    pstmt.close();
-    return a;
-  }
-
-  public Map<String, String> alrrmMap2Eventmap(Map<String, String> map ) throws SQLException {
-    String dev_no = map.get("deviceNo");
-    String res_uid = map.get("ResourceUid");
-    List<String> b = getResIdResNo(dev_no,res_uid);
-    int res_id =  Integer.parseInt(b.get(1));
-    int res_no = Integer.parseInt(b.get(2));
-    String res_name = b.get(3);
-    int type = Integer.parseInt(map.get("evenType"));
-    Map<String, String> mymap =  new HashMap<String, String>();
-    if( (type == 1) ||((type > 100)&&(type < 200))){ //VSEventTypeMonitor
-      mymap.put("event_type",evenType2string(type));
-      mymap.put("res_id",String.valueOf(res_id));
-      mymap.put("res_name",res_name);
-      mymap.put("group_id",null);
-      mymap.put("group_name",null);
-      mymap.put("happen_time",map.get("happen_time"));
-      mymap.put("pic_path1",null);
-      mymap.put("pic_path1",null);
-      mymap.put("pic_path1",null);
-    }else if ((type == 2) ||((type > 200)&&(type < 300))){ //VSEventTypeDigitalIO
-      mymap.put("event_type",evenType2string(type));
-      mymap.put("res_id",String.valueOf(res_id));
-      mymap.put("res_name",res_name);
-      mymap.put("group_id",null);
-      mymap.put("group_name",null);
-      mymap.put("happen_time",map.get("happen_time"));
-    }else{
-      System.out.println("wrong evenType");
-      mymap = null;
-    }
-    return  mymap;
-  }
 
   private void start() throws Exception {
-    //server = NettyServerBuilder.forPort(PORT).addService(new EventServer().bindService()).build();
+    //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-             .addService(new EventServer(mqIP,mqPort).bindService())
-             .addService(new EventServer2(mqIP,mqPort).bindService())
-             .build();
+        .addService(new EventServer(redisIP, redisPort).bindService())
+        .addService(new EventServer2(redisIP, redisPort).bindService())
+        .build();
     server.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
         System.err.println("*** shutting down gRPC server since JVM is shutting down");
+        getLogger().error("*** shutting down gRPC server since JVM is shutting down");
         EventServerStart.this.stop();
         System.err.println("*** server shut down");
+        getLogger().error("*** server shut down");
       }
     });
   }
@@ -307,26 +646,183 @@ public class EventServerStart implements WatchCallerInterface {
       server.awaitTermination(2, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
+      getLogger().error(e);
     } catch (SQLException e) {
       e.printStackTrace();
+      getLogger().error(e);
     }
+  }
+
+  public VsIeyeClient getBlgClient() {
+    return blgClient;
+  }
+
+  public VsIeyeClient getCmsClient() {
+    return cmsClient;
+  }
+
+  public List<VsIAClient> getIaagClients() {
+    return iaagClients;
+  }
+
+  public void setIaagClients(List<VsIAClient> iaagClients) {
+    this.iaagClients = iaagClients;
+  }
+
+  public VsIAClient findIaagClient(String address) {
+    if (getIaagClients() == null) {
+      return null;
+    }
+    for (VsIAClient vsIAClient : getIaagClients()) {
+      if (address.equals(vsIAClient.getIP() + ":" + vsIAClient.getPORT()) {
+        return vsIAClient;
+      }
+    }
+    return null;
   }
 
   public static void main(String[] args) throws Exception {
     int cpuNums = Runtime.getRuntime().availableProcessors();
     int threadPoolNum = cpuNums;
-    for (int i = 0; i < threadPoolNum; i++) {
-      new Thread (new AlarmProcess("thread"+ (i+1))).start();
-    }
+//    for (int i = 0; i < threadPoolNum; i++) {
+//      new Thread (new AlarmProcess("thread"+ (i+1))).start();
+//    }
     System.out.println("cpuNums :" + cpuNums);
     final EventServerStart simpleServerStart = new EventServerStart();
     simpleServerStart.cfgInit();
     MicroService myservice = new MicroServiceImpl();
     myservice.init(registerCenterAddress, simpleServerStart);
     simpleServerStart.start();
+    simpleServerStart.redisInit();
     simpleServerStart.dbInit();
+    simpleServerStart.getEventConfig().loadConfig(simpleServerStart.getConn());
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
-    simpleServerStart.travel();
+
+    myservice.SetWatcher("server_", true);
+
+    //obtail cms and blg server address
+    //simpleServerStart.setBlgClient(new VsIeyeClient("blg", myservice.Resolve("blg").toString()));
+    //simpleServerStart.setCmsClient(new VsIeyeClient("cms", myservice.Resolve("cms").toString()));
+
+    String logAddress = myservice.Resolve("server_log");
+    simpleServerStart.setLogServiceClient(logAddress);
+
+    String blgAddress = myservice.Resolve("server_blg");
+    simpleServerStart.setBlgClient(blgAddress);
+
+
+    String cmsAddress = myservice.Resolve("server_cms");
+    simpleServerStart.setCmsClient(cmsAddress);
+
+    IaagMap iaagMap = new IaagMap();
+    iaagMap.setConn(simpleServerStart.getConn());
+    iaagMap.load();
+    simpleServerStart.setIaagMap(iaagMap);
+
+    List<String> iaagAdress = null;
+    try {
+      iaagAdress = myservice.ResolveAllAddress("server_iaag");
+      simpleServerStart.getLogger().info("resolve all iaag address :" + iaagAdress);
+      if (simpleServerStart.getIaagClients() == null) {
+        simpleServerStart.setIaagClients(new ArrayList<>());
+      }
+      for (int i = 0; i < iaagAdress.size(); i++) {
+        VsIAClient a = iaagMap.IaClinetInit(iaagAdress.get(i));
+        if (a != null)
+          simpleServerStart.getIaagClients().add(a);
+      }
+    } catch (Exception e) {
+      simpleServerStart.getLogger().error(e);
+      e.printStackTrace();
+    }
+
+
+    //monitor process
+    AlarmProcess monitorProcess = new AlarmProcess();
+    monitorProcess.setLogger(simpleServerStart.getLogger());
+    monitorProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    monitorProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    monitorProcess.setName("monitorProcess");
+    monitorProcess.setEventConfig(simpleServerStart.getEventConfig());
+    monitorProcess.setIaagMap(simpleServerStart.getIaagMap());
+    monitorProcess.setProcessType(ProcessServerType);
+    monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+    monitorProcess.redisInit(redisIP, redisPort);
+    monitorProcess.mqInit(activemqIp, activemqPort);
+
+    //sio process
+    AlarmProcess sioProcess = new AlarmProcess();
+    sioProcess.setLogger(simpleServerStart.getLogger());
+    sioProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    sioProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    sioProcess.setName("sioProcess");
+    sioProcess.setEventConfig(simpleServerStart.getEventConfig());
+    sioProcess.setIaagMap(simpleServerStart.getIaagMap());
+    sioProcess.setProcessType(ProcessSioType);
+    sioProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+    sioProcess.redisInit(redisIP, redisPort);
+    sioProcess.mqInit(activemqIp, activemqPort);
+
+    //ia process
+    AlarmProcess iaProcess = new AlarmProcess();
+    iaProcess.setLogger(simpleServerStart.getLogger());
+    iaProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+    iaProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+    iaProcess.setName("iaProcess");
+    iaProcess.setEventConfig(simpleServerStart.getEventConfig());
+    iaProcess.setIaagMap(simpleServerStart.getIaagMap());
+    iaProcess.setProcessType(ProcessIaType);
+    iaProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+    iaProcess.redisInit(redisIP, redisPort);
+    iaProcess.mqInit(activemqIp, activemqPort);
+
+//    //server process
+//    AlarmProcess serverProcess = new AlarmProcess();
+//    serverProcess.setLogger(simpleServerStart.getLogger());
+//    serverProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+//    serverProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+//    serverProcess.setName("serverProcess");
+//    serverProcess.setEventConfig(simpleServerStart.getEventConfig());
+//    serverProcess.setIaagMap(simpleServerStart.getIaagMap());
+//    serverProcess.setProcessType(ProcessServerType);
+//    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+//    serverProcess.redisInit(redisIP, redisPort);
+//serverProcess.mqInit(activemqIp, activemqPort);
+//    //device process
+//    AlarmProcess deviceProcess = new AlarmProcess();
+//    deviceProcess.setLogger(simpleServerStart.getLogger());
+//    deviceProcess.setBlgTeyeClient(simpleServerStart.getBlgClient());
+//    deviceProcess.setCmsIeyeClient(simpleServerStart.getCmsClient());
+//    deviceProcess.setName("deviceProcess");
+//    deviceProcess.setEventConfig(simpleServerStart.getEventConfig());
+//    deviceProcess.setIaagMap(simpleServerStart.getIaagMap());
+//    deviceProcess.setProcessType(ProcessDeviceType);
+//    deviceProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+//    deviceProcess.redisInit(redisIP, redisPort);
+//    deviceProcess.mqInit(activemqIp, activemqPort);
+
+    new Thread(monitorProcess).start();
+    new Thread(sioProcess).start();
+    new Thread(iaProcess).start();
+//    new Thread(serverProcess).start();
+//    new Thread(deviceProcess).start();
+
+    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
+      try {
+        simpleServerStart.updateConfig();
+      } catch (SQLException e) {
+        simpleServerStart.getLogger().error(e);
+        e.printStackTrace();
+      } catch (JsonFormat.ParseException e) {
+        simpleServerStart.getLogger().error(e);
+        e.printStackTrace();
+      }
+    }, 1l, 1L, TimeUnit.SECONDS);
+
+    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
+      simpleServerStart.getIaagMap().dispatch();
+    }, 1l, 1L, TimeUnit.SECONDS);
+
     TimeUnit.DAYS.sleep(365 * 2000);
   }
 }

@@ -3,10 +3,10 @@ package com.vorxsoft.ieye.eventservice.config;
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class EventInfo {
-
   private int event_id;
   private String event_no;
   private String event_genus;
@@ -16,17 +16,22 @@ public class EventInfo {
   private int enable_state;
   private int event_level;
   private int auto_release_interval;
-  private GuardPlan guardPlan=new GuardPlan();
-  private int res_id=0;
-  private int dev_id=0;
-  private int machine_id=0;
-  private int svr_id=0;
-  private int sourceId=0;
-  private int iaagId=0;
-  private int iaag_chn_id=0;
-  List<EventLinkage> eventLinkagelist = new ArrayList<>();
+  private GuardPlan guardPlan;
+  private int res_id = 0;
+  private int dev_id = 0;
+  private int machine_id = 0;
+  private int svr_id = 0;
+  private int sourceId = 0;
+  private int iaagId = 0;
+  private int iaag_chn_id = 0;
+  List<EventLinkage> eventLinkagelist;
 
   public EventInfo() {
+    event_no = "";
+    event_genus = "";
+    event_type = "";
+    event_name = "";
+    event_desc = "";
   }
 
   private EventInfo(Builder builder) {
@@ -50,11 +55,11 @@ public class EventInfo {
     setEventLinkagelist(builder.eventLinkagelist);
   }
 
-  public void clear(){
-    if(getGuardPlan()!=null)
+  public void clear() {
+    if (getGuardPlan() != null)
       getGuardPlan().clear();
     guardPlan = null;
-    if(getEventLinkagelist()!=null)
+    if (getEventLinkagelist() != null)
       eventLinkagelist.clear();
     eventLinkagelist = null;
   }
@@ -201,7 +206,9 @@ public class EventInfo {
   }
 
 
-  public int getEventLinkagelistSize(){
+  public int getEventLinkagelistSize() {
+    if (getEventLinkagelist() == null)
+      return 0;
     return getEventLinkagelist().size();
   }
 
@@ -330,5 +337,124 @@ public class EventInfo {
     public EventInfo build() {
       return new EventInfo(this);
     }
+
   }
+
+  public MonitorConfigKey getMonitorConfigKey() {
+    return MonitorConfigKey.newBuilder().
+            event_type(getEvent_type()).res_id(getRes_id()).build();
+  }
+
+  public SioConfigKey getSioConfigKey() {
+    return SioConfigKey.newBuilder().
+            event_type(getEvent_type()).res_id(getRes_id()).build();
+  }
+
+  public IaConfigKey getIaConfigKey() {
+    return IaConfigKey.newBuilder().
+            event_type(getEvent_type()).res_id(getRes_id()).
+            iaagId(getIaagId()).iaag_chn_id(getIaag_chn_id()).build();
+  }
+
+  public ServerConfigKey getServerConfigKey() {
+    return ServerConfigKey.newBuilder().
+            event_type(getEvent_type()).machine_id(getMachine_id()).build();
+  }
+
+  public DeviceConfigKey getDeviceConfigKey() {
+    return DeviceConfigKey.newBuilder().
+            event_type(getEvent_type()).dev_id(getDev_id()).build();
+  }
+
+  public void deleteLinkagebyId(int id) {
+    Iterator<EventLinkage> it = getEventLinkagelist().iterator();
+    while (it.hasNext()) {
+      EventLinkage x = it.next();
+      if (x.getLinkage_id() == id) {
+        getEventLinkagelist().remove(x);
+        return;
+      }
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "EventInfo{" +
+            "event_id=" + event_id +
+            ", event_no='" + event_no + '\'' +
+            ", event_genus='" + event_genus + '\'' +
+            ", event_type='" + event_type + '\'' +
+            ", event_name='" + event_name + '\'' +
+            ", event_desc='" + event_desc + '\'' +
+            ", enable_state=" + enable_state +
+            ", event_level=" + event_level +
+            ", auto_release_interval=" + auto_release_interval +
+            ", guardPlan=" + guardPlan +
+            ", res_id=" + res_id +
+            ", dev_id=" + dev_id +
+            ", machine_id=" + machine_id +
+            ", svr_id=" + svr_id +
+            ", sourceId=" + sourceId +
+            ", iaagId=" + iaagId +
+            ", iaag_chn_id=" + iaag_chn_id +
+            ", eventLinkagelist=" + eventLinkagelist +
+            '}';
+  }
+
+  public void zero() {
+    this.event_id = 0;
+    this.event_no = "";
+    this.event_genus = "";
+    this.event_type = "";
+    this.event_name = "";
+    this.event_desc = "";
+    this.enable_state = 0;
+    this.event_level = 0;
+    this.auto_release_interval = 0;
+    this.guardPlan.zero();
+    this.res_id = 0;
+    this.dev_id = 0;
+    this.machine_id = 0;
+    this.svr_id = 0;
+    this.sourceId = 0;
+    this.iaagId = 0;
+    this.iaag_chn_id = 0;
+    if (this.eventLinkagelist != null) {
+      for (int i = 0; i < getEventLinkagelist().size(); i++) {
+        getEventLinkagelist().get(i).zero();
+        getEventLinkagelist().remove(i);
+        i--;
+      }
+    } else {
+      setEventLinkagelist(new ArrayList<>());
+    }
+  }
+
+  public void copy(EventInfo other) {
+    this.event_id = other.getEvent_id();
+    this.event_no = other.getEvent_no();
+    this.event_genus = other.getEvent_genus();
+    this.event_type = other.getEvent_type();
+    this.event_name = other.getEvent_name();
+    this.event_desc = other.getEvent_desc();
+    this.enable_state = other.getEnable_state();
+    this.event_level = other.getEvent_level();
+    this.auto_release_interval = other.getAuto_release_interval();
+    this.guardPlan.copy(other.getGuardPlan());
+    this.res_id = other.getRes_id();
+    this.dev_id = other.getDev_id();
+    this.machine_id = other.getMachine_id();
+    this.svr_id = other.getSvr_id();
+    this.sourceId = other.getSourceId();
+    this.iaagId = other.getIaagId();
+    this.iaag_chn_id = other.getIaag_chn_id();
+    if (other.getEventLinkagelist() != null) {
+      for (int i = 0; i < other.getEventLinkagelist().size(); i++) {
+        EventLinkage eventLinkage = new EventLinkage();
+        eventLinkage.copy(other.getEventLinkagelist().get(i));
+        getEventLinkagelist().add(eventLinkage);
+      }
+    }
+  }
+
 }

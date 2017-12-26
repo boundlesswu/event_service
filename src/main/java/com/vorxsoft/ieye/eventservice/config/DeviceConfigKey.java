@@ -58,4 +58,30 @@ public class DeviceConfigKey {
       return new DeviceConfigKey(this);
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    DeviceConfigKey that = (DeviceConfigKey) o;
+
+    if (dev_id != that.dev_id) return false;
+    return event_type.equals(that.event_type);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = event_type.hashCode();
+    result = 31 * result + dev_id;
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "DeviceConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", dev_id=" + dev_id +
+            '}';
+  }
 }

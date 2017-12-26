@@ -46,4 +46,15 @@ public class EventContacts {
   public void setCellphone(String cellphone) {
     this.cellphone = cellphone;
   }
+
+  @Override
+  public String toString() {
+    return "EventContacts{" +
+            "contact_id=" + contact_id +
+            ", name='" + name + '\'' +
+            ", phone_number='" + phone_number + '\'' +
+            ", email='" + email + '\'' +
+            ", cellphone='" + cellphone + '\'' +
+            '}';
+  }
 }

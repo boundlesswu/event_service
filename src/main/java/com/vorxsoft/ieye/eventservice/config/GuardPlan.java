@@ -2,6 +2,7 @@ package com.vorxsoft.ieye.eventservice.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.vorxsoft.ieye.eventservice.grpc.GrpcClient;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -14,11 +15,25 @@ import java.util.List;
 public class GuardPlan {
   private int guard_plan_id;
   private String guard_plan_name;
-  private TimeSchedule timeSchedule = new TimeSchedule();
+  private TimeSchedule timeSchedule;
   private String time_schedule;
   private GuardPlanType guard_plan_type;
-  private java.sql.Timestamp start_time;
-  private java.sql.Timestamp end_time;
+  private Timestamp start_time;
+  private Timestamp end_time;
+
+  private GuardPlan(Builder builder) {
+    setGuard_plan_id(builder.guard_plan_id);
+    setGuard_plan_name(builder.guard_plan_name);
+    setTimeSchedule(builder.timeSchedule);
+    setTime_schedule(builder.time_schedule);
+    setGuard_plan_type(builder.guard_plan_type);
+    setStart_time(builder.start_time);
+    setEnd_time(builder.end_time);
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
   public void clear(){
     timeSchedule = null;
@@ -51,16 +66,21 @@ public class GuardPlan {
         JSONObject ccc = (JSONObject) timeArray.toArray()[j];
         TimePeriod  timePeriod = new TimePeriod();
         timePeriod.setType(Integer.parseInt(ccc.get("type").toString()));
-        timePeriod.setSt(Integer.parseInt(ccc.get("start").toString()));
-        timePeriod.setEt(Integer.parseInt(ccc.get("end").toString()));
+        timePeriod.setSt(Float.parseFloat(ccc.get("start").toString()));
+        timePeriod.setEt(Float.parseFloat(ccc.get("end").toString()));
         timePeriods.add(timePeriod);
       }
       timeScheduleItem.setTimePeriods(timePeriods);
       System.out.println(timeScheduleItem.toString());
+      if(getTimeSchedule() == null)
+        timeSchedule = TimeSchedule.newBuilder().build();
       timeSchedule.addTimeScheduleItem(timeScheduleItem);
     }
   }
   public TimeScheduleItem getTimeScheduleItemIndexOf(int index){
+    if(getTimeSchedule() == null){
+      return null;
+    }
     for (int i = 0; i < getTimeSchedule().getTimeScheduleItems().size(); i++) {
       TimeScheduleItem item = getTimeSchedule().getTimeScheduleItems().get(i);
       if(index == item.getDayOfWeek()){
@@ -73,7 +93,7 @@ public class GuardPlan {
   public enum GuardPlanType{
      Permanent,Temporary;
   }
-  public GuardPlanType Long2GuardPlanType(int a ){
+  public static GuardPlanType Long2GuardPlanType(int a){
     if(a == 1)
       return GuardPlanType.Permanent;
     else if(a == 2)
@@ -112,19 +132,23 @@ public class GuardPlan {
     this.guard_plan_type = guard_plan_type;
   }
 
-  public java.sql.Timestamp getStart_time() {
+  public void setGuard_plan_type(int guard_plan_type) {
+    setGuard_plan_type(Long2GuardPlanType(guard_plan_type));
+  }
+
+  public Timestamp getStart_time() {
     return start_time;
   }
 
-  public void setStart_time(java.sql.Timestamp start_time) {
+  public void setStart_time(Timestamp start_time) {
     this.start_time = start_time;
   }
 
-  public java.sql.Timestamp getEnd_time() {
+  public Timestamp getEnd_time() {
     return end_time;
   }
 
-  public void setEnd_time(java.sql.Timestamp end_time) {
+  public void setEnd_time(Timestamp end_time) {
     this.end_time = end_time;
   }
 
@@ -142,8 +166,7 @@ public Date timestamp2datetime(Timestamp ts){
 }
 
   public Timestamp datetime2timestamp( Date date){
-    Timestamp ts = new Timestamp(date.getTime());
-    return ts;
+    return new Timestamp(date.getTime());
   }
 
   public Timestamp String2timestamp(String time) {
@@ -215,4 +238,88 @@ public Date timestamp2datetime(Timestamp ts){
     return ret;
   }
 
+  public static final class Builder {
+    private int guard_plan_id;
+    private String guard_plan_name;
+    private TimeSchedule timeSchedule;
+    private String time_schedule;
+    private GuardPlanType guard_plan_type;
+    private Timestamp start_time;
+    private Timestamp end_time;
+
+    private Builder() {
+    }
+
+    public Builder guard_plan_id(int val) {
+      guard_plan_id = val;
+      return this;
+    }
+
+    public Builder guard_plan_name(String val) {
+      guard_plan_name = val;
+      return this;
+    }
+
+    public Builder timeSchedule(TimeSchedule val) {
+      timeSchedule = val;
+      return this;
+    }
+
+    public Builder time_schedule(String val) {
+      time_schedule = val;
+      return this;
+    }
+
+    public Builder guard_plan_type(GuardPlanType val) {
+      guard_plan_type = val;
+      return this;
+    }
+
+    public Builder start_time(Timestamp val) {
+      start_time = val;
+      return this;
+    }
+
+    public Builder end_time(Timestamp val) {
+      end_time = val;
+      return this;
+    }
+
+    public GuardPlan build() {
+      return new GuardPlan(this);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "GuardPlan{" +
+            "guard_plan_id=" + guard_plan_id +
+            ", guard_plan_name='" + guard_plan_name + '\'' +
+            ", timeSchedule=" + timeSchedule +
+            ", time_schedule='" + time_schedule + '\'' +
+            ", guard_plan_type=" + guard_plan_type +
+            ", start_time=" + start_time +
+            ", end_time=" + end_time +
+            '}';
+  }
+
+  public void zero(){
+    this.guard_plan_id = 0;
+    this.guard_plan_name = "";
+    this.timeSchedule.zero();
+    this.time_schedule ="";
+    this.guard_plan_type = GuardPlanType.Permanent;
+    //this.start_time = 0;
+    //this.end_time = 0;
+  }
+  public void copy(GuardPlan other){
+    zero();
+    this.guard_plan_id = other.getGuard_plan_id();
+    this.guard_plan_name = other.getGuard_plan_name();
+    this.timeSchedule.copy(other.getTimeSchedule());
+    this.time_schedule = other.getTime_schedule();
+    this.guard_plan_type = other.getGuard_plan_type();
+    this.start_time = other.getStart_time();
+    this.end_time = other.getEnd_time();
+  }
 }

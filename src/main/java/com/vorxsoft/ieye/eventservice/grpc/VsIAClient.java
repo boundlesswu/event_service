@@ -5,17 +5,52 @@ import io.grpc.stub.StreamObserver;
 
 public class VsIAClient extends GrpcClient{
   private VSIAServiceGrpc.VSIAServiceStub stub;
+  //private IAAGInfo iaagInfo;
+
+  public VsIAClient(String name, String IP, int PORT) {
+    super(name, IP, PORT);
+    if(getStub() == null){
+      stub =  VSIAServiceGrpc.newStub(getManagedChannel());
+    }
+  }
+
+  public VsIAClient(String name, String address) {
+    super(name, address);
+    if(getStub() == null){
+      stub =  VSIAServiceGrpc.newStub(getManagedChannel());
+    }
+  }
+
+//  public IAAGInfo getIaagInfo() {
+//    return iaagInfo;
+//  }
+//
+//  public void setIaagInfo(IAAGInfo iaagInfo) {
+//    this.iaagInfo = iaagInfo;
+//  }
+
+  public VSIAServiceGrpc.VSIAServiceStub getStub() {
+    return stub;
+  }
+
+  public void setStub(VSIAServiceGrpc.VSIAServiceStub stub) {
+    this.stub = stub;
+  }
+
 
   public VsIAClient(String IP, int PORT) {
     super(IP, PORT);
   }
+
 
   public VsIAClient() {
   }
 
   public void init(){
     createChannel();
-    stub =  VSIAServiceGrpc.newStub(getManagedChannel());
+    if(getManagedChannel().isTerminated()){
+      stub =  VSIAServiceGrpc.newStub(getManagedChannel());
+    }
   }
 
   public void sentIACMD(SentIACMDRequest request){
@@ -76,4 +111,5 @@ public class VsIAClient extends GrpcClient{
     };
     stub.queryIAUList(request, responseObserver);
   }
+
 }

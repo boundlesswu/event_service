@@ -11,14 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class test {
-  private int PORT = 9999;
-  private String hostip;
-  private String dbname;
-  private String dbAddress;
-  private String serviceName;
   private int ttl;
-  private String registerCenterName;
-  private String registerCenterAddress="http://192.168.20.251:2379";
 
   //final String cfgFile = "C:\\Users\\oe\\workspace\\ieye\\eventservice\\src\\main\\resources\\event_service.xml";
   final String cfgFile = "event_service.xml";
@@ -52,6 +45,9 @@ public class test {
           String lvalue = bookChild.getStringValue();
           System.out.println("节点名：" + bookChild.getName() + "--节点值：" + bookChild.getStringValue());
           if (tname.equals("info")) {
+            String serviceName;
+            String hostip;
+            int PORT = 9999;
             if (lname.equals("hostip"))
               hostip = lvalue;
             else if (lname.equals("port"))
@@ -60,12 +56,16 @@ public class test {
               serviceName = lvalue;
           }
           if (tname.equals("database")) {
+            String dbAddress;
+            String dbname;
             if (lname.equals("name"))
               dbname = lvalue;
             else if (lname.equals("address"))
               dbAddress = lvalue;
           }
           if (tname.equals("registerCenter")) {
+            String registerCenterAddress = "http://192.168.20.251:2379";
+            String registerCenterName;
             if (lname.equals("name"))
               registerCenterName = lvalue;
             else if (lname.equals("address"))

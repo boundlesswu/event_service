@@ -1,10 +1,7 @@
 package com.vorxsoft.ieye.eventservice.redis;
 
 import com.vorxsoft.ieye.eventservice.linkage.EventLinkage;
-import com.vorxsoft.ieye.proto.EventWithLinkage;
-import com.vorxsoft.ieye.proto.Events;
-import com.vorxsoft.ieye.proto.Linkage;
-import com.vorxsoft.ieye.proto.ReportEventRequest;
+import com.vorxsoft.ieye.proto.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -490,89 +487,102 @@ public class EventRecord {
       return this;
     }
   }
-  public void setLinkageFlag(){
+
+  public void setLinkageFlag() {
     setbSend2blg(true);
     setbSend2cms(true);
     setbSend2mq(true);
   }
-  public Events covert2Events(int logId){
-    Events events = Events.newBuilder().
-                                                   setSResNo(getsResNo()).
-                                                   setSDevNo(getsDevNo()).
-                                                   setSEventName(getsEventName()).
-                                                   setSEventType(getsEventType()).
-                                                   setSHappentime(getsHappentime()).
-                                                   setNEventID(getnEventID()).
-                                                   setSDevName(getsDevName()).
-                                                   setSResName(getsResName()).
-                                                   setSPicpath(getsPicpath()).
-                                                   setNEventlevel(getnEventlevel()).
-                                                   setNEventlogID(logId).
-                                                   setNSvrID(getnSvrID()).build();
-    return events;
-  }
-  public Events covert2Events(){
-    Events events = Events.newBuilder().
-            setSResNo(getsResNo()).
-            setSDevNo(getsDevNo()).
-            setSEventName(getsEventName()).
-            setSEventType(getsEventType()).
-            setSHappentime(getsHappentime()).
+
+  public Events covert2Events(int logId) {
+    return Events.newBuilder().
+            setSResNo(getsResNo()==null?"":getsResNo()).
+            setSDevNo(getsDevNo()==null?"":getsDevNo()).
+            setSEventName(getsEventName()==null?"":getsEventName()).
+            setSEventType(getsEventType()==null?"":getsEventType()).
+            setSHappentime(getsHappentime()==null?"":getsHappentime()).
             setNEventID(getnEventID()).
-            setSDevName(getsDevName()).
-            setSResName(getsResName()).
-            setSPicpath(getsPicpath()).
+            setSDevName(getsDevName()==null?"":getsDevName()).
+            setSResName(getsResName()==null?"":getsResName()).
+            setSPicpath(getsPicpath()==null?"":getsPicpath()).
+            setNEventlevel(getnEventlevel()).
+            setNEventlogID(logId).
+            setNSvrID(getnSvrID()).
+            setSExtraParam(getsExtraDesc()==null?"":getsExtraDesc()).
+            build();
+  }
+
+  public Events covert2Events() {
+    return Events.newBuilder().
+            setSResNo(getsResNo()==null?"":getsResNo()).
+            setSDevNo(getsDevNo()==null?"":getsDevNo()).
+            setSEventName(getsEventName()==null?"":getsEventName()).
+            setSEventType(getsEventType()==null?"":getsEventType()).
+            setSHappentime(getsHappentime()==null?"":getsHappentime()).
+            setNEventID(getnEventID()).
+            setSDevName(getsDevName()==null?"":getsDevName()).
+            setSResName(getsResName()==null?"":getsResName()).
+            setSPicpath(getsPicpath()==null?"":getsPicpath()).
             setNEventlevel(getnEventlevel()).
             setNEventlogID(getnEventlogID()).
-        setNSvrID(getnSvrID()).build();
-    return events;
+            setNSvrID(getnSvrID()).
+            setSExtraParam(getsExtraDesc()==null?"":getsExtraDesc()).
+            build();
   }
-  public  EventWithLinkage covert2EventWithLinkage(){
+
+  public EventWithLinkage covert2EventWithLinkage() {
     Events event = Events.newBuilder().
-        setSResNo(getsResNo()).
-        setSDevNo(getsDevNo()).
-        setSEventName(getsEventName()).
-        setSEventType(getsEventType()).
-        setSHappentime(getsHappentime()).
-        setNEventID(getnEventID()).
-        setSDevName(getsDevName()).
-        setSResName(getsResName()).
-        setSPicpath(getsPicpath()).
-        setNEventlevel(getnEventlevel()).
-        setNEventlogID(getnEventlogID()).
-        setNSvrID(getnSvrID()).build();
+            setSResNo(getsResNo()==null?"":getsResNo()).
+            setSDevNo(getsDevNo()==null?"":getsDevNo()).
+            setSEventName(getsEventName()==null?"":getsEventName()).
+            setSEventType(getsEventType()==null?"":getsEventType()).
+            setSHappentime(getsHappentime()==null?"":getsHappentime()).
+            setNEventID(getnEventID()).
+            setSDevName(getsDevName()==null?"":getsDevName()).
+            setSResName(getsResName()==null?"":getsResName()).
+            setSPicpath(getsPicpath()==null?"":getsPicpath()).
+            setNEventlevel(getnEventlevel()).
+            setNEventlogID(getnEventlogID()).
+            setNSvrID(getnSvrID()).
+            setSExtraParam(getsExtraDesc()==null?"":getsExtraDesc()).
+            build();
+    //EventWithLinkage eventWithLinkage = EventWithLinkage.newBuilder().setEvent(event);
+    EventWithLinkage.Builder eventWithLinkageBuilder = EventWithLinkage.newBuilder().setEvent(event);
+    for (int i = 0; i < getEventLinkage().size(); i++) {
+      EventLinkage eventLinkage = getEventLinkage().get(i);
+      Linkage linkage = eventLinkage.convert2linkage();
+      //eventWithLinkage.getLinkagesList().add(linkage);
+      eventWithLinkageBuilder.addLinkages(linkage);
+    }
+    return eventWithLinkageBuilder.build();
+  }
+
+  public EventWithLinkage covert2EventWithLinkage(int logId) {
+    Events event = covert2Events( logId);
     EventWithLinkage eventWithLinkage = EventWithLinkage.newBuilder().setEvent(event).build();
 
     for (int i = 0; i < getEventLinkage().size(); i++) {
       EventLinkage eventLinkage = getEventLinkage().get(i);
-      Linkage linkage = eventLinkage.convert2lingage();
+      Linkage linkage = eventLinkage.convert2linkage();
       eventWithLinkage.getLinkagesList().add(linkage);
-
     }
     return eventWithLinkage;
   }
-  public  EventWithLinkage covert2EventWithLinkage(int logId){
-    Events event = Events.newBuilder().
-        setSResNo(getsResNo()).
-        setSDevNo(getsDevNo()).
-        setSEventName(getsEventName()).
-        setSEventType(getsEventType()).
-        setSHappentime(getsHappentime()).
-        setNEventID(getnEventID()).
-        setSDevName(getsDevName()).
-        setSResName(getsResName()).
-        setSPicpath(getsPicpath()).
-        setNEventlevel(getnEventlevel()).
-        setNEventlogID(logId).
-        setNSvrID(getnSvrID()).build();
-    EventWithLinkage eventWithLinkage = EventWithLinkage.newBuilder().setEvent(event).build();
+  public ReportEventRequest convert2ReportEventRequest(){
+    ReportEventRequest reportEventRequest = null;
+    return reportEventRequest;
+  }
 
-    for (int i = 0; i < getEventLinkage().size(); i++) {
-      EventLinkage eventLinkage = getEventLinkage().get(i);
-      Linkage linkage = eventLinkage.convert2lingage();
-      eventWithLinkage.getLinkagesList().add(linkage);
-
-    }
-    return eventWithLinkage;
+  ReportLinkageRequest convert2ReportLinkageRequest(){
+    ReportLinkageRequest linkageReq = null;
+    return linkageReq;
+  }
+  public boolean isProcessed(){
+    if(isbSend2cms()) return false;
+    if(isbInsert2srcLog()) return false;
+    if(isbSend2mq()) return false;
+    if(isbSend2blg()) return false;
+    if(isbInsert2log()) return false;
+    return true;
   }
 }

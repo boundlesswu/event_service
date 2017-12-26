@@ -1,41 +1,49 @@
 package com.vorxsoft.ieye.eventservice.redis;
 
 class AlarmStormRecordItem {
+  private int alarmStormId;
+  private String event_type;
+  private long happenTime;
+
+  public AlarmStormRecordItem() {
+  }
+  public long diffTime() {
+    return (System.currentTimeMillis() - happenTime)/1000;
+  }
+  @Override
+  public String toString() {
+    return "AlarmStormRecordItem{" +
+            "alarmStormId=" + alarmStormId +
+            ", event_type='" + event_type + '\'' +
+            ", happenTime=" + happenTime +
+            '}';
+  }
+
+  public String getEvent_type() {
+    return event_type;
+  }
+
+  public void setEvent_type(String event_type) {
+    this.event_type = event_type;
+  }
+
   private AlarmStormRecordItem(Builder builder) {
-    setAlarmStormInfo(builder.alarmStormInfo);
+    setAlarmStormId(builder.alarmStormId);
+    setEvent_type(builder.event_type);
     setHappenTime(builder.happenTime);
-    setExtraContent(builder.extraContent);
   }
 
   public static Builder newBuilder() {
     return new Builder();
   }
 
-  public AlarmStormInfo getAlarmStormInfo() {
-    return alarmStormInfo;
+  public int getAlarmStormId() {
+    return alarmStormId;
   }
 
-  public void setAlarmStormInfo(AlarmStormInfo alarmStormInfo) {
-    this.alarmStormInfo = alarmStormInfo;
+  public void setAlarmStormId(int alarmStormId) {
+    this.alarmStormId = alarmStormId;
   }
-
-  public String getExtraContent() {
-    return extraContent;
-  }
-
-  public void setExtraContent(String extraContent) {
-    this.extraContent = extraContent;
-  }
-
-
-  private AlarmStormInfo alarmStormInfo;
-  private long happenTime;
-  private String extraContent;
-
-  public long diffTime() {
-    return System.currentTimeMillis() / 1000 - happenTime;
-  }
-
 
   public long getHappenTime() {
     return happenTime;
@@ -46,15 +54,20 @@ class AlarmStormRecordItem {
   }
 
   public static final class Builder {
-    private AlarmStormInfo alarmStormInfo;
+    private int alarmStormId;
+    private String event_type;
     private long happenTime;
-    private String extraContent;
 
     private Builder() {
     }
 
-    public Builder alarmStormInfo(AlarmStormInfo val) {
-      alarmStormInfo = val;
+    public Builder alarmStormId(int val) {
+      alarmStormId = val;
+      return this;
+    }
+
+    public Builder event_type(String val) {
+      event_type = val;
       return this;
     }
 
@@ -63,13 +76,13 @@ class AlarmStormRecordItem {
       return this;
     }
 
-    public Builder extraContent(String val) {
-      extraContent = val;
-      return this;
-    }
-
     public AlarmStormRecordItem build() {
       return new AlarmStormRecordItem(this);
     }
+  }
+  public void copy(AlarmStormRecordItem other){
+    this.alarmStormId = other.getAlarmStormId();
+    this.event_type = other.getEvent_type();
+    this.happenTime = other.getHappenTime();
   }
 }

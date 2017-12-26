@@ -1,6 +1,5 @@
 package com.vorxsoft.ieye.eventservice;
 
-import com.vorxsoft.ieye.proto.VSAlarmRequest;
 import com.vorxsoft.ieye.proto.VSEventServiceGrpc;
 
 

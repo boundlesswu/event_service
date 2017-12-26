@@ -91,4 +91,36 @@ public class  IaConfigKey {
       return new IaConfigKey(this);
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    IaConfigKey that = (IaConfigKey) o;
+
+    if (res_id != that.res_id) return false;
+    if (iaagId != that.iaagId) return false;
+    if (iaag_chn_id != that.iaag_chn_id) return false;
+    return event_type.equals(that.event_type);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = event_type.hashCode();
+    result = 31 * result + res_id;
+    result = 31 * result + iaagId;
+    result = 31 * result + iaag_chn_id;
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "IaConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", res_id=" + res_id +
+            ", iaagId=" + iaagId +
+            ", iaag_chn_id=" + iaag_chn_id +
+            '}';
+  }
 }

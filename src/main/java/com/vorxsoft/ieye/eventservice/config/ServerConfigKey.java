@@ -58,4 +58,30 @@ public class ServerConfigKey{
       return new ServerConfigKey(this);
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ServerConfigKey that = (ServerConfigKey) o;
+
+    if (machine_id != that.machine_id) return false;
+    return event_type.equals(that.event_type);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = event_type.hashCode();
+    result = 31 * result + machine_id;
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "ServerConfigKey{" +
+            "event_type='" + event_type + '\'' +
+            ", machine_id=" + machine_id +
+            '}';
+  }
 }

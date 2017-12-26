@@ -1,6 +1,10 @@
 package com.vorxsoft.ieye.eventservice.linkage;
 
+import com.google.protobuf.ProtocolStringList;
 import com.vorxsoft.ieye.proto.Linkage;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class EventLinkage {
   private int linkage_id;
@@ -212,33 +216,87 @@ public class EventLinkage {
     }
   }
   //public com.vorxsoft.ieye.proto.Linkage
-  public Linkage convert2lingage(){
-    Linkage linkage = Linkage.newBuilder().setNLinkageID(getLinkage_id()).
-                      setNEventID(getEvent_id()).setSLinkageType(getLinkage_type()).build();
-    if(arg1 == null || arg1.length() <= 0){
-      linkage.getSArgsList().add(arg1);
+  public Linkage convert2linkage(){
+    Linkage.Builder linkageBulder = Linkage.newBuilder().setNLinkageID(getLinkage_id()).
+            setNEventID(getEvent_id()).setSLinkageType(getLinkage_type());
+    if(arg1 != null && arg1.length() > 0){
+      linkageBulder.addSArgs(arg1);
+      //linkageBulder.setSArgs(0,arg1);
     }
-    if(arg2 == null || arg2.length() <= 0){
-      linkage.getSArgsList().add(arg2);
+    if(arg2 != null && arg2.length() > 0){
+      linkageBulder.addSArgs(arg2);
+      //linkageBulder.setSArgs(1,arg2);
     }
-    if(arg3 == null || arg3.length() <= 0){
-      linkage.getSArgsList().add(arg3);
+    if(arg3 != null && arg3.length() > 0){
+      linkageBulder.addSArgs(arg3);
+      //linkageBulder.setSArgs(2,arg3);
     }
-    if(arg4 == null || arg4.length() <= 0){
-      linkage.getSArgsList().add(arg4);
+    if(arg4 != null && arg4.length() > 0){
+      linkageBulder.addSArgs(arg4);
+      //linkageBulder.setSArgs(3,arg4);
     }
-    if(arg5 == null || arg5.length() <= 0){
-      linkage.getSArgsList().add(arg5);
+    if(arg5 != null && arg5.length() > 0){
+      linkageBulder.addSArgs(arg5);
+      //linkageBulder.setSArgs(4,arg5);
     }
-    if(arg6 == null || arg6.length() <= 0){
-      linkage.getSArgsList().add(arg6);
+    if(arg6 != null && arg6.length() > 0){
+      linkageBulder.addSArgs(arg6);
+      //linkageBulder.setSArgs(5,arg6);
     }
-    if(arg7 == null || arg7.length() <= 0){
-      linkage.getSArgsList().add(arg7);
+    if(arg7 != null && arg7.length() > 0){
+      linkageBulder.addSArgs(arg7);
+      //linkageBulder.setSArgs(6,arg7);
     }
-    if(arg8 == null || arg8.length() <= 0){
-      linkage.getSArgsList().add(arg8);
+    if(arg8 != null && arg8.length() > 0){
+      linkageBulder.addSArgs(arg8);
+      //linkageBulder.setSArgs(7,arg8);
     }
-    return linkage;
+    return linkageBulder.build();
+  }
+
+  @Override
+  public String toString() {
+    return "EventLinkage{" +
+            "linkage_id=" + linkage_id +
+            ", event_id=" + event_id +
+            ", linkage_type='" + linkage_type + '\'' +
+            ", arg1='" + arg1 + '\'' +
+            ", arg2='" + arg2 + '\'' +
+            ", arg3='" + arg3 + '\'' +
+            ", arg4='" + arg4 + '\'' +
+            ", arg5='" + arg5 + '\'' +
+            ", arg6='" + arg6 + '\'' +
+            ", arg7='" + arg7 + '\'' +
+            ", arg8='" + arg8 + '\'' +
+            '}';
+  }
+
+  public void zero(){
+   this.linkage_id = 0;
+    this.event_id = 0;
+    this.linkage_type = "";
+    this.arg1 = "";
+    this.arg2 = "";
+    this.arg3 = "";
+    this.arg4 = "";
+    this.arg5 = "";
+    this.arg6 = "";
+    this.arg7 = "";
+    this.arg8 = "";
+  }
+
+  public void copy(EventLinkage other){
+    zero();
+    this.linkage_id = other.getLinkage_id();
+    this.event_id =other.getEvent_id();
+    this.linkage_type = other.getLinkage_type();
+    this.arg1 = other.getArg1();
+    this.arg2 = other.getArg2();
+    this.arg3 = other.getArg3();
+    this.arg4 = other.getArg4();
+    this.arg5 = other.getArg5();
+    this.arg6 = other.getArg6();
+    this.arg7 = other.getArg7();
+    this.arg8 = other.getArg8();
   }
 }

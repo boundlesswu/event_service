@@ -7,20 +7,31 @@ import com.vorxsoft.ieye.proto.Events;
 import com.vorxsoft.ieye.proto.ReportEventRequest;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
 public class EventRecordMap {
+  private List<EventRecord> eventRecords;
+
+  public EventRecordMap() {
+    this.eventRecords = new ArrayList<>();
+  }
+
   public List<EventRecord> getEventRecords() {
     return eventRecords;
+  }
+  public boolean isEmpty(){
+    if(getEventRecords().size() == 0 )
+      return true;
+    else
+      return false;
   }
 
   public void setEventRecords(List<EventRecord> eventRecords) {
     this.eventRecords = eventRecords;
   }
-
-  private List<EventRecord> eventRecords;
 
   public void add(EventRecord record) {
     eventRecords.add(record);
@@ -68,4 +79,18 @@ public class EventRecordMap {
     }
     return req;
   }
+
+  public void clearRecord() {
+    for (int i = 0; i < getEventRecords().size(); i++) {
+      EventRecord record = getEventRecords().get(i);
+      //System.out.println("event record :" + record);
+      if (record.isProcessed()) {
+        System.out.println("event record :" + record + "will delete");
+        getEventRecords().remove(record);
+        i--;
+      }
+    }
+  }
+
+
 }

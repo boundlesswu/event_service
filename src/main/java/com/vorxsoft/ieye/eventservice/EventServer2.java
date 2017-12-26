@@ -17,10 +17,14 @@ public class EventServer2 extends VsIeyeProtoGrpc.VsIeyeProtoImplBase{
     System.out.println("receiver" +  req);
     try {
       String s = JsonFormat.printer().print(req.toBuilder());
+      //System.out.println("s");
       jedis.hset("reload_config_req"+String.valueOf(System.currentTimeMillis()),"req",s);
     } catch (InvalidProtocolBufferException e) {
       e.printStackTrace();
     }
+    DefaultReply defaultReply = DefaultReply.newBuilder().setResult(1).setSBusinessID("1212121").build();
+    reply.onNext(defaultReply);
+    reply.onCompleted();
   }
 
 }

@@ -73,4 +73,18 @@ public class TimePeriod{
       return new TimePeriod(this);
     }
   }
+
+  @Override
+  public String toString() {
+    return "TimePeriod{" +
+            "type=" + type +
+            ", st=" + st +
+            ", et=" + et +
+            '}';
+  }
+  public void copy(TimePeriod other){
+    setEt(other.getEt());
+    setSt(other.getSt());
+    setType(other.getType());
+  }
 }

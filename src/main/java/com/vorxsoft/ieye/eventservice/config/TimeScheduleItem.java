@@ -5,6 +5,9 @@ import java.util.List;
 
 public class TimeScheduleItem{
 
+  private int dayOfWeek;
+  private List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
+
   private TimeScheduleItem(Builder builder) {
     setDayOfWeek(builder.dayOfWeek);
     setTimePeriods(builder.timePeriods);
@@ -42,9 +45,6 @@ public class TimeScheduleItem{
     return false;
   }
 
-  private int dayOfWeek;
-  private List<TimePeriod> timePeriods = new ArrayList<TimePeriod>();
-
   public static final class Builder {
     private int dayOfWeek;
     private List<TimePeriod> timePeriods;
@@ -64,6 +64,38 @@ public class TimeScheduleItem{
 
     public TimeScheduleItem build() {
       return new TimeScheduleItem(this);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "TimeScheduleItem{" +
+            "dayOfWeek=" + dayOfWeek +
+            ", timePeriods=" + timePeriods +
+            '}';
+  }
+
+  public void zero(){
+    setDayOfWeek(0);
+    if(getTimePeriods() != null){
+      for (int i = 0; i < getTimePeriods().size(); i++) {
+        getTimePeriods().remove(i);
+        i--;
+      }
+    }else{
+      setTimePeriods(new ArrayList<>());
+    }
+  }
+
+  public void copy(TimeScheduleItem other){
+    zero();
+    setDayOfWeek(other.getDayOfWeek());
+    if(other.getTimePeriods()!=null){
+      for (int i = 0; i < other.getTimePeriods().size(); i++) {
+        TimePeriod timePeriod  = new TimePeriod();
+        timePeriod.copy(other.getTimePeriods().get(i));
+        getTimePeriods().add(timePeriod);
+      }
     }
   }
 }
