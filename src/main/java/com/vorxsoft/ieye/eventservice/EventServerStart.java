@@ -722,6 +722,7 @@ public class EventServerStart implements WatchCallerInterface {
     List<String> iaagAdress = null;
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
+
       simpleServerStart.getLogger().info("resolve all iaag address :" + iaagAdress);
       if (simpleServerStart.getIaagClients() == null) {
         simpleServerStart.setIaagClients(new ArrayList<>());
