@@ -37,9 +37,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.BlgType;
-import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.CmsType;
-import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.LogType;
+import static com.vorxsoft.ieye.eventservice.EventServerStart.ClientType.*;
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 import static com.vorxsoft.ieye.proto.VSLogLevel.VSLogLevelInfo;
 
@@ -128,42 +126,44 @@ public class EventServerStart implements WatchCallerInterface {
                 //setBlgClient(null);
               }
             }
-            if (name.equals("server_log")) {
-              //clear log grpc client and  synchronize to process threads
-              if (getLogServiceClient() != null) {
-                if (address.equals(getLogServiceClient().getIP() + ":" + getLogServiceClient().getPORT())) {
-                  getLogServiceClient().shut();
-                  //setLogServiceClient(null);
-                }
-              }
-            }
-            if (name.equals("server_iaag")) {
-              //clear cms grpc client
-              VsIAClient client = findIaagClient(address);
-              if (client != null) {
-                client.shut();
-                getIaagClients().remove(client);
-              } else {
-                getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
-              }
-              IaagMapItem b = getIaagMap().findIaagMapItem(address);
-              if (b != null) {
-                b.setClient(null);
-                getIaagMap().getIaags().remove(b);
-              } else {
-                getLogger().error("server_iaag :" + address + " client not found in IaagMap");
-              }
-            }
-            break;
-            case UNRECOGNIZED:
-              break;
           }
+          if (name.equals("server_log")) {
+            //clear log grpc client and  synchronize to process threads
+            if (getLogServiceClient() != null) {
+              if (address.equals(getLogServiceClient().getIP() + ":" + getLogServiceClient().getPORT())) {
+                getLogServiceClient().shut();
+                //setLogServiceClient(null);
+              }
+            }
+          }
+          if (name.equals("server_iaag")) {
+            //clear cms grpc client
+            VsIAClient client = findIaagClient(address);
+            if (client != null) {
+              client.shut();
+              getIaagClients().remove(client);
+            } else {
+              getLogger().error("server_iaag :" + address + " client not found in VsIAClients");
+            }
+            IaagMapItem b = getIaagMap().findIaagMapItem(address);
+            if (b != null) {
+              b.setClient(null);
+              getIaagMap().getIaags().remove(b);
+            } else {
+              getLogger().error("server_iaag :" + address + " client not found in IaagMap");
+            }
+          }
+          break;
+
 //      KeyValue keyVal = a.getKeyValue();
 //      String key = a.getKeyValue().getKey().toString();
 //      String value = a.getKeyValue().getKey
 
+        case UNRECOGNIZED:
+          break;
       }
     }
+  }
 
   public EventConfig getEventConfig() {
     return eventConfig;
@@ -263,8 +263,8 @@ public class EventServerStart implements WatchCallerInterface {
   public void setXXXClient(ClientType type, String address) {
     if (address == null) {
       String tmp = "cannot resolve " +
-          ((type == BlgType) ? " blg " : ((type == CmsType) ? " cms " : (type == LogType) ? " log " : " "))
-          + "server address";
+              ((type == BlgType) ? " blg " : ((type == CmsType) ? " cms " : (type == LogType) ? " log " : " "))
+              + "server address";
       System.out.println(tmp);
       getLogger().warn(tmp);
       return;
@@ -622,9 +622,9 @@ public class EventServerStart implements WatchCallerInterface {
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-        .addService(new EventServer(redisIP, redisPort).bindService())
-        .addService(new EventServer2(redisIP, redisPort).bindService())
-        .build();
+            .addService(new EventServer(redisIP, redisPort).bindService())
+            .addService(new EventServer2(redisIP, redisPort).bindService())
+            .build();
     server.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -674,7 +674,7 @@ public class EventServerStart implements WatchCallerInterface {
       return null;
     }
     for (VsIAClient vsIAClient : getIaagClients()) {
-      if (address.equals(vsIAClient.getIP() + ":" + vsIAClient.getPORT()) {
+      if (address.equals(vsIAClient.getIP() + ":" + vsIAClient.getPORT())) {
         return vsIAClient;
       }
     }
@@ -722,6 +722,7 @@ public class EventServerStart implements WatchCallerInterface {
     List<String> iaagAdress = null;
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
+
       simpleServerStart.getLogger().info("resolve all iaag address :" + iaagAdress);
       if (simpleServerStart.getIaagClients() == null) {
         simpleServerStart.setIaagClients(new ArrayList<>());
