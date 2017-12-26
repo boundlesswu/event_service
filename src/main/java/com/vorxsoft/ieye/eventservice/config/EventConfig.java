@@ -163,8 +163,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
       list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -176,8 +176,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
       list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -189,8 +189,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
       list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -202,8 +202,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
       list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -215,8 +215,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
       list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -228,8 +228,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
       list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -259,7 +259,7 @@ public class EventConfig {
     setSioConfigList(null);
     setSioConfigList2(null);
 
-    alarmStormConfig.clear();
+    alarmStormConfig.zero();
   }
 
   public void reLoadConfig(Connection conn) throws SQLException {

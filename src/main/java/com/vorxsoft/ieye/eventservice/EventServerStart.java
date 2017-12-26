@@ -60,9 +60,9 @@ public class EventServerStart implements WatchCallerInterface {
     getLogger().info("watcher response  " + ret);
     for (int i = 0; i < ret.getEvents().size(); i++) {
       WatchEvent a = ret.getEvents().get(i);
-      String key = a.getKeyValue().getKey().toString();
+      String key = a.getKeyValue().getKey().toStringUtf8();
       String[] akey = key.split("/");
-      String name = akey[1];
+      String name = new String(akey[2]);
       String address = akey[3];
       String[] aa = address.split(":");
       String ip = aa[0];
@@ -71,20 +71,20 @@ public class EventServerStart implements WatchCallerInterface {
         case PUT:
           if (name.equals("server_cms")) {
             //cms client is not exist
-            if (getCmsClient() == null || getCmsClient().getManagedChannel().isShutdown()) {
+            if (getCmsClient() == null || getCmsClient().getManagedChannel() == null || getCmsClient().getManagedChannel().isShutdown()) {
               setCmsClient(address);
             }
             //update cms grpc client and  synchronize to process threads
           }
           if (name.equals("server_blg")) {
             //update blg grpc client and  synchronize to process threads
-            if (getBlgClient() == null || getBlgClient().getManagedChannel().isShutdown()) {
+            if (getBlgClient() == null || getBlgClient().getManagedChannel() == null || getBlgClient().getManagedChannel().isShutdown()) {
               setBlgClient(address);
             }
           }
           if (name.equals("server_log")) {
             //update log grpc client and  synchronize to process threads
-            if (getLogServiceClient() == null || getLogServiceClient().getManagedChannel().isShutdown()) {
+            if (getLogServiceClient() == null || getLogServiceClient().getManagedChannel() == null || getLogServiceClient().getManagedChannel().isShutdown()) {
               setLogServiceClient(address);
             }
           }
@@ -211,13 +211,13 @@ public class EventServerStart implements WatchCallerInterface {
   private InputStream cfgFile;
   private final String cfgFileName = "event_service.xml";
 
-  private VsIeyeClient blgClient;
-  private VsIeyeClient cmsClient;
+  private VsIeyeClient blgClient = new VsIeyeClient();
+  private VsIeyeClient cmsClient = new VsIeyeClient();
 
   private List<VsIAClient> iaagClients;
   IaagMap iaagMap;
   private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
-  private LogServiceClient logServiceClient;
+  private LogServiceClient logServiceClient = new LogServiceClient();
 
   public static Logger getLogger() {
     return logger;
@@ -307,7 +307,8 @@ public class EventServerStart implements WatchCallerInterface {
         getLogServiceClient().setHostNameIp(hostip);
         getLogServiceClient().setpName(serviceName);
         String logContent = "successful resolve log server  address:" + address;
-        getLogServiceClient().sentVSLog(logContent, VSLogLevelInfo);
+        if (getLogServiceClient().getStub() != null || !getLogServiceClient().getManagedChannel().isTerminated())
+          getLogServiceClient().sentVSLog(logContent, VSLogLevelInfo);
         break;
     }
   }
@@ -441,7 +442,7 @@ public class EventServerStart implements WatchCallerInterface {
     return reloadRequestList;
   }
 
-  public void updateConfig() throws SQLException, JsonFormat.ParseException {
+  public void updateConfig(MicroService myservice) throws SQLException, JsonFormat.ParseException {
     List<ReloadRequest> reqList = getReloadRequest();
     if (reqList == null) {
       return;
@@ -575,15 +576,34 @@ public class EventServerStart implements WatchCallerInterface {
               }
               break;
             case OA_MOD:
-              //修改时候 id无效
-              for (int j = 0; j < req.getIdListList().size(); j++) {
-              }
-              break;
             case OA_DEL:
-              //删除时候 id是有效的
-              for (int j = 0; j < req.getIdListList().size(); j++) {
+              //修改时候 id无效
+//              for (int j = 0; j < req.getIdListList().size(); j++) {
+//              }
+              iaagMap.zero();
+              iaagMap.setConn(getConn());
+              iaagMap.load();
+              if (getIaagClients() != null && getIaagClients().size() != 0) {
+                for (VsIAClient client : getIaagClients()) {
+                  getIaagClients().remove(client);
+                  client.zero();
+                }
               }
+              List<String> iaagAdress = null;
+              try {
+                iaagAdress = myservice.ResolveAllAddress("server_iaag");
+              } catch (Exception e) {
+                e.printStackTrace();
+                getLogger().error(e);
+              }
+              setIaagClients2(iaagAdress);
+              getEventConfig().reLoadConfig(getConn());
               break;
+//            case OA_DEL:
+//              //删除时候 id是有效的,会级联删除掉级联的事件等
+//              for (int j = 0; j < req.getIdListList().size(); j++) {
+//              }
+//              break;
             case OA_QUR:
             case OA_ON:
             case OA_OFF:
@@ -669,6 +689,23 @@ public class EventServerStart implements WatchCallerInterface {
     this.iaagClients = iaagClients;
   }
 
+  public void setIaagClients2(List<String> iaagAdress) {
+    try {
+      if (getIaagClients() == null) {
+        setIaagClients(new ArrayList<>());
+      }
+      for (int i = 0; i < iaagAdress.size(); i++) {
+        VsIAClient a = getIaagMap().IaClinetInit(iaagAdress.get(i));
+        if (a != null)
+          getIaagClients().add(a);
+      }
+    } catch (Exception e) {
+      getLogger().error(e);
+      e.printStackTrace();
+    }
+
+  }
+
   public VsIAClient findIaagClient(String address) {
     if (getIaagClients() == null) {
       return null;
@@ -719,24 +756,20 @@ public class EventServerStart implements WatchCallerInterface {
     iaagMap.load();
     simpleServerStart.setIaagMap(iaagMap);
 
-    List<String> iaagAdress = null;
+    if (simpleServerStart.getIaagClients() != null && simpleServerStart.getIaagClients().size() != 0) {
+      for (VsIAClient client : simpleServerStart.getIaagClients()) {
+        simpleServerStart.getIaagClients().remove(client);
+        client.zero();
+      }
+    }
+    List<String> iaagAdress = new ArrayList<>();
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
-
-      simpleServerStart.getLogger().info("resolve all iaag address :" + iaagAdress);
-      if (simpleServerStart.getIaagClients() == null) {
-        simpleServerStart.setIaagClients(new ArrayList<>());
-      }
-      for (int i = 0; i < iaagAdress.size(); i++) {
-        VsIAClient a = iaagMap.IaClinetInit(iaagAdress.get(i));
-        if (a != null)
-          simpleServerStart.getIaagClients().add(a);
-      }
     } catch (Exception e) {
-      simpleServerStart.getLogger().error(e);
+      getLogger().error(e);
       e.printStackTrace();
     }
-
+    simpleServerStart.setIaagClients2(iaagAdress);
 
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
@@ -810,7 +843,7 @@ public class EventServerStart implements WatchCallerInterface {
 
     simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
       try {
-        simpleServerStart.updateConfig();
+        simpleServerStart.updateConfig(myservice);
       } catch (SQLException e) {
         simpleServerStart.getLogger().error(e);
         e.printStackTrace();

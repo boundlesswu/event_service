@@ -57,10 +57,14 @@ public class EventInfo {
 
   public void clear() {
     if (getGuardPlan() != null)
-      getGuardPlan().clear();
+      getGuardPlan().zero();
     guardPlan = null;
-    if (getEventLinkagelist() != null)
-      eventLinkagelist.clear();
+    if (getEventLinkagelist() != null) {
+      for (EventLinkage linkage : getEventLinkagelist()) {
+        getEventLinkagelist().remove(linkage);
+        linkage.zero();
+      }
+    }
     eventLinkagelist = null;
   }
 

@@ -269,4 +269,17 @@ public class IaagInfo {
     result = 31 * result + (preset_no != null ? preset_no.hashCode() : 0);
     return result;
   }
+
+  public void zero() {
+    this.svr_id = 0;
+    this.svr_no = "";
+    this.svr_name = "";
+    this.machine_id = 0;
+    this.ip_extranet = "";
+    this.ip_intranet = "";
+    this.port_extranet = 0;
+    this.port_intranet = 0;
+    this.remark = "";
+    this.preset_no = "";
+  }
 }

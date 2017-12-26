@@ -77,12 +77,21 @@ public abstract class  GrpcClient {
 
   public void shut(){
     if (getManagedChannel()!=null && !getManagedChannel().isShutdown()){
-      getManagedChannel().shutdown();
+      getManagedChannel().shutdownNow();
     }
   }
   public void setAddress(String address){
     String[] a = address.split(":");
     this.IP = a[0];
     this.PORT = Integer.parseInt(a[1]);
+  }
+
+  public void zero() {
+    if (this.managedChannel != null && !this.managedChannel.isShutdown()) {
+      this.managedChannel.shutdownNow();
+    }
+    this.IP = "";
+    this.PORT = 0;
+    this.name = "";
   }
 }

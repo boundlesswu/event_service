@@ -155,7 +155,7 @@ public class IauItem {
     this.password = password;
   }
 
-   public static final class Builder {
+  public static final class Builder {
     private int dev_id;
     private String dev_no;
     private int svr_id;
@@ -290,5 +290,22 @@ public class IauItem {
     result = 31 * result + (username != null ? username.hashCode() : 0);
     result = 31 * result + (password != null ? password.hashCode() : 0);
     return result;
+  }
+
+  public void zero() {
+    this.dev_id = 0;
+    this.dev_no = "";
+    this.svr_id = 0;
+    this.dev_name = "";
+    this.dev_type = "";
+    this.protocol_type = "";
+    this.dev_sn = "";
+    this.group_id = 0;
+    this.remark = "";
+    this.chn_video = 0;
+    this.ip = "";
+    this.port = 0;
+    this.username = "";
+    this.password = "";
   }
 }
