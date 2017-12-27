@@ -227,10 +227,10 @@ public class AlarmProcess implements Runnable {
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
-        getLogger().error(e);
+        getLogger().error(e.getMessage(), e);
       } catch (Exception e) {
         e.printStackTrace();
-        getLogger().error(e);
+        getLogger().error(e.getMessage(), e);
       }
     }
 

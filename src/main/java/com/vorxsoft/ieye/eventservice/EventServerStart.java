@@ -711,7 +711,8 @@ public class EventServerStart implements WatchCallerInterface {
       return null;
     }
     for (VsIAClient vsIAClient : getIaagClients()) {
-      if (address.equals(vsIAClient.getIP() + ":" + vsIAClient.getPORT())) {
+      String tmp = new String(vsIAClient.getIP() + ":" + (vsIAClient.getPORT() - 2));
+      if (address.equals(tmp)) {
         return vsIAClient;
       }
     }
@@ -766,7 +767,7 @@ public class EventServerStart implements WatchCallerInterface {
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
     } catch (Exception e) {
-      getLogger().error(e);
+      getLogger().error(e.getStackTrace());
       e.printStackTrace();
     }
     simpleServerStart.setIaagClients2(iaagAdress);
@@ -845,10 +846,10 @@ public class EventServerStart implements WatchCallerInterface {
       try {
         simpleServerStart.updateConfig(myservice);
       } catch (SQLException e) {
-        simpleServerStart.getLogger().error(e);
+        simpleServerStart.getLogger().error(e.getStackTrace());
         e.printStackTrace();
       } catch (JsonFormat.ParseException e) {
-        simpleServerStart.getLogger().error(e);
+        simpleServerStart.getLogger().error(e.getStackTrace());
         e.printStackTrace();
       }
     }, 1l, 1L, TimeUnit.SECONDS);
