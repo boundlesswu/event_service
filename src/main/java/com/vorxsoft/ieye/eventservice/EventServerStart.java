@@ -26,6 +26,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -173,7 +175,7 @@ public class EventServerStart implements WatchCallerInterface {
     this.eventConfig = eventConfig;
   }
 
-  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(3);
+  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(4);
   ;
   public long count = 0;
 
@@ -525,6 +527,10 @@ public class EventServerStart implements WatchCallerInterface {
               for (int j = 0; j < req.getIdListList().size(); j++) {
                 getEventConfig().updateAlarmStorm(conn, req.getIdList(j));
               }
+              if (req.getIdListList().size() == 0) {
+                getEventConfig().getAlarmStormConfig().zero();
+                getEventConfig().getAlarmStormConfig().load(conn);
+              }
               break;
             case OA_DEL:
               for (int j = 0; j < req.getIdListList().size(); j++) {
@@ -594,7 +600,7 @@ public class EventServerStart implements WatchCallerInterface {
                 iaagAdress = myservice.ResolveAllAddress("server_iaag");
               } catch (Exception e) {
                 e.printStackTrace();
-                getLogger().error(e);
+                getLogger().error(e.getMessage(), e);
               }
               setIaagClients2(iaagAdress);
               getEventConfig().reLoadConfig(getConn());
@@ -628,6 +634,7 @@ public class EventServerStart implements WatchCallerInterface {
   public void redisInit() {
     jedis = new Jedis(redisIP, redisPort);
   }
+
 
   public String evenType2string(int type) {
     if ((type == 1) || ((type > 100) && (type < 200))) { //VSEventTypeMonitor
@@ -666,10 +673,10 @@ public class EventServerStart implements WatchCallerInterface {
       server.awaitTermination(2, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
-      getLogger().error(e);
+      getLogger().error(e.getMessage(), e);
     } catch (SQLException e) {
       e.printStackTrace();
-      getLogger().error(e);
+      getLogger().error(e.getMessage(), e);
     }
   }
 
@@ -700,7 +707,7 @@ public class EventServerStart implements WatchCallerInterface {
           getIaagClients().add(a);
       }
     } catch (Exception e) {
-      getLogger().error(e);
+      getLogger().error(e.getMessage(), e);
       e.printStackTrace();
     }
 
@@ -767,7 +774,7 @@ public class EventServerStart implements WatchCallerInterface {
     try {
       iaagAdress = myservice.ResolveAllAddress("server_iaag");
     } catch (Exception e) {
-      getLogger().error(e.getStackTrace());
+      getLogger().error(e.getMessage(), e);
       e.printStackTrace();
     }
     simpleServerStart.setIaagClients2(iaagAdress);
@@ -780,7 +787,7 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setName("monitorProcess");
     monitorProcess.setEventConfig(simpleServerStart.getEventConfig());
     monitorProcess.setIaagMap(simpleServerStart.getIaagMap());
-    monitorProcess.setProcessType(ProcessServerType);
+    monitorProcess.setProcessType(ProcessMonitorType);
     monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
     monitorProcess.redisInit(redisIP, redisPort);
     monitorProcess.mqInit(activemqIp, activemqPort);
@@ -842,19 +849,29 @@ public class EventServerStart implements WatchCallerInterface {
 //    new Thread(serverProcess).start();
 //    new Thread(deviceProcess).start();
 
-    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
-      try {
-        simpleServerStart.updateConfig(myservice);
-      } catch (SQLException e) {
-        simpleServerStart.getLogger().error(e.getStackTrace());
-        e.printStackTrace();
-      } catch (JsonFormat.ParseException e) {
-        simpleServerStart.getLogger().error(e.getStackTrace());
-        e.printStackTrace();
-      }
-    }, 1l, 1L, TimeUnit.SECONDS);
+//    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
+//      try {
+//        simpleServerStart.updateConfig(myservice);
+//      } catch (SQLException e) {
+//        simpleServerStart.getLogger().error(e.getMessage(), e);
+//        e.printStackTrace();
+//      } catch (JsonFormat.ParseException e) {
+//        simpleServerStart.getLogger().error(e.getMessage(), e);
+//        e.printStackTrace();
+//      }
+//    }, 1l, 1L, TimeUnit.SECONDS);
 
     simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
+      try {
+        getLogger().info("updateConfig  thread : " + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + "  is running");
+        simpleServerStart.updateConfig(myservice);
+      } catch (SQLException e) {
+        simpleServerStart.getLogger().error(e.getMessage(), e);
+        e.printStackTrace();
+      } catch (JsonFormat.ParseException e) {
+        simpleServerStart.getLogger().error(e.getMessage(), e);
+        e.printStackTrace();
+      }
       simpleServerStart.getIaagMap().dispatch();
     }, 1l, 1L, TimeUnit.SECONDS);
 

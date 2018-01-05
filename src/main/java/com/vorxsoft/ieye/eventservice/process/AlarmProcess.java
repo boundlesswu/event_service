@@ -16,6 +16,7 @@ import com.vorxsoft.ieye.eventservice.util.ResUtilImpl;
 import com.vorxsoft.ieye.eventservice.util.TimeUtil;
 import com.vorxsoft.ieye.proto.EventWithLinkage;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
+import javafx.scene.paint.LinearGradient;
 import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -414,6 +415,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nResID(resourceId).
+                nEventlogID(0).
                 sResName(getResUtil().getResName(resourceId)).
                 nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).
@@ -435,6 +437,7 @@ public class AlarmProcess implements Runnable {
                 nSvrID(iaadId).
                 sSvrName(getResUtil().getSvrName(iaadId)).
                 nResID(resourceId).
+                nEventlogID(0).
                 sResName(getResUtil().getResName(resourceId)).
                 nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).
@@ -454,6 +457,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nResID(resourceId).
+                nEventlogID(0).
                 sResName(getResUtil().getResName(resourceId)).
                 nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).
@@ -473,6 +477,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nMachineID(machineId).
+                nEventlogID(0).
                 sMachineName(getResUtil().getMachineName(machineId)).
                 nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).bInsert2log(true).build();
@@ -491,6 +496,7 @@ public class AlarmProcess implements Runnable {
                 sHappentime(happenTime).
                 sExtraDesc(extraContent).
                 nDevID(deviceId).
+                nEventlogID(0).
                 sDevName(getResUtil().getDevName(deviceId)).
                 nEventID(eventInfo.getEvent_id()).
                 bInsert2srcLog(true).bInsert2log(true).build();
@@ -518,6 +524,7 @@ public class AlarmProcess implements Runnable {
         EventRecord eventRecord = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
                 sResName(getResUtil().getResName(resourceId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_monitor").build();
+        eventRecord.setnEventlogID(0);
         getEventRecordMap().add(eventRecord);
         break;
       case ProcessIaType:
@@ -525,24 +532,28 @@ public class AlarmProcess implements Runnable {
                 sSvrName(getResUtil().getSvrName(iaadId)).sHappentime(happenTime).
                 nResID(resourceId).sResName(getResUtil().getResName(resourceId)).
                 bInsert2srcLog(true).sEventGenus("event_ia").build();
+        eventRecord2.setnEventlogID(0);
         getEventRecordMap().add(eventRecord2);
         break;
       case ProcessSioType:
         EventRecord eventRecord3 = EventRecord.newBuilder().sEventType(evenType).nResID(resourceId).
                 sResName(getResUtil().getResName(resourceId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_sio").build();
+        eventRecord3.setnEventlogID(0);
         getEventRecordMap().add(eventRecord3);
         break;
       case ProcessServerType:
         EventRecord eventRecord4 = EventRecord.newBuilder().sEventType(evenType).nMachineID(machineId).
                 sMachineName(getResUtil().getMachineName(machineId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_server").build();
+        eventRecord4.setnEventlogID(0);
         getEventRecordMap().add(eventRecord4);
         break;
       case ProcessDeviceType:
         EventRecord eventRecord5 = EventRecord.newBuilder().sEventType(evenType).nDevID(deviceId).
                 sDevName(getResUtil().getDevName(deviceId)).sHappentime(happenTime).
                 bInsert2srcLog(true).sEventGenus("event_device").build();
+        eventRecord5.setnEventlogID(0);
         getEventRecordMap().add(eventRecord5);
         break;
       default:
@@ -558,6 +569,7 @@ public class AlarmProcess implements Runnable {
     }
     Iterator<EventRecord> it = getEventRecordMap().getEventRecords().iterator();
     while (it.hasNext()) {
+      LogId = 0;
       EventRecord record = it.next();
       if (record.isbInsert2log()) {
         EventLog eventLog = new EventLog().newBuilder().sEventGenus(record.getsEventGenus()).
@@ -568,12 +580,14 @@ public class AlarmProcess implements Runnable {
         LogId = eventLog.insert2db(conn);
         if (LogId <= 0) {
           System.out.println("insert event  log error");
+          getLogger().error("insert event  log error");
+          continue;
         } else {
           //it.next().setnEventlogID(LogId);
+          getLogger().debug("success insert event  log" + "event log id :" + LogId);
           record.setnEventlogID(LogId);
           record.setbInsert2log(false);
         }
-
       }
       switch (processType) {
         case ProcessMonitorType:
@@ -586,7 +600,9 @@ public class AlarmProcess implements Runnable {
             eventSrcMonitor.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcMonitor.insert2db(conn)) {
               System.out.println("insert event  src monitor log error");
+              getLogger().error("insert event  src monitor log error");
             } else {
+              getLogger().debug("success insert event src monitor log" + "event log id :" + LogId);
               record.setbInsert2srcLog(false);
             }
           }
@@ -602,7 +618,9 @@ public class AlarmProcess implements Runnable {
             eventSrcIA.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcIA.insert2db(conn)) {
               System.out.println("insert event  src ia log error");
+              getLogger().error("insert event  src ia log error");
             } else {
+              getLogger().debug("success insert event src ia log" + "event log id :" + LogId);
               record.setbInsert2srcLog(false);
             }
           }
@@ -618,7 +636,9 @@ public class AlarmProcess implements Runnable {
             System.out.println(eventSrcSio);
             if (!eventSrcSio.insert2db(conn)) {
               System.out.println("insert event  src sio log error");
+              getLogger().error("insert event  src sio log error");
             } else {
+              getLogger().debug("success insert event src sio log" + "event log id :" + LogId);
               record.setbInsert2srcLog(false);
             }
           }
@@ -632,8 +652,10 @@ public class AlarmProcess implements Runnable {
             eventSrcMachine.setsEventType(record.getsEventType());
             eventSrcMachine.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcMachine.insert2db(conn)) {
-              System.out.println("insert event  src sio log error");
+              System.out.println("insert event  src server log error");
+              getLogger().error("insert event  src server log error");
             } else {
+              getLogger().debug("success insert event src service log" + "event log id :" + LogId);
               record.setbInsert2srcLog(false);
             }
           }
@@ -647,8 +669,10 @@ public class AlarmProcess implements Runnable {
             eventSrcDev.setsEventType(record.getsEventType());
             eventSrcDev.settHappenTime(TimeUtil.string2timestamp(record.getsHappentime()));
             if (!eventSrcDev.insert2db(conn)) {
-              System.out.println("insert event  src sio log error");
+              System.out.println("insert event  src device log error");
+              getLogger().error("insert event  src device log error");
             } else {
+              getLogger().debug("success insert event src device log" + "event log id :" + LogId);
               record.setbInsert2srcLog(false);
             }
           }
