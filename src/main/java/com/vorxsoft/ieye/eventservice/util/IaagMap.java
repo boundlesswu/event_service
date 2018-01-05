@@ -67,6 +67,20 @@ public class IaagMap {
     pstmt.close();
   }
 
+  public IACMDType getChannelState(int id) throws SQLException {
+    String sql = "SELECT chn_state  FROM tr_iaag_cam WHERE iaag_chn_id = ?";
+    PreparedStatement pstmt = conn.prepareStatement(sql);
+    pstmt.setInt(1, id);
+    ResultSet ret = pstmt.executeQuery();
+    IACMDType type = IACMDType.Stop;
+    while (ret.next()) {
+      type = (ret.getInt(1) == 1) ? IACMDType.Start : IACMDType.Stop;
+    }
+    ret.close();
+    pstmt.close();
+    return type;
+  }
+
   public HashMap<Integer, IaagChannelInfo> createIaagChannelFromDB(int svr_id) throws SQLException {
     String sql = "SELECT iaag_chn_id,res_id,preset_no FROM tr_iaag_cam WHERE svr_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -98,6 +112,8 @@ public class IaagMap {
         ids.add(ret2.getInt(1));
         iacmdType = (ret2.getInt(1) == 0) ? IACMDType.Stop : IACMDType.Start;
       }
+      //get channel state
+      iacmdType = getChannelState(iaag_chn_id);
       chanel.setCmdType(iacmdType);
       chanel.setEvent_ids(ids);
       chanel.setNeedSendcmd(true);
@@ -238,8 +254,8 @@ public class IaagMap {
       Map.Entry entry = (Map.Entry) it.next();
       Object val = entry.getValue();
       IaagMapItem iaag = (IaagMapItem) val;
-      iaag.zero();
       getIaags().remove(iaag);
+      iaag.zero();
     }
     this.conn = null;
   }

@@ -163,7 +163,7 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      list.remove(key);
+      //list.remove(key);
       eventInfo.zero();
     }
     list.clear();
@@ -176,7 +176,7 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      list.remove(key);
+      //list.remove(key);
       eventInfo.zero();
     }
     list.clear();
@@ -189,7 +189,7 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      list.remove(key);
+      //list.remove(key);
       eventInfo.zero();
     }
     list.clear();
@@ -202,7 +202,7 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      list.remove(key);
+      //list.remove(key);
       eventInfo.zero();
     }
     list.clear();
@@ -215,7 +215,7 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      list.remove(key);
+      //list.remove(key);
       eventInfo.zero();
     }
     list.clear();
@@ -228,7 +228,7 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      list.remove(key);
+      //list.remove(key);
       eventInfo.zero();
     }
     list.clear();

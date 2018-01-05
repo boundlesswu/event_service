@@ -261,7 +261,7 @@ public class AlarmProcess implements Runnable {
     }
     Set<String> set = jedis.keys(patterKey);
     if (set.size() == 0) {
-      System.out.println("patterKey :" + patterKey + "is not exist");
+      //System.out.println("patterKey :" + patterKey + "is not exist");
       return;
     }
     Iterator<String> it = set.iterator();
@@ -564,7 +564,7 @@ public class AlarmProcess implements Runnable {
   public void processEvent() throws SQLException, InvalidProtocolBufferException, JMSException {
     int LogId = 0;
     if (getEventRecordMap().getEventRecords().isEmpty()) {
-      System.out.println("EventRecordMap is empty!!!!!!!!!!");
+      //System.out.println("EventRecordMap is empty!!!!!!!!!!");
       return;
     }
     Iterator<EventRecord> it = getEventRecordMap().getEventRecords().iterator();

@@ -278,10 +278,11 @@ public class IaagChannelInfo {
     this.preset_no = "";
     this.chn_state = 0;
     this.dev_id = 0;
-    for (Integer a : this.event_ids) {
-      event_ids.remove(a);
-      a = 0;
-    }
+    event_ids.clear();
+//    for (Integer a : this.event_ids) {
+//      event_ids.remove(a);
+//      //a = 0;
+//    }
     this.needSendcmd = false;
     this.hasSendCmd = false;
     cmdType = IACMDType.Stop;

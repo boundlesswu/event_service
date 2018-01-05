@@ -219,17 +219,19 @@ public class IaagMapItem {
       Map.Entry entry = (Map.Entry) it.next();
       Object val = entry.getValue();
       IaagChannelInfo channelInfo = (IaagChannelInfo) val;
-      channelInfo.zero();
       getChannels().remove(channelInfo);
+      channelInfo.zero();
     }
     it = getIaus().entrySet().iterator();
     while (it.hasNext()) {
       Map.Entry entry = (Map.Entry) it.next();
       Object val = entry.getValue();
       IauItem iau = (IauItem) val;
-      iau.zero();
       getIaus().remove(iau);
+      iau.zero();
     }
-    this.client.zero();
+    if (this.client != null) {
+      this.client.zero();
+    }
   }
 }

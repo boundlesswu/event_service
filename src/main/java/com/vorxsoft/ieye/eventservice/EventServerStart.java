@@ -591,9 +591,10 @@ public class EventServerStart implements WatchCallerInterface {
               iaagMap.load();
               if (getIaagClients() != null && getIaagClients().size() != 0) {
                 for (VsIAClient client : getIaagClients()) {
-                  getIaagClients().remove(client);
+                  //getIaagClients().remove(client);
                   client.zero();
                 }
+                getIaagClients().clear();
               }
               List<String> iaagAdress = null;
               try {
@@ -603,7 +604,7 @@ public class EventServerStart implements WatchCallerInterface {
                 getLogger().error(e.getMessage(), e);
               }
               setIaagClients2(iaagAdress);
-              getEventConfig().reLoadConfig(getConn());
+              //getEventConfig().reLoadConfig(getConn());
               break;
 //            case OA_DEL:
 //              //删除时候 id是有效的,会级联删除掉级联的事件等
