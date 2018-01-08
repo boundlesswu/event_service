@@ -599,11 +599,16 @@ public class EventServerStart implements WatchCallerInterface {
               List<String> iaagAdress = null;
               try {
                 iaagAdress = myservice.ResolveAllAddress("server_iaag");
+                if (iaagAdress == null) {
+                  getLogger().error(" ResolveAllAddress failed,and server_iaag is null");
+                }
               } catch (Exception e) {
                 e.printStackTrace();
                 getLogger().error(e.getMessage(), e);
               }
-              setIaagClients2(iaagAdress);
+              if (iaagAdress != null) {
+                setIaagClients2(iaagAdress);
+              }
               //getEventConfig().reLoadConfig(getConn());
               break;
 //            case OA_DEL:
