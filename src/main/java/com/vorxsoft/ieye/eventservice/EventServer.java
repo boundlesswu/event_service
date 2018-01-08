@@ -168,6 +168,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         map = monitorAlarm2map(alarm);
         monitor_count++;
         key = "alarm_monitor_"+monitor_count;
+        System.out.println("key: " + key);
+        System.out.println("map: " + map);
         jedis.hmset(key,map);
       }
       for (int i = 0; i < request.getSioAlarmCount(); i++) {
@@ -182,6 +184,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         map = iaAlarm2map(alarm);
         ia_count++;
         key = "alarm_ia_" + ia_count;
+        System.out.println("key: " + key);
+        System.out.println("map: " + map);
         jedis.hmset(key,map);
       }
       for (int i = 0; i < request.getDeviceAlarmCount(); i++) {

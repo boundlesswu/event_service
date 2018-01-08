@@ -12,6 +12,7 @@ import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
 import com.vorxsoft.ieye.eventservice.util.IaagMap;
 import com.vorxsoft.ieye.eventservice.util.IaagMapItem;
+import com.vorxsoft.ieye.eventservice.util.RedisUtil;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
@@ -26,8 +27,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -210,6 +209,7 @@ public class EventServerStart implements WatchCallerInterface {
   private static String redisIP;
   private static int redisPort;
   private Jedis jedis;
+  public RedisUtil redisUtil;
   private InputStream cfgFile;
   private final String cfgFileName = "event_service.xml";
 
