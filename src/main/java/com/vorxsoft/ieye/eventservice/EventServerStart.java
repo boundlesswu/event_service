@@ -208,8 +208,8 @@ public class EventServerStart implements WatchCallerInterface {
   private static String mqName;
   private static String redisIP;
   private static int redisPort;
-  private Jedis jedis;
-  public RedisUtil redisUtil;
+  //private Jedis jedis;
+  public RedisUtil redisUtil = null;
   private InputStream cfgFile;
   private final String cfgFileName = "event_service.xml";
 
@@ -220,6 +220,14 @@ public class EventServerStart implements WatchCallerInterface {
   IaagMap iaagMap;
   private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
   private LogServiceClient logServiceClient = new LogServiceClient();
+
+  public RedisUtil getRedisUtil() {
+    return redisUtil;
+  }
+
+  public void setRedisUtil(RedisUtil redisUtil) {
+    this.redisUtil = redisUtil;
+  }
 
   public static Logger getLogger() {
     return logger;
@@ -418,7 +426,8 @@ public class EventServerStart implements WatchCallerInterface {
   }
 
   public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
-    Set<String> set = jedis.keys("reload_config_req*");
+    //Set<String> set = jedis.keys("reload_config_req*");
+    Set<String> set = redisUtil.keys("reload_config_req*");
     if (set == null || set.size() == 0) {
       return null;
     }
@@ -426,7 +435,8 @@ public class EventServerStart implements WatchCallerInterface {
     List<ReloadRequest> reloadRequestList = new ArrayList<>();
     while (it.hasNext()) {
       String keyStr = it.next();
-      String a = jedis.hget(keyStr, "req");
+      //String a = jedis.hget(keyStr, "req");
+      String a = redisUtil.hget(keyStr, "req");
       if (a == null || a.length() == 0) {
         System.out.println("wrong redis hash,and key:" + keyStr);
       } else {
@@ -439,7 +449,8 @@ public class EventServerStart implements WatchCallerInterface {
           e.printStackTrace();
         }
       }
-      jedis.del(keyStr);
+      redisUtil.del(keyStr);
+      //jedis.del(keyStr);
     }
     return reloadRequestList;
   }
@@ -638,7 +649,8 @@ public class EventServerStart implements WatchCallerInterface {
   }
 
   public void redisInit() {
-    jedis = new Jedis(redisIP, redisPort);
+    redisUtil = new RedisUtil(redisIP,redisPort);
+    //jedis = new Jedis(redisIP, redisPort);
   }
 
 
@@ -655,8 +667,10 @@ public class EventServerStart implements WatchCallerInterface {
   private void start() throws Exception {
     //server = NettyServerBuilder.forPort(PORT).addService(new EventServer(mqIP,mqPort).bindService()).build();
     server = NettyServerBuilder.forPort(PORT)
-            .addService(new EventServer(redisIP, redisPort).bindService())
-            .addService(new EventServer2(redisIP, redisPort).bindService())
+//            .addService(new EventServer(redisIP, redisPort).bindService())
+//            .addService(new EventServer2(redisIP, redisPort).bindService())
+            .addService(new EventServer(getRedisUtil()).bindService())
+            .addService(new EventServer2(getRedisUtil()).bindService())
             .build();
     server.start();
 
@@ -674,7 +688,7 @@ public class EventServerStart implements WatchCallerInterface {
 
   private void stop() {
     try {
-      jedis.close();
+      //jedis.close();
       conn.close();
       server.awaitTermination(2, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
@@ -741,11 +755,12 @@ public class EventServerStart implements WatchCallerInterface {
     System.out.println("cpuNums :" + cpuNums);
     final EventServerStart simpleServerStart = new EventServerStart();
     simpleServerStart.cfgInit();
+    simpleServerStart.redisInit();
+    simpleServerStart.dbInit();
     MicroService myservice = new MicroServiceImpl();
     myservice.init(registerCenterAddress, simpleServerStart);
     simpleServerStart.start();
-    simpleServerStart.redisInit();
-    simpleServerStart.dbInit();
+
     simpleServerStart.getEventConfig().loadConfig(simpleServerStart.getConn());
     myservice.RegisteWithHB(serviceName, hostip, PORT, ttl);
 
@@ -795,7 +810,8 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setIaagMap(simpleServerStart.getIaagMap());
     monitorProcess.setProcessType(ProcessMonitorType);
     monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    monitorProcess.redisInit(redisIP, redisPort);
+    monitorProcess.setRedisUtil(simpleServerStart.getRedisUtil());
+    //monitorProcess.redisInit(redisIP, redisPort);
     monitorProcess.mqInit(activemqIp, activemqPort);
 
     //sio process
@@ -808,7 +824,8 @@ public class EventServerStart implements WatchCallerInterface {
     sioProcess.setIaagMap(simpleServerStart.getIaagMap());
     sioProcess.setProcessType(ProcessSioType);
     sioProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    sioProcess.redisInit(redisIP, redisPort);
+    sioProcess.setRedisUtil(simpleServerStart.getRedisUtil());
+    //sioProcess.redisInit(redisIP, redisPort);
     sioProcess.mqInit(activemqIp, activemqPort);
 
     //ia process
@@ -821,7 +838,8 @@ public class EventServerStart implements WatchCallerInterface {
     iaProcess.setIaagMap(simpleServerStart.getIaagMap());
     iaProcess.setProcessType(ProcessIaType);
     iaProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    iaProcess.redisInit(redisIP, redisPort);
+    iaProcess.setRedisUtil(simpleServerStart.getRedisUtil());
+    //iaProcess.redisInit(redisIP, redisPort);
     iaProcess.mqInit(activemqIp, activemqPort);
 
 //    //server process
@@ -835,6 +853,7 @@ public class EventServerStart implements WatchCallerInterface {
 //    serverProcess.setProcessType(ProcessServerType);
 //    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
 //    serverProcess.redisInit(redisIP, redisPort);
+//    serverProcess.setRedisUtil(simpleServerStart.getRedisUtil());
 //serverProcess.mqInit(activemqIp, activemqPort);
 //    //device process
 //    AlarmProcess deviceProcess = new AlarmProcess();
@@ -846,6 +865,7 @@ public class EventServerStart implements WatchCallerInterface {
 //    deviceProcess.setIaagMap(simpleServerStart.getIaagMap());
 //    deviceProcess.setProcessType(ProcessDeviceType);
 //    deviceProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
+//    deviceProcess.setRedisUtil(simpleServerStart.getRedisUtil());
 //    deviceProcess.redisInit(redisIP, redisPort);
 //    deviceProcess.mqInit(activemqIp, activemqPort);
 

@@ -10,10 +10,7 @@ import com.vorxsoft.ieye.eventservice.redis.AlarmStormInfo;
 import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
-import com.vorxsoft.ieye.eventservice.util.IaagMap;
-import com.vorxsoft.ieye.eventservice.util.ResUtil;
-import com.vorxsoft.ieye.eventservice.util.ResUtilImpl;
-import com.vorxsoft.ieye.eventservice.util.TimeUtil;
+import com.vorxsoft.ieye.eventservice.util.*;
 import com.vorxsoft.ieye.proto.EventWithLinkage;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
 import javafx.scene.paint.LinearGradient;
@@ -37,7 +34,8 @@ public class AlarmProcess implements Runnable {
   //private AlarmStormConfig alarmStormConfig;
   private AlarmStormRecordMap alarmStormRecordMap;
   private EventRecordMap eventRecordMap;
-  private Jedis jedis;
+  //private Jedis jedis;
+  private RedisUtil redisUtil=null;
   private Connection conn;
   VsIeyeClient cmsIeyeClient;
   VsIeyeClient blgTeyeClient;
@@ -107,12 +105,12 @@ public class AlarmProcess implements Runnable {
     this.alarmStormRecordMap = alarmStormRecordMap;
   }
 
-  public Jedis getJedis() {
-    return jedis;
+  public RedisUtil getRedisUtil() {
+    return redisUtil;
   }
 
-  public void setJedis(Jedis jedis) {
-    this.jedis = jedis;
+  public void setRedisUtil(RedisUtil redisUtil) {
+    this.redisUtil = redisUtil;
   }
 
   public void mqInit(String ip, int port) {
@@ -182,9 +180,10 @@ public class AlarmProcess implements Runnable {
     resUtil.init(conn);
   }
 
-  public void redisInit(String redisIP, int redisPort) {
-    jedis = new Jedis(redisIP, redisPort);
-  }
+//  public void redisInit(String redisIP, int redisPort) {
+//    redisUtil = new RedisUtil(redisIP,redisPort);
+//    //jedis = new Jedis(redisIP, redisPort);
+//  }
 
   public String getName() {
     return name;
@@ -259,7 +258,8 @@ public class AlarmProcess implements Runnable {
         System.out.println("wrong processType");
         return;
     }
-    Set<String> set = jedis.keys(patterKey);
+    //Set<String> set = jedis.keys(patterKey);
+    Set<String> set = redisUtil.keys(patterKey);
     if (set.size() == 0) {
       //System.out.println("patterKey :" + patterKey + "is not exist");
       return;
@@ -279,7 +279,8 @@ public class AlarmProcess implements Runnable {
     while (it.hasNext()) {
       String keyStr = it.next();
       System.out.println(keyStr);
-      Map<String, String> map = jedis.hgetAll(keyStr);
+      //Map<String, String> map = jedis.hgetAll(keyStr);
+      Map<String, String> map = redisUtil.hgetAll(keyStr);
       evenType = map.get("evenType");
       happenTime = map.get("happenTime");
       extraContent = map.get("extraContent");
@@ -310,7 +311,8 @@ public class AlarmProcess implements Runnable {
         System.out.println("wrong processType");
         continue;
       }
-      jedis.del(keyStr);
+      //jedis.del(keyStr);
+      redisUtil.del(keyStr);
       if (eventInfo == null) {
         getLogger().warn("No event config for alarm evenType:" + evenType +
                 " happenTime " + happenTime + " extraContent: " + extraContent +

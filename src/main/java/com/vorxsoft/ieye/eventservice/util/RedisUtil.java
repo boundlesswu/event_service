@@ -564,7 +564,6 @@ public class RedisUtil {
       jedis = pool.getResource();
       res = jedis.hmset(key, hash);
     } catch (Exception e) {
-
       LOGGER.error(e.getMessage());
     } finally {
       returnResource(pool, jedis);
@@ -588,14 +587,33 @@ public class RedisUtil {
       jedis = pool.getResource();
       res = jedis.hget(key, field);
     } catch (Exception e) {
-
       LOGGER.error(e.getMessage());
     } finally {
       returnResource(pool, jedis);
     }
     return res;
   }
-
+  /**
+   * <p>
+   * 通过key  获取所有的 map
+   * </p>
+   *
+   * @param key
+   * @return 没有返回null
+   */
+  public Map<String, String> hgetAll(String key) {
+    Jedis jedis = null;
+    Map<String, String> res = null;
+    try {
+      jedis = pool.getResource();
+      res = jedis.hgetAll(key);
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage());
+    } finally {
+      returnResource(pool, jedis);
+    }
+    return res;
+  }
   /**
    * <p>
    * 通过key 和 fields 获取指定的value 如果没有对应的value则返回null
