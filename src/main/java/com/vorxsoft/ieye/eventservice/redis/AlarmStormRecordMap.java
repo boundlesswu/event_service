@@ -66,13 +66,13 @@ public class AlarmStormRecordMap {
     }
   }
 
-  public long diffCurrentTime(EventInfo eventInfo) {
+  public long diffCurrentTime(String happenTime, EventInfo eventInfo) {
     AlarmStormRecordItem item =find(eventInfo);
     if (item == null) {
       System.out.println("no AlarmStormItem: found:");
       return Long.MAX_VALUE;
     } else {
-      return item.diffTime();
+      return item.diffTime(happenTime);
     }
   }
 

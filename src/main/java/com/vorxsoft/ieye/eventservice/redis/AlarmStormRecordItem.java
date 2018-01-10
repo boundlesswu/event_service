@@ -1,5 +1,7 @@
 package com.vorxsoft.ieye.eventservice.redis;
 
+import com.vorxsoft.ieye.eventservice.util.TimeUtil;
+
 class AlarmStormRecordItem {
   private int alarmStormId;
   private String event_type;
@@ -7,8 +9,10 @@ class AlarmStormRecordItem {
 
   public AlarmStormRecordItem() {
   }
-  public long diffTime() {
-    return (System.currentTimeMillis() - happenTime)/1000;
+
+  public long diffTime(String happenTime) {
+    return (TimeUtil.string2timestamplong(happenTime) - this.happenTime) / 1000;
+    //return (System.currentTimeMillis() - this.happenTime)/1000;
   }
   @Override
   public String toString() {

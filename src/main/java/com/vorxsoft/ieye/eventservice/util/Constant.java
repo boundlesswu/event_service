@@ -17,14 +17,14 @@ public class Constant {
   public static final String sLinkageEmail = new String("linkage_email");
 
   public static String eventType2Genus(String type){
-    if(type.equals("event_monitor")) return sGenusSio;
-    if(type.equals("event_motion_detect")) return sGenusSio;
-    if(type.equals("event_video_lose")) return sGenusSio;
-    if(type.equals("event_video_occlusion")) return sGenusSio;
-    if(type.equals("event_face_snapshot")) return sGenusSio;
-    if(type.equals("event_face_recognize")) return sGenusSio;
-    if(type.equals("event_steal_move")) return sGenusSio;
-    if(type.equals("event_perimeter_alarm")) return sGenusSio;
+    if (type.equals("event_monitor")) return sGenusMonitor;
+    if (type.equals("event_motion_detect")) return sGenusMonitor;
+    if (type.equals("event_video_lose")) return sGenusMonitor;
+    if (type.equals("event_video_occlusion")) return sGenusMonitor;
+    if (type.equals("event_face_snapshot")) return sGenusMonitor;
+    if (type.equals("event_face_recognize")) return sGenusMonitor;
+    if (type.equals("event_steal_move")) return sGenusMonitor;
+    if (type.equals("event_perimeter_alarm")) return sGenusMonitor;
 
     if(type.equals("event_sio")) return sGenusSio;
     if(type.equals("event_sio_common")) return sGenusSio;

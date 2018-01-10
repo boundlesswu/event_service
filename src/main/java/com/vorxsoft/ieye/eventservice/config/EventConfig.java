@@ -248,16 +248,16 @@ public class EventConfig {
     clearServerConfigConfigListbyKey(serverConfigList2);
     clearDeviceConfigConfigListbyKey(deviceConfigList2);
 
-    setDeviceConfigList(null);
-    setDeviceConfigList2(null);
-    setIaConfigList(null);
-    setIaConfigList2(null);
-    setMonitorConfigList(null);
-    setMonitorConfigList2(null);
-    setServerConfigList(null);
-    setServerConfigList2(null);
-    setSioConfigList(null);
-    setSioConfigList2(null);
+//    setDeviceConfigList(null);
+//    setDeviceConfigList2(null);
+//    setIaConfigList(null);
+//    setIaConfigList2(null);
+//    setMonitorConfigList(null);
+//    setMonitorConfigList2(null);
+//    setServerConfigList(null);
+//    setServerConfigList2(null);
+//    setSioConfigList(null);
+//    setSioConfigList2(null);
 
     alarmStormConfig.zero();
   }

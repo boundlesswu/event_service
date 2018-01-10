@@ -73,28 +73,51 @@ public class EventServerStart implements WatchCallerInterface {
           if (name.equals("server_cms")) {
             //cms client is not exist
             if (getCmsClient() == null || getCmsClient().getManagedChannel() == null || getCmsClient().getManagedChannel().isShutdown()) {
+              getLogger().debug("re set cms client of address:" + address);
               setCmsClient(address);
+            } else {
+              String tmpstring = null;
+              tmpstring = (getCmsClient() == null) ? "CmsClient is null" : (getCmsClient().getManagedChannel() == null) ?
+                      "CmsClient ManagedChannel is null" : (!getCmsClient().getManagedChannel().isShutdown()) ?
+                      "CmsClient ManagedChannel is opened" : "";
+              getLogger().debug(tmpstring);
             }
             //update cms grpc client and  synchronize to process threads
           }
           if (name.equals("server_blg")) {
             //update blg grpc client and  synchronize to process threads
             if (getBlgClient() == null || getBlgClient().getManagedChannel() == null || getBlgClient().getManagedChannel().isShutdown()) {
+              getLogger().debug("re set blg client of address:" + address);
               setBlgClient(address);
+            } else {
+              String tmpstring = null;
+              tmpstring = (getBlgClient() == null) ? "blgClient is null" : (getBlgClient().getManagedChannel() == null) ?
+                      "blgClient ManagedChannel is null" : (!getBlgClient().getManagedChannel().isShutdown()) ?
+                      "blgClient ManagedChannel is opened" : "";
+              getLogger().debug(tmpstring);
             }
           }
           if (name.equals("server_log")) {
             //update log grpc client and  synchronize to process threads
             if (getLogServiceClient() == null || getLogServiceClient().getManagedChannel() == null || getLogServiceClient().getManagedChannel().isShutdown()) {
+              getLogger().debug("re set log client of address:" + address);
               setLogServiceClient(address);
+            } else {
+              String tmpstring = null;
+              tmpstring = (getLogServiceClient() == null) ? "logClient is null" : (getLogServiceClient().getManagedChannel() == null) ?
+                      "logClient ManagedChannel is null" : (!getLogServiceClient().getManagedChannel().isShutdown()) ?
+                      "logClient ManagedChannel is opened" : "";
+              getLogger().debug(tmpstring);
             }
           }
           if (name.equals("server_iaag")) {
             //update cms grpc client
             VsIAClient client = findIaagClient(address);
             if (client == null) {
+              getLogger().debug("cannot find iaag client of address(" + address + ")");
               client = addVsIAClient(address);
             } else {
+              getLogger().debug(" find iaag client of address(" + address + ") and reinit client");
               client.shut();
               client.setAddress(address);
               client.init();
@@ -102,9 +125,11 @@ public class EventServerStart implements WatchCallerInterface {
             //redispatch
             IaagMapItem b = getIaagMap().findIaagMapItem(address);
             if (b != null) {
+              getLogger().error("find iaag of address(" + address + ") in IaagMap and redispatch ");
               b.setClient(client);
               b.redispatch(getConn());
             } else {
+              getLogger().error("cannot find iaag of address(" + address + ") in IaagMap");
               //re read  iaag and
             }
           }
@@ -116,6 +141,8 @@ public class EventServerStart implements WatchCallerInterface {
               if (address.equals(getCmsClient().getIP() + ":" + getCmsClient().getPORT())) {
                 getCmsClient().shut();
                 //setCmsClient(null);
+              } else {
+                getLogger().error("cannot find cms of address(" + address + ") to be deleted");
               }
             }
           }
@@ -125,6 +152,8 @@ public class EventServerStart implements WatchCallerInterface {
               if (address.equals(getBlgClient().getIP() + ":" + getBlgClient().getPORT())) {
                 getBlgClient().shut();
                 //setBlgClient(null);
+              } else {
+                getLogger().error("cannot find blg of address(" + address + ") to be deleted");
               }
             }
           }
@@ -134,6 +163,8 @@ public class EventServerStart implements WatchCallerInterface {
               if (address.equals(getLogServiceClient().getIP() + ":" + getLogServiceClient().getPORT())) {
                 getLogServiceClient().shut();
                 //setLogServiceClient(null);
+              } else {
+                getLogger().error("cannot find log service of address(" + address + ") to be deleted");
               }
             }
           }
@@ -422,6 +453,7 @@ public class EventServerStart implements WatchCallerInterface {
       }
     } catch (DocumentException e) {
       e.printStackTrace();
+      getLogger().error(e.getMessage(), e);
     }
   }
 
@@ -447,6 +479,7 @@ public class EventServerStart implements WatchCallerInterface {
           reloadRequestList.add(req);
         } catch (InvalidProtocolBufferException e) {
           e.printStackTrace();
+          getLogger().error(e.getMessage(), e);
         }
       }
       redisUtil.del(keyStr);
@@ -620,7 +653,12 @@ public class EventServerStart implements WatchCallerInterface {
               if (iaagAdress != null) {
                 setIaagClients2(iaagAdress);
               }
-              //getEventConfig().reLoadConfig(getConn());
+              try {
+                getEventConfig().reLoadConfig(getConn());
+              } catch (Exception e) {
+                e.printStackTrace();
+                getLogger().error(e.getMessage(), e);
+              }
               break;
 //            case OA_DEL:
 //              //删除时候 id是有效的,会级联删除掉级联的事件等

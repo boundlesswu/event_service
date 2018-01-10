@@ -6,7 +6,7 @@
 
     <groupId>com.vorxsoft.ieye</groupId>
     <artifactId>event_service</artifactId>
-    <version>4.0.2.2</version>
+    <version>4.0.2.3</version>
     <properties>
         <grpc.version>1.4.0</grpc.version>
     </properties>
