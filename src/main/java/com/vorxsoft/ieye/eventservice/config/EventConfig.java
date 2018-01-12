@@ -820,6 +820,7 @@ public class EventConfig {
       System.out.println("error event_genus :" + event_genus);
       return null;
     }
+    eventInfo.setEventLinkagelist(eventLinkages);
     return eventInfo;
   }
 
