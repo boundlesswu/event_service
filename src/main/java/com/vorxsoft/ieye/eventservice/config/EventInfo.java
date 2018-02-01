@@ -452,6 +452,7 @@ public class EventInfo {
     this.sourceId = other.getSourceId();
     this.iaagId = other.getIaagId();
     this.iaag_chn_id = other.getIaag_chn_id();
+    this.eventLinkagelist.clear();
     if (other.getEventLinkagelist() != null) {
       for (int i = 0; i < other.getEventLinkagelist().size(); i++) {
         EventLinkage eventLinkage = new EventLinkage();

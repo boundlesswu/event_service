@@ -6,12 +6,17 @@
 
     <groupId>com.vorxsoft.ieye</groupId>
     <artifactId>event_service</artifactId>
-    <version>4.0.2.4</version>
+    <version>4.0.3.1</version>
     <properties>
         <grpc.version>1.4.0</grpc.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
         <dependency>
             <groupId>com.vorxsoft.ieye</groupId>
             <artifactId>proto</artifactId>

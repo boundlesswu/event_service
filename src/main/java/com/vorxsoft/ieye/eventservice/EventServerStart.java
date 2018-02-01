@@ -47,6 +47,38 @@ import static com.vorxsoft.ieye.proto.VSLogLevel.VSLogLevelInfo;
  */
 public class EventServerStart implements WatchCallerInterface {
 
+  private String alarmBellIp;
+  private int alarmBellPort;
+  private String alarmBellUrl;
+
+  public String getAlarmBellIp() {
+    return alarmBellIp;
+  }
+
+  public void setAlarmBellIp(String alarmBellIp) {
+    this.alarmBellIp = alarmBellIp;
+  }
+
+  public int getAlarmBellPort() {
+    return alarmBellPort;
+  }
+
+  public void setAlarmBellPort(int alarmBellPort) {
+    this.alarmBellPort = alarmBellPort;
+  }
+
+  public String getAlarmBellUrl() {
+    return alarmBellUrl;
+  }
+
+  public void setAlarmBellUrl(String alarmBellUrl) {
+    this.alarmBellUrl = alarmBellUrl;
+  }
+
+  public String getAlarmUrl() {
+    return "http://" + getAlarmBellIp() + ":" + getAlarmBellPort() + "/" + getAlarmBellUrl();
+  }
+
   public VsIAClient addVsIAClient(String address) {
     VsIAClient a = iaagMap.IaClinetInit(address);
     if (a != null)
@@ -448,6 +480,16 @@ public class EventServerStart implements WatchCallerInterface {
             else if (lname.equals("port"))
               activemqPort = Integer.parseInt(lvalue);
           }
+          if (tname.equals("alarmBell")) {
+            if (lname.equals("name")) {
+            } else if (lname.equals("ip")) {
+              alarmBellIp = lvalue;
+            } else if (lname.equals("port")) {
+              alarmBellPort = Integer.parseInt(lvalue);
+            } else if (lname.equals("url")) {
+              alarmBellUrl = lvalue;
+            }
+          }
         }
         //System.out.println("=====结束遍历某一本书=====");
       }
@@ -510,6 +552,7 @@ public class EventServerStart implements WatchCallerInterface {
         case REL_EVENT_INFO:
           switch (req.getEmAct()) {
             case OA_ADD:
+            case OA_ON:
               for (int j = 0; j < req.getIdListList().size(); j++) {
                 getEventConfig().addEventInfo(conn, req.getIdList(j));
               }
@@ -520,13 +563,12 @@ public class EventServerStart implements WatchCallerInterface {
               }
               break;
             case OA_DEL:
+            case OA_OFF:
               for (int j = 0; j < req.getIdListList().size(); j++) {
                 getEventConfig().deleteEventInfo(req.getIdList(j));
               }
               break;
             case OA_QUR:
-            case OA_ON:
-            case OA_OFF:
             case OA_OTHER:
             case OA_ALL_ISSUE:
             case UNRECOGNIZED:
@@ -678,6 +720,12 @@ public class EventServerStart implements WatchCallerInterface {
     }
   }
 
+  /**
+   * @Author boundlesswu
+   * @Description
+   * @Param
+   * @create 2018/1/15 0015 16:54
+   **/
   public void dbInit() throws SQLException, ClassNotFoundException {
     dbUrl = "jdbc:" + dbname + "://" + dbAddress;
     System.out.println("db url :" + dbUrl);
@@ -851,6 +899,7 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setRedisUtil(simpleServerStart.getRedisUtil());
     //monitorProcess.redisInit(redisIP, redisPort);
     monitorProcess.mqInit(activemqIp, activemqPort);
+    monitorProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
 
     //sio process
     AlarmProcess sioProcess = new AlarmProcess();
@@ -865,6 +914,7 @@ public class EventServerStart implements WatchCallerInterface {
     sioProcess.setRedisUtil(simpleServerStart.getRedisUtil());
     //sioProcess.redisInit(redisIP, redisPort);
     sioProcess.mqInit(activemqIp, activemqPort);
+    sioProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
 
     //ia process
     AlarmProcess iaProcess = new AlarmProcess();
@@ -879,6 +929,7 @@ public class EventServerStart implements WatchCallerInterface {
     iaProcess.setRedisUtil(simpleServerStart.getRedisUtil());
     //iaProcess.redisInit(redisIP, redisPort);
     iaProcess.mqInit(activemqIp, activemqPort);
+    iaProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
 
 //    //server process
 //    AlarmProcess serverProcess = new AlarmProcess();
@@ -892,7 +943,8 @@ public class EventServerStart implements WatchCallerInterface {
 //    serverProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
 //    serverProcess.redisInit(redisIP, redisPort);
 //    serverProcess.setRedisUtil(simpleServerStart.getRedisUtil());
-//serverProcess.mqInit(activemqIp, activemqPort);
+//    serverProcess.mqInit(activemqIp, activemqPort);
+    //serverProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
 //    //device process
 //    AlarmProcess deviceProcess = new AlarmProcess();
 //    deviceProcess.setLogger(simpleServerStart.getLogger());
@@ -906,6 +958,7 @@ public class EventServerStart implements WatchCallerInterface {
 //    deviceProcess.setRedisUtil(simpleServerStart.getRedisUtil());
 //    deviceProcess.redisInit(redisIP, redisPort);
 //    deviceProcess.mqInit(activemqIp, activemqPort);
+    // deviceProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
 
     new Thread(monitorProcess).start();
     new Thread(sioProcess).start();

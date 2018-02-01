@@ -28,6 +28,7 @@ import java.util.*;
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 
 public class AlarmProcess implements Runnable {
+  String alarmBellUrl;
   private String name;
   private ProcessType processType;
   private EventConfig eventConfig;
@@ -40,6 +41,13 @@ public class AlarmProcess implements Runnable {
   VsIeyeClient cmsIeyeClient;
   VsIeyeClient blgTeyeClient;
 
+  public String getAlarmBellUrl() {
+    return alarmBellUrl;
+  }
+
+  public void setAlarmBellUrl(String alarmBellUrl) {
+    this.alarmBellUrl = alarmBellUrl;
+  }
 
   //HashMap<String,VsIeyeClient>
   private static Logger logger;
@@ -361,6 +369,7 @@ public class AlarmProcess implements Runnable {
         System.out.println("send to event queue");
         // send to event queue
         insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
+        HttpClientUtils.doPostHttp(alarmBellUrl, eventInfo.getEvent_name(), eventInfo.getEvent_level());
       } else {
         int stom_time = alarmStorm.getEventStom();
         if (stom_time == 0) {
@@ -376,6 +385,7 @@ public class AlarmProcess implements Runnable {
           getLogger().info("alarm matching event_id" + eventInfo.toString());
           // send to event queue
           insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
+          HttpClientUtils.doPostHttp(alarmBellUrl, eventInfo.getEvent_name(), eventInfo.getEvent_level());
         } else if (stom_time <= alarmStormRecordMap.diffCurrentTime(happenTime, eventInfo)) {
           System.out.println("define storm time  <=  :");
           getLogger().info("define storm time  <=  :event_type:" + evenType +
@@ -385,6 +395,7 @@ public class AlarmProcess implements Runnable {
           getLogger().info("alarm matching event_id" + eventInfo.toString());
           // send to event queue
           insertEvenList(processType, evenType, resourceId, happenTime, iaadId, machineId, deviceId, eventInfo, extraContent);
+          HttpClientUtils.doPostHttp(alarmBellUrl, eventInfo.getEvent_name(), eventInfo.getEvent_level());
           alarmStormRecordMap.update(TimeUtil.string2timestamplong(happenTime), alarmStorm.getStomId(), eventInfo);
         } else {
           System.out.println("define storm time  >  :");
@@ -690,14 +701,14 @@ public class AlarmProcess implements Runnable {
       }
       //send to blg
       if (record.isbSend2blg()) {
-        ReportLinkageRequest.Builder reqBuilder = ReportLinkageRequest.newBuilder().
-                setSBusinessID("00000000");
-        EventWithLinkage eventWithLinkage = record.covert2EventWithLinkage();
-        reqBuilder.addEventWithLinkages(eventWithLinkage);
-        if (getBlgTeyeClient() != null) {
+        if (getBlgTeyeClient() != null && getBlgTeyeClient().getStub() != null) {
+          ReportLinkageRequest.Builder reqBuilder = ReportLinkageRequest.newBuilder().
+                  setSBusinessID("00000000");
+          EventWithLinkage eventWithLinkage = record.covert2EventWithLinkage();
+          reqBuilder.addEventWithLinkages(eventWithLinkage);
           getBlgTeyeClient().reportLinkage(reqBuilder.build());
+          record.setbSend2blg(false);
         }
-        record.setbSend2blg(false);
       }
       //send to mq
       if (record.isbSend2mq()) {

@@ -780,7 +780,7 @@ public class EventConfig {
       ret.close();
       pstmt.close();
     } else if (event_genus.equals(sGenusIa)) {
-      sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ia_ex WHERE event_id = ?";
+      sql = "SELECT res_id,svr_id,iaag_chn_id FROM ti_event_ia_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();

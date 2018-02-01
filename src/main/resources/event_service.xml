@@ -16,7 +16,7 @@
     </database>
     <registerCenter>
         <name>etcd</name>
-        <address>http://192.168.20.251:2379</address>
+        <address>http://192.168.20.12:2379</address>
     </registerCenter>
     <redis>
         <name>redis1</name>
@@ -27,5 +27,11 @@
         <name>activemq1</name>
         <ip>192.168.20.222</ip>
         <port>61616</port>
-    </activemq>>
+    </activemq>
+    <alarmBell>
+        <name>alarmBell</name>
+        <ip>192.168.20.253</ip>
+        <port>8080</port>
+        <url>sendMessage</url>
+    </alarmBell>
 </microservice>
