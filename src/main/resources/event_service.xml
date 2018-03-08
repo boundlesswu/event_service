@@ -16,7 +16,7 @@
     </database>
     <registerCenter>
         <name>etcd</name>
-        <address>http://192.168.20.12:2379</address>
+        <address>http://192.168.20.251:2379</address>
     </registerCenter>
     <redis>
         <name>redis1</name>

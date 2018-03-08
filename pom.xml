@@ -134,8 +134,8 @@
                                 <copy file="${basedir}/target/event_service-${version}-jar-with-dependencies.jar"
                                       tofile="${basedir}/target/event_service/event_service.jar"
                                       overwrite="true"/>
-                                <copy file="${basedir}\src\main\resources\event_service.xml"
-                                      tofile="${basedir}/target/event_service/event_service.xml"
+                                <copy file="${basedir}\src\main\resources\Config.xml"
+                                      tofile="${basedir}/target/Config.xml"
                                       overwrite="true"/>
                                 <copy file="${basedir}\version.txt"
                                       tofile="${basedir}/target/event_service/version.txt"
