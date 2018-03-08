@@ -395,6 +395,7 @@ public class EventServerStart implements WatchCallerInterface {
     hostip = configReadUtils.getHostip();
     PORT = configReadUtils.getEmsPort();
     ttl = configReadUtils.getTtl();
+    registerCenterAddress = configReadUtils.getRegisterCenterAddress();
     dbname = configReadUtils.getDbname();
     dbUser = configReadUtils.getDbUser();
     dbPasswd = configReadUtils.getDbPasswd();
