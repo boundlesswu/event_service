@@ -107,8 +107,18 @@ public class HttpClientUtils {
   // being rate limited.
   private static final String CHARSET = "UTF-8";
 
-  public static String doPostHttp(String url, String message, int level) {
+  public static String doPostHttp(String url, String message, int level) throws UnsupportedEncodingException {
     Map<String, Object> params = new HashMap<>();
+    logger.debug("#################################### do post http ####################################");
+    logger.debug("url:" + url);
+    logger.debug("message:" + message);
+//    String utf8m = new String(message.getBytes(),"UTF-8");
+    System.out.println("#################################### do post http ####################################");
+    System.out.println("url:" + url);
+    System.out.println("message:" + message);
+//    System.out.println("message encode is :"+ getEncoding(message));
+//    System.out.println("utf8 message:" + utf8m);
+//    System.out.println("utf8 message encode is :"+ getEncoding(utf8m));
     params.put("message", message);
     params.put("level", String.valueOf(level));
     //return doPostHttp(url,params);
@@ -118,6 +128,8 @@ public class HttpClientUtils {
   public static String sendPost(String targetURL, Map<String, Object> urlParameters) {
     HttpURLConnection connection = null;
     String param = JSON.toJSONString(urlParameters);
+    logger.debug(" param toJSONString: " + param);
+    System.out.println(" param toJSONString: " + param);
     String result = "";
     PrintWriter pw = null;
     BufferedReader br = null;
@@ -156,6 +168,7 @@ public class HttpClientUtils {
 
       return result;
     } catch (Exception e) {
+      logger.error(e.getMessage(), e);
       e.printStackTrace();
       return null;
     } finally {
@@ -622,4 +635,48 @@ public class HttpClientUtils {
     return statusCode + ":" + cause;
   }
 
+  /**
+   * 判断字符串的编码
+   *
+   * @param str
+   * @return
+   */
+  public static String getEncoding(String str) {
+    String encode[] = new String[]{
+            "UTF-8",
+            "ISO-8859-1",
+            "GB2312",
+            "GBK",
+            "GB18030",
+            "Big5",
+            "Unicode",
+            "ASCII"
+    };
+    for (int i = 0; i < encode.length; i++) {
+      try {
+        if (str.equals(new String(str.getBytes(encode[i]), encode[i]))) {
+          return encode[i];
+        }
+      } catch (Exception ex) {
+      }
+    }
+
+    return "";
+  }
+
+  public static void main(String[] args) throws Exception {
+    if (args.length < 2) {
+      System.out.println("args error");
+      return;
+    }
+    String alarmBellUrl = "http://" + args[0] + ":" + args[1] + "/" + "sendMessage";
+    System.out.println("alarmBellUrl" + alarmBellUrl);
+    String message = new String("中文_abcde文d17");
+    Properties initProp = new Properties(System.getProperties());
+    System.out.println("当前系统编码:" + initProp.getProperty("file.encoding"));
+    System.out.println("当前系统语言:" + initProp.getProperty("user.language"));
+    //System.out.println("encode is :"+ getEncoding(message));
+    int level = 1;
+    HttpClientUtils.doPostHttp(alarmBellUrl, message, level);
+  }
 }

@@ -10,10 +10,7 @@ import com.vorxsoft.ieye.eventservice.grpc.LogServiceClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.process.AlarmProcess;
-import com.vorxsoft.ieye.eventservice.util.ConfigReadUtils;
-import com.vorxsoft.ieye.eventservice.util.IaagMap;
-import com.vorxsoft.ieye.eventservice.util.IaagMapItem;
-import com.vorxsoft.ieye.eventservice.util.RedisUtil;
+import com.vorxsoft.ieye.eventservice.util.*;
 import com.vorxsoft.ieye.microservice.MicroService;
 import com.vorxsoft.ieye.microservice.MicroServiceImpl;
 import com.vorxsoft.ieye.microservice.WatchCallerInterface;
@@ -408,7 +405,7 @@ public class EventServerStart implements WatchCallerInterface {
     activemqIp = configReadUtils.getActivemqIp();
     activemqPort = configReadUtils.getActivemqPort();
     alarmBellIp = configReadUtils.getAlarmBellIp();
-    activemqPort = configReadUtils.getActivemqPort();
+    alarmBellPort = configReadUtils.getAlarmBellPort();
     alarmBellUrl = configReadUtils.getAlarmBellUrl();
   }
 
@@ -798,6 +795,20 @@ public class EventServerStart implements WatchCallerInterface {
       e.printStackTrace();
     }
     simpleServerStart.setIaagClients2(iaagAdress);
+
+//    //#####################################################################
+//    String alarmBellUrl = "http://" + "192.168.20.145"+ ":" + 8080 + "/" + "sendMessage";
+//    System.out.println("alarmBellUrl"+alarmBellUrl);
+//    String message = new String("中文_abcded17");
+//    Properties initProp = new Properties(System.getProperties());
+//    System.out.println("当前系统编码:" + initProp.getProperty("file.encoding"));
+//    System.out.println("当前系统语言:" + initProp.getProperty("user.language"));
+//    int id = 2;
+//    String tmp = simpleServerStart.getEventConfig().findEventInfo(id).getEvent_name();
+//    HttpClientUtils.doPostHttp(alarmBellUrl, tmp, 1);
+//    //#####################################################################
+
+
 
     //monitor process
     AlarmProcess monitorProcess = new AlarmProcess();
