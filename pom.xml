@@ -6,12 +6,17 @@
 
     <groupId>com.vorxsoft.ieye</groupId>
     <artifactId>event_service</artifactId>
-    <version>4.0.2.1</version>
+    <version>4.0.3.1</version>
     <properties>
         <grpc.version>1.4.0</grpc.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
         <dependency>
             <groupId>com.vorxsoft.ieye</groupId>
             <artifactId>proto</artifactId>
@@ -129,8 +134,8 @@
                                 <copy file="${basedir}/target/event_service-${version}-jar-with-dependencies.jar"
                                       tofile="${basedir}/target/event_service/event_service.jar"
                                       overwrite="true"/>
-                                <copy file="${basedir}\src\main\resources\event_service.xml"
-                                      tofile="${basedir}/target/event_service/event_service.xml"
+                                <copy file="${basedir}\src\main\resources\Config.xml"
+                                      tofile="${basedir}/target/Config.xml"
                                       overwrite="true"/>
                                 <copy file="${basedir}\version.txt"
                                       tofile="${basedir}/target/event_service/version.txt"

@@ -20,12 +20,18 @@
     </registerCenter>
     <redis>
         <name>redis1</name>
-        <ip>192.168.20.251</ip>
+        <ip>127.0.0.1</ip>
         <port>6379</port>
     </redis>
     <activemq>
         <name>activemq1</name>
         <ip>192.168.20.222</ip>
         <port>61616</port>
-    </activemq>>
+    </activemq>
+    <alarmBell>
+        <name>alarmBell</name>
+        <ip>192.168.20.253</ip>
+        <port>8080</port>
+        <url>sendMessage</url>
+    </alarmBell>
 </microservice>

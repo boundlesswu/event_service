@@ -11,22 +11,22 @@ public class VsIeyeClient extends GrpcClient {
 
   public VsIeyeClient(String IP, int PORT) {
     super(IP, PORT);
-    if(getStub() == null){
-      stub =  VsIeyeProtoGrpc.newStub(getManagedChannel());
+    if (getStub() == null) {
+      stub = VsIeyeProtoGrpc.newStub(getManagedChannel());
     }
   }
 
   public VsIeyeClient(String name, String IP, int PORT) {
     super(name, IP, PORT);
-    if(getStub() == null){
-      stub =  VsIeyeProtoGrpc.newStub(getManagedChannel());
+    if (getStub() == null) {
+      stub = VsIeyeProtoGrpc.newStub(getManagedChannel());
     }
   }
 
   public VsIeyeClient(String name, String address) {
     super(name, address);
-    if(getStub() == null){
-      stub =  VsIeyeProtoGrpc.newStub(getManagedChannel());
+    if (getStub() == null) {
+      stub = VsIeyeProtoGrpc.newStub(getManagedChannel());
     }
   }
 
@@ -40,9 +40,7 @@ public class VsIeyeClient extends GrpcClient {
 
   public void init() {
     createChannel();
-    if(getStub() == null){
-      stub = VsIeyeProtoGrpc.newStub(getManagedChannel());
-    }
+    stub = VsIeyeProtoGrpc.newStub(getManagedChannel());
   }
 
   public void reportEvent(ReportEventRequest request) {
@@ -117,7 +115,7 @@ public class VsIeyeClient extends GrpcClient {
 
   //云台联动-调用预置点	linkage_preset
   //PTZPreset (PTZPresetRequest) returns (PTZPresetReply)预置位设置
-  public void pTZPreset(PTZPresetRequest request){
+  public void pTZPreset(PTZPresetRequest request) {
     StreamObserver<PTZPresetReply> responseObserver = new StreamObserver<PTZPresetReply>() {
       @Override
       public void onNext(PTZPresetReply ptzPresetReply) {
@@ -136,11 +134,12 @@ public class VsIeyeClient extends GrpcClient {
 
       }
     };
-    stub.pTZPreset(request,responseObserver);
+    stub.pTZPreset(request, responseObserver);
   }
+
   //云台联动-调用巡航	linkage_cruise
   // PTZCruise (PTZCruiseRequest) returns (PTZCruiseReply)
-  public void PTZCruise(PTZCruiseRequest request){
+  public void PTZCruise(PTZCruiseRequest request) {
     StreamObserver<PTZCruiseReply> streamObserver = new StreamObserver<PTZCruiseReply>() {
       @Override
       public void onNext(PTZCruiseReply ptzCruiseReply) {
@@ -159,12 +158,12 @@ public class VsIeyeClient extends GrpcClient {
 
       }
     };
-    stub.pTZCruise(request,streamObserver);
+    stub.pTZCruise(request, streamObserver);
   }
 
   //报警输出	linkage_sio			可设置多条
   //AlarmControl (AlarmControlRequest) returns (DefaultReply)
-  public void alarmControl(AlarmControlRequest request){
+  public void alarmControl(AlarmControlRequest request) {
     StreamObserver<DefaultReply> streamObserver = new StreamObserver<DefaultReply>() {
       @Override
       public void onNext(DefaultReply defaultReply) {
@@ -183,7 +182,11 @@ public class VsIeyeClient extends GrpcClient {
 
       }
     };
-    stub.alarmControl(request,streamObserver);
+    stub.alarmControl(request, streamObserver);
   }
 
+  public void zero() {
+    this.stub = null;
+    super.zero();
+  }
 }

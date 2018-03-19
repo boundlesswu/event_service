@@ -3,21 +3,21 @@ package com.vorxsoft.ieye.eventservice.grpc;
 import com.vorxsoft.ieye.proto.*;
 import io.grpc.stub.StreamObserver;
 
-public class VsIAClient extends GrpcClient{
+public class VsIAClient extends GrpcClient {
   private VSIAServiceGrpc.VSIAServiceStub stub;
   //private IAAGInfo iaagInfo;
 
   public VsIAClient(String name, String IP, int PORT) {
     super(name, IP, PORT);
-    if(getStub() == null){
-      stub =  VSIAServiceGrpc.newStub(getManagedChannel());
+    if (getStub() == null) {
+      stub = VSIAServiceGrpc.newStub(getManagedChannel());
     }
   }
 
   public VsIAClient(String name, String address) {
     super(name, address);
-    if(getStub() == null){
-      stub =  VSIAServiceGrpc.newStub(getManagedChannel());
+    if (getStub() == null) {
+      stub = VSIAServiceGrpc.newStub(getManagedChannel());
     }
   }
 
@@ -46,14 +46,12 @@ public class VsIAClient extends GrpcClient{
   public VsIAClient() {
   }
 
-  public void init(){
+  public void init() {
     createChannel();
-    if(getManagedChannel().isTerminated()){
-      stub =  VSIAServiceGrpc.newStub(getManagedChannel());
-    }
+    stub = VSIAServiceGrpc.newStub(getManagedChannel());
   }
 
-  public void sentIACMD(SentIACMDRequest request){
+  public void sentIACMD(SentIACMDRequest request) {
     StreamObserver<SentIACMDResponse> responseObserver = new StreamObserver<SentIACMDResponse>() {
       @Override
       public void onNext(SentIACMDResponse value) {
@@ -61,10 +59,12 @@ public class VsIAClient extends GrpcClient{
           return;
         }
       }
+
       @Override
       public void onError(Throwable t) {
-        System.out.println("send ia cmd  onError"+t);
+        System.out.println("send ia cmd  onError" + t);
       }
+
       @Override
       public void onCompleted() {
         // Won't be called, since the server in this example always
@@ -74,16 +74,18 @@ public class VsIAClient extends GrpcClient{
     stub.sentIACMD(request, responseObserver);
   }
 
-  public void queryIAAG(QueryIAAGRequest request){
+  public void queryIAAG(QueryIAAGRequest request) {
     StreamObserver<QueryIAAGResponse> responseObserver = new StreamObserver<QueryIAAGResponse>() {
       @Override
       public void onNext(QueryIAAGResponse value) {
-        System.out.println("iaag info "+value.getIaagInfo());
+        System.out.println("iaag info " + value.getIaagInfo());
       }
+
       @Override
       public void onError(Throwable t) {
-        System.out.println("query iaag onError"+t);
+        System.out.println("query iaag onError" + t);
       }
+
       @Override
       public void onCompleted() {
         // Won't be called, since the server in this example always
@@ -93,16 +95,18 @@ public class VsIAClient extends GrpcClient{
     stub.queryIAAG(request, responseObserver);
   }
 
-  public void queryIAUList(QueryIAUListRequest request){
+  public void queryIAUList(QueryIAUListRequest request) {
     StreamObserver<QueryIAUListResponse> responseObserver = new StreamObserver<QueryIAUListResponse>() {
       @Override
       public void onNext(QueryIAUListResponse value) {
-        System.out.println("iaag info "+value.getIauListList());
+        System.out.println("iaag info " + value.getIauListList());
       }
+
       @Override
       public void onError(Throwable t) {
-        System.out.println("query iau list onError"+t);
+        System.out.println("query iau list onError" + t);
       }
+
       @Override
       public void onCompleted() {
         // Won't be called, since the server in this example always
@@ -110,6 +114,11 @@ public class VsIAClient extends GrpcClient{
       }
     };
     stub.queryIAUList(request, responseObserver);
+  }
+
+  public void zero() {
+    this.stub = null;
+    super.zero();
   }
 
 }

@@ -19,27 +19,32 @@ public class IaagMapItem {
     while (it.hasNext()) {
       Map.Entry entry = (Map.Entry) it.next();
       IaagChannelInfo channal = (IaagChannelInfo) entry.getValue();
-      ;
       channal.setHasSendCmd(true);
     }
   }
 
   public void redispatch(Connection conn) {
-    dispatch(conn, false);
+    dispatch(conn, false, false);
   }
 
   public void dispatch(Connection conn) {
-    dispatch(conn, true);
+    dispatch(conn, true, false);
   }
 
-  private void dispatch(Connection conn, boolean ischeckstat) {
+  public void dispatchStop(Connection conn) {
+    dispatch(conn, false, true);
+  }
+
+  private void dispatch(Connection conn, boolean ischeckstat, boolean issendStop) {
     if (getClient() == null)
       return;
     if (getChannels() == null || getChannels().size() == 0)
       return;
     SentIACMDRequest.Builder builer = SentIACMDRequest.newBuilder();
     SentIACMDRequest.Builder builer2 = SentIACMDRequest.newBuilder();
+    //start list
     List<ResInfo> resInfos = new ArrayList<>();
+    //stop list
     List<ResInfo> resInfos2 = new ArrayList<>();
     Iterator it = getChannels().entrySet().iterator();
     while (it.hasNext()) {
@@ -56,6 +61,9 @@ public class IaagMapItem {
             resInfos2.add(a);
           }
         }
+      } else if (issendStop) { //stop all channel
+        ResInfo a = channal.convert2ResInfo(conn);
+        resInfos2.add(a);
       } else {
         ResInfo a = channal.convert2ResInfo(conn);
         if (channal.getCmdType() == IACMDType.Start) {
@@ -202,5 +210,28 @@ public class IaagMapItem {
             ", iaus=" + iaus +
             ", client=" + client +
             '}';
+  }
+
+  public void zero() {
+    this.iaagInfo.zero();
+    Iterator it = getChannels().entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry entry = (Map.Entry) it.next();
+      Object val = entry.getValue();
+      IaagChannelInfo channelInfo = (IaagChannelInfo) val;
+      getChannels().remove(channelInfo);
+      channelInfo.zero();
+    }
+    it = getIaus().entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry entry = (Map.Entry) it.next();
+      Object val = entry.getValue();
+      IauItem iau = (IauItem) val;
+      getIaus().remove(iau);
+      iau.zero();
+    }
+    if (this.client != null) {
+      this.client.zero();
+    }
   }
 }

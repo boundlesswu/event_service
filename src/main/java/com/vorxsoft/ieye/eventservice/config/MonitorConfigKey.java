@@ -1,13 +1,13 @@
 package com.vorxsoft.ieye.eventservice.config;
 
-public class  MonitorConfigKey {
+public class MonitorConfigKey {
   private String event_type;
   private int res_id;
 
-  MonitorConfigKey(){
-
+  MonitorConfigKey() {
   }
-  public MonitorConfigKey(String event_type,int res_id ){
+
+  public MonitorConfigKey(String event_type, int res_id) {
     this.event_type = event_type;
     this.res_id = res_id;
   }
@@ -50,24 +50,6 @@ public class  MonitorConfigKey {
       return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      Builder builder = (Builder) o;
-
-      if (res_id != builder.res_id) return false;
-      return event_type.equals(builder.event_type);
-    }
-
-    @Override
-    public int hashCode() {
-      int result = event_type.hashCode();
-      result = 31 * result + res_id;
-      return result;
-    }
-
     public Builder res_id(int val) {
       res_id = val;
       return this;
@@ -76,6 +58,24 @@ public class  MonitorConfigKey {
     public MonitorConfigKey build() {
       return new MonitorConfigKey(this);
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof MonitorConfigKey)) return false;
+
+    MonitorConfigKey that = (MonitorConfigKey) o;
+
+    if (res_id != that.res_id) return false;
+    return event_type != null ? event_type.equals(that.event_type) : that.event_type == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = event_type != null ? event_type.hashCode() : 0;
+    result = 31 * result + res_id;
+    return result;
   }
 
   @Override

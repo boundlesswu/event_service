@@ -81,9 +81,7 @@ public class LogServiceClient extends GrpcClient{
 
   public void init(){
     createChannel();
-    if(getManagedChannel().isTerminated()){
-      stub =  VSLogServiceGrpc.newStub(getManagedChannel());
-    }
+    stub = VSLogServiceGrpc.newStub(getManagedChannel());
   }
 
   public void sentVSLog(VSLogRequest request){
@@ -142,5 +140,13 @@ public class LogServiceClient extends GrpcClient{
                            setLogLevel(level).
                            setLogContent(logContent).build();
     getStub().sentVSLog(request,responseObserver);
+  }
+
+  public void zero() {
+    this.stub = null;
+    this.hostNameIp = "";
+    this.pId = 0;
+    this.pName = "";
+    super.zero();
   }
 }

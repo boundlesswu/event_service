@@ -163,8 +163,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
-      list.remove(key);
+      //list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -176,8 +176,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
-      list.remove(key);
+      //list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -189,8 +189,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
-      list.remove(key);
+      //list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -202,8 +202,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
-      list.remove(key);
+      //list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -215,8 +215,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
-      list.remove(key);
+      //list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -228,8 +228,8 @@ public class EventConfig {
       Object key = entry.getKey();
       Object val = entry.getValue();
       EventInfo eventInfo = (EventInfo) val;
-      eventInfo.clear();
-      list.remove(key);
+      //list.remove(key);
+      eventInfo.zero();
     }
     list.clear();
   }
@@ -248,18 +248,18 @@ public class EventConfig {
     clearServerConfigConfigListbyKey(serverConfigList2);
     clearDeviceConfigConfigListbyKey(deviceConfigList2);
 
-    setDeviceConfigList(null);
-    setDeviceConfigList2(null);
-    setIaConfigList(null);
-    setIaConfigList2(null);
-    setMonitorConfigList(null);
-    setMonitorConfigList2(null);
-    setServerConfigList(null);
-    setServerConfigList2(null);
-    setSioConfigList(null);
-    setSioConfigList2(null);
+//    setDeviceConfigList(null);
+//    setDeviceConfigList2(null);
+//    setIaConfigList(null);
+//    setIaConfigList2(null);
+//    setMonitorConfigList(null);
+//    setMonitorConfigList2(null);
+//    setServerConfigList(null);
+//    setServerConfigList2(null);
+//    setSioConfigList(null);
+//    setSioConfigList2(null);
 
-    alarmStormConfig.clear();
+    alarmStormConfig.zero();
   }
 
   public void reLoadConfig(Connection conn) throws SQLException {
@@ -780,7 +780,7 @@ public class EventConfig {
       ret.close();
       pstmt.close();
     } else if (event_genus.equals(sGenusIa)) {
-      sql = "SELECT res_id,svr_id,iaag_chn_id ti_event_ ia_ex WHERE event_id = ?";
+      sql = "SELECT res_id,svr_id,iaag_chn_id FROM ti_event_ia_ex WHERE event_id = ?";
       pstmt = conn.prepareStatement(sql);
       pstmt.setInt(1, id);
       ret = pstmt.executeQuery();
@@ -820,6 +820,7 @@ public class EventConfig {
       System.out.println("error event_genus :" + event_genus);
       return null;
     }
+    eventInfo.setEventLinkagelist(eventLinkages);
     return eventInfo;
   }
 
