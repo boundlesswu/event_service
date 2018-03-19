@@ -5,13 +5,13 @@
                   dbpassword="123456"/>
         <storage zhname="存储服务" Threadcount="10" dbip="192.168.5.4" dbport="5432" dbname="vag" dbusername="postgres"
                  dbpassword="123456"/>
-        <redis zhname="缓存服务" name="redis1" ip="127.0.0.1" port="6379"/>
+        <redis zhname="缓存服务" name="redis1" ip="192.168.20.251" port="6379"/>
         <activemq zhname="队列服务" name="activemq1" ip="192.168.20.222" port="61616"/>
         <MicroService zhname="微服务" ip="192.168.20.251" port="2379"/>
     </baservice>
     <buineservice zhname="业务服务">
         <server zhname="公共参数">
-            <local zhname="本地配置" ip="192.168.20.12"/>
+            <local zhname="本地配置" ip="192.168.20.134"/>
             <grpcttl zhname="注册中心" grpcttl="30"/>
             <stream zhname="流端口" portbegin="20000" portend="30000"/>
         </server>
