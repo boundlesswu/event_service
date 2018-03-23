@@ -1,5 +1,5 @@
 @echo off
 
-start -Dfile.encoding="UTF-8" javaw -jar event_service.jar
+start  javaw -jar -Dfile.encoding="UTF-8" event_service.jar
 
 exit
