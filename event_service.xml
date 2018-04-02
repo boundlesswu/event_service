@@ -1,0 +1,11 @@
+<service>
+    <id>server_event</id>
+    <name>server_event</name>
+    <description>event Service</description>
+    <log mode="none"/>
+    <executable>C:\Program Files\vorx\event_service\startup.bat</executable>
+    <startarguments></startarguments>
+    <stopexecutable></stopexecutable>
+    <stoparguments></stoparguments>
+    <delayedAutoStart/>
+</service>
