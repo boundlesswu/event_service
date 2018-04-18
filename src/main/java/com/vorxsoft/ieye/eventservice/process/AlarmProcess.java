@@ -272,10 +272,12 @@ public class AlarmProcess implements Runnable {
       //System.out.println(name + "运行  :  " + i);
       try {
         processAlarm();
-        Thread.sleep((int) Math.random() * 10);
+        //Thread.sleep((int) Math.random() * 10);
+        Thread.sleep(100);
         processEvent();
-        Thread.sleep((int) Math.random() * 10);
-        if (i % 200000 == 0) {
+        //Thread.sleep((int) Math.random() * 10);
+        Thread.sleep(100);
+        if (i % 100 == 0) {
           //System.out.println("process :" + getName() + getProcessType() + "is running");
           getLogger().debug("process :" + getName() + " " + getProcessType() + " is running!!! " +
                   Thread.currentThread().getName() + " " + Thread.currentThread().getId());
@@ -338,7 +340,7 @@ public class AlarmProcess implements Runnable {
     int deviceId = 0;
     EventInfo eventInfo = null;
     // while (it.hasNext()) {
-    while (cq.isEmpty()) {
+    while (!cq.isEmpty()) {
       //String keyStr = it.next();
       //System.out.println(keyStr);
       //Map<String, String> map = jedis.hgetAll(keyStr);

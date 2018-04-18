@@ -132,7 +132,10 @@ public class AlarmStormConfig {
     setAlarmStormConfigList(null);
   }
   public AlarmStorm getAlarmStorm(String type){
-    return alarmStormConfigList.get(type);
+    if (alarmStormConfigList == null)
+      return null;
+    else
+      return alarmStormConfigList.get(type);
   }
 
   @Override
