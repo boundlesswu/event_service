@@ -24,10 +24,57 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.vorxsoft.ieye.eventservice.process.AlarmProcess.ProcessType.*;
 
 public class AlarmProcess implements Runnable {
+  private ConcurrentLinkedQueue<Map<String, String>> monitorCq;
+  private ConcurrentLinkedQueue<Map<String, String>> sioCq;
+  private ConcurrentLinkedQueue<Map<String, String>> iaCq;
+  private ConcurrentLinkedQueue<Map<String, String>> serverCq;
+  private ConcurrentLinkedQueue<Map<String, String>> deviceCq;
+
+  public ConcurrentLinkedQueue<Map<String, String>> getMonitorCq() {
+    return monitorCq;
+  }
+
+  public void setMonitorCq(ConcurrentLinkedQueue<Map<String, String>> monitorCq) {
+    this.monitorCq = monitorCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getSioCq() {
+    return sioCq;
+  }
+
+  public void setSioCq(ConcurrentLinkedQueue<Map<String, String>> sioCq) {
+    this.sioCq = sioCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getIaCq() {
+    return iaCq;
+  }
+
+  public void setIaCq(ConcurrentLinkedQueue<Map<String, String>> iaCq) {
+    this.iaCq = iaCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getServerCq() {
+    return serverCq;
+  }
+
+  public void setServerCq(ConcurrentLinkedQueue<Map<String, String>> serverCq) {
+    this.serverCq = serverCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getDeviceCq() {
+    return deviceCq;
+  }
+
+  public void setDeviceCq(ConcurrentLinkedQueue<Map<String, String>> deviceCq) {
+    this.deviceCq = deviceCq;
+  }
+
   String alarmBellUrl;
   private String name;
   private ProcessType processType;
@@ -36,7 +83,7 @@ public class AlarmProcess implements Runnable {
   private AlarmStormRecordMap alarmStormRecordMap;
   private EventRecordMap eventRecordMap;
   //private Jedis jedis;
-  private RedisUtil redisUtil = null;
+  //private RedisUtil redisUtil = null;
   private Connection conn;
   VsIeyeClient cmsIeyeClient;
   VsIeyeClient blgTeyeClient;
@@ -113,13 +160,13 @@ public class AlarmProcess implements Runnable {
     this.alarmStormRecordMap = alarmStormRecordMap;
   }
 
-  public RedisUtil getRedisUtil() {
-    return redisUtil;
-  }
-
-  public void setRedisUtil(RedisUtil redisUtil) {
-    this.redisUtil = redisUtil;
-  }
+//  public RedisUtil getRedisUtil() {
+//    return redisUtil;
+//  }
+//
+//  public void setRedisUtil(RedisUtil redisUtil) {
+//    this.redisUtil = redisUtil;
+//  }
 
   public void mqInit(String ip, int port) {
     publisher = new Publisher(ip, port);
@@ -245,34 +292,40 @@ public class AlarmProcess implements Runnable {
   }
 
   public void processAlarm() throws Exception {
+    ConcurrentLinkedQueue<Map<String, String>> cq = null;
     String patterKey = "";
     switch (processType) {
       case ProcessMonitorType:
-        patterKey = "alarm_monitor_*";
+        //patterKey = "alarm_monitor_*";
+        cq = monitorCq;
         break;
       case ProcessIaType:
-        patterKey = "alarm_ia_*";
+        //patterKey = "alarm_ia_*";
+        cq = iaCq;
         break;
       case ProcessSioType:
-        patterKey = "alarm_sio_*";
+        //patterKey = "alarm_sio_*";
+        cq = sioCq;
         break;
       case ProcessServerType:
-        patterKey = "alarm_server_*";
+        //patterKey = "alarm_server_*";
+        cq = serverCq;
         break;
       case ProcessDeviceType:
-        patterKey = "alarm_device_*";
+        //patterKey = "alarm_device_*";
+        cq = deviceCq;
         break;
       default:
         System.out.println("wrong processType");
         return;
     }
     //Set<String> set = jedis.keys(patterKey);
-    Set<String> set = redisUtil.keys(patterKey);
-    if (set.size() == 0) {
-      //System.out.println("patterKey :" + patterKey + "is not exist");
-      return;
-    }
-    Iterator<String> it = set.iterator();
+//    Set<String> set = redisUtil.keys(patterKey);
+//    if (set.size() == 0) {
+//      //System.out.println("patterKey :" + patterKey + "is not exist");
+//      return;
+//    }
+    //Iterator<String> it = set.iterator();
     String sCount = "";
     String evenType = "";
     int resourceId = 0;
@@ -284,11 +337,13 @@ public class AlarmProcess implements Runnable {
     int machineId = 0;
     int deviceId = 0;
     EventInfo eventInfo = null;
-    while (it.hasNext()) {
-      String keyStr = it.next();
-      System.out.println(keyStr);
+    // while (it.hasNext()) {
+    while (cq.isEmpty()) {
+      //String keyStr = it.next();
+      //System.out.println(keyStr);
       //Map<String, String> map = jedis.hgetAll(keyStr);
-      Map<String, String> map = redisUtil.hgetAll(keyStr);
+      //Map<String, String> map = redisUtil.hgetAll(keyStr);
+      Map<String, String> map = cq.poll();
       evenType = map.get("evenType");
       happenTime = map.get("happenTime");
       extraContent = map.get("extraContent");
@@ -320,7 +375,7 @@ public class AlarmProcess implements Runnable {
         continue;
       }
       //jedis.del(keyStr);
-      redisUtil.del(keyStr);
+      //redisUtil.del(keyStr);
       if (eventInfo == null) {
         getLogger().warn("No event config for alarm evenType:" + evenType +
                 " happenTime " + happenTime + " extraContent: " + extraContent +

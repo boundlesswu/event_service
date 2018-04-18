@@ -6,6 +6,7 @@ import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.vorxsoft.ieye.proto.VSEventGenus.*;
 
@@ -16,7 +17,27 @@ import static com.vorxsoft.ieye.proto.VSEventGenus.*;
 public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
 
   //private Jedis jedis ;
-  private RedisUtil redisUtil = null;
+  //private RedisUtil redisUtil = null;
+  //private ConcurrentLinkedQueue< Map<String, String>> monitorCq = new ConcurrentLinkedQueue<>();
+  private ConcurrentLinkedQueue< Map<String, String>> monitorCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> sioCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> iaCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> serverCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> deviceCq;
+
+  public EventServer(ConcurrentLinkedQueue<Map<String, String>> monitorCq,
+                     ConcurrentLinkedQueue<Map<String, String>> sioCq,
+                     ConcurrentLinkedQueue<Map<String, String>> iaCq,
+                     ConcurrentLinkedQueue<Map<String, String>> serverCq,
+                     ConcurrentLinkedQueue<Map<String, String>> deviceCq)
+  {
+    this.monitorCq = monitorCq;
+    this.sioCq = sioCq;
+    this.iaCq = iaCq;
+    this.serverCq = serverCq;
+    this.deviceCq = deviceCq;
+  }
+
   private long count;
   private long monitor_count = 0;
   private long sio_count = 0;
@@ -24,25 +45,25 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
   private long device_count = 0;
   private long server_count = 0;
 
-  EventServer(String ip,int port)  {
-    //jedis  = new  Jedis(ip, port);
-    redisUtil = new RedisUtil(ip,port);
-  }
-  EventServer(RedisUtil redisUtil)  {
-    //jedis  = new  Jedis(ip, port);
-    setRedisUtil(redisUtil);
-  }
+//  EventServer(String ip,int port)  {
+//    //jedis  = new  Jedis(ip, port);
+//    redisUtil = new RedisUtil(ip,port);
+//  }
+//  EventServer(RedisUtil redisUtil)  {
+//    //jedis  = new  Jedis(ip, port);
+//    setRedisUtil(redisUtil);
+//  }
 //  public Jedis getJedis(){
 //    return jedis;
 //  }
 
-  public RedisUtil getRedisUtil() {
-    return redisUtil;
-  }
-
-  public void setRedisUtil(RedisUtil redisUtil) {
-    this.redisUtil = redisUtil;
-  }
+//  public RedisUtil getRedisUtil() {
+//    return redisUtil;
+//  }
+//
+//  public void setRedisUtil(RedisUtil redisUtil) {
+//    this.redisUtil = redisUtil;
+//  }
 
   public Map<String, String> monitorAlarm2map(VSMonitorAlarm monitorAlarm){
     Map<String, String> map = new HashMap<String, String>();
@@ -184,7 +205,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         key = "alarm_monitor_"+monitor_count;
         System.out.println("key: " + key);
         System.out.println("map: " + map);
-        redisUtil.hmset(key,map);
+        monitorCq.offer(map);
+        //redisUtil.hmset(key,map);
         //jedis.hmset(key,map);
       }
       for (int i = 0; i < request.getSioAlarmCount(); i++) {
@@ -192,7 +214,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         map = sioAlarm2map(alarm);
         sio_count++;
         key = "alarm_sio_"+ sio_count;
-        redisUtil.hmset(key,map);
+        sioCq.offer(map);
+        //redisUtil.hmset(key,map);
         //jedis.hmset(key,map);
       }
       for (int i = 0; i < request.getIaAlarmCount(); i++) {
@@ -202,7 +225,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         key = "alarm_ia_" + ia_count;
         System.out.println("key: " + key);
         System.out.println("map: " + map);
-        redisUtil.hmset(key,map);
+        iaCq.offer(map);
+        //redisUtil.hmset(key,map);
         //jedis.hmset(key,map);
       }
       for (int i = 0; i < request.getDeviceAlarmCount(); i++) {
@@ -210,7 +234,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         map = deviceAlarm2map(alarm);
         device_count++;
         key = "alarm_device_" + device_count;
-        redisUtil.hmset(key,map);
+        deviceCq.offer(map);
+        //redisUtil.hmset(key,map);
         //jedis.hmset(key,map);
       }
       for (int i = 0; i < request.getServerAlarmCount(); i++) {
@@ -218,7 +243,8 @@ public class EventServer extends VSEventServiceGrpc.VSEventServiceImplBase {
         map = serverAlarm2map(alarmq);
         server_count++;
         key = "alarm_server_" +  server_count;
-        redisUtil.hmset(key,map);
+        serverCq.offer(map);
+        //redisUtil.hmset(key,map);
         //jedis.hmset(key,map);
       }
         System.out.println("receive : " +  request);

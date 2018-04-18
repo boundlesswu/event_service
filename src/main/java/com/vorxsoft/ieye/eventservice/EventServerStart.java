@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -219,6 +220,62 @@ public class EventServerStart implements WatchCallerInterface {
     }
   }
 
+  private ConcurrentLinkedQueue< Map<String, String>> monitorCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> sioCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> iaCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> serverCq ;
+  private ConcurrentLinkedQueue< Map<String, String>> deviceCq;
+
+  public ConcurrentLinkedQueue<String> getcCq() {
+    return cCq;
+  }
+
+  public void setcCq(ConcurrentLinkedQueue<String> cCq) {
+    this.cCq = cCq;
+  }
+
+  private ConcurrentLinkedQueue<String> cCq;
+
+  public ConcurrentLinkedQueue<Map<String, String>> getMonitorCq() {
+    return monitorCq;
+  }
+
+  public void setMonitorCq(ConcurrentLinkedQueue<Map<String, String>> monitorCq) {
+    this.monitorCq = monitorCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getSioCq() {
+    return sioCq;
+  }
+
+  public void setSioCq(ConcurrentLinkedQueue<Map<String, String>> sioCq) {
+    this.sioCq = sioCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getIaCq() {
+    return iaCq;
+  }
+
+  public void setIaCq(ConcurrentLinkedQueue<Map<String, String>> iaCq) {
+    this.iaCq = iaCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getServerCq() {
+    return serverCq;
+  }
+
+  public void setServerCq(ConcurrentLinkedQueue<Map<String, String>> serverCq) {
+    this.serverCq = serverCq;
+  }
+
+  public ConcurrentLinkedQueue<Map<String, String>> getDeviceCq() {
+    return deviceCq;
+  }
+
+  public void setDeviceCq(ConcurrentLinkedQueue<Map<String, String>> deviceCq) {
+    this.deviceCq = deviceCq;
+  }
+
   public EventConfig getEventConfig() {
     return eventConfig;
   }
@@ -262,7 +319,8 @@ public class EventServerStart implements WatchCallerInterface {
   private static String redisIP;
   private static int redisPort;
   //private Jedis jedis;
-  public RedisUtil redisUtil = null;
+  //public RedisUtil redisUtil = null;
+  private ConcurrentLinkedQueue<String> cfgcq;
   private InputStream cfgFile;
   private final String cfgFileName = "event_service.xml";
 
@@ -274,13 +332,13 @@ public class EventServerStart implements WatchCallerInterface {
   private static Logger logger = LogManager.getLogger(EventServerStart.class.getName());
   private LogServiceClient logServiceClient = new LogServiceClient();
 
-  public RedisUtil getRedisUtil() {
-    return redisUtil;
-  }
-
-  public void setRedisUtil(RedisUtil redisUtil) {
-    this.redisUtil = redisUtil;
-  }
+//  public RedisUtil getRedisUtil() {
+//    return redisUtil;
+//  }
+//
+//  public void setRedisUtil(RedisUtil redisUtil) {
+//    this.redisUtil = redisUtil;
+//  }
 
   public static Logger getLogger() {
     return logger;
@@ -410,19 +468,11 @@ public class EventServerStart implements WatchCallerInterface {
   }
 
   public List<ReloadRequest> getReloadRequest() throws JsonFormat.ParseException {
-    //Set<String> set = jedis.keys("reload_config_req*");
-    Set<String> set = redisUtil.keys("reload_config_req*");
-    if (set == null || set.size() == 0) {
-      return null;
-    }
-    Iterator<String> it = set.iterator();
     List<ReloadRequest> reloadRequestList = new ArrayList<>();
-    while (it.hasNext()) {
-      String keyStr = it.next();
-      //String a = jedis.hget(keyStr, "req");
-      String a = redisUtil.hget(keyStr, "req");
+    while(cfgcq.isEmpty()){
+      String a = cfgcq.poll();
       if (a == null || a.length() == 0) {
-        System.out.println("wrong redis hash,and key:" + keyStr);
+        System.out.println("wrong cfgcq");
       } else {
         try {
           ReloadRequest.Builder builder = ReloadRequest.newBuilder();
@@ -434,10 +484,38 @@ public class EventServerStart implements WatchCallerInterface {
           getLogger().error(e.getMessage(), e);
         }
       }
-      redisUtil.del(keyStr);
-      //jedis.del(keyStr);
     }
     return reloadRequestList;
+
+//    Set<String> set = jedis.keys("reload_config_req*");
+//    Set<String> set = redisUtil.keys("reload_config_req*");
+//    if (set == null || set.size() == 0) {
+//      return null;
+//    }
+//    Iterator<String> it = set.iterator();
+//    List<ReloadRequest> reloadRequestList = new ArrayList<>();
+//    while (it.hasNext()) {
+//      String keyStr = it.next();
+//      //String a = jedis.hget(keyStr, "req");
+//      //String a = redisUtil.hget(keyStr, "req");
+//      String a = keyStr;
+//      if (a == null || a.length() == 0) {
+//        System.out.println("wrong redis hash,and key:" + keyStr);
+//      } else {
+//        try {
+//          ReloadRequest.Builder builder = ReloadRequest.newBuilder();
+//          com.google.protobuf.util.JsonFormat.parser().merge(a, builder);
+//          ReloadRequest req = builder.build();
+//          reloadRequestList.add(req);
+//        } catch (InvalidProtocolBufferException e) {
+//          e.printStackTrace();
+//          getLogger().error(e.getMessage(), e);
+//        }
+//      }
+//      redisUtil.del(keyStr);
+//      //jedis.del(keyStr);
+//    }
+//    return reloadRequestList;
   }
 
   public void updateConfig(MicroService myservice) throws SQLException, JsonFormat.ParseException {
@@ -644,11 +722,19 @@ public class EventServerStart implements WatchCallerInterface {
     //st = conn.createStatement();
   }
 
-  public void redisInit() {
-    redisUtil = new RedisUtil(redisIP,redisPort);
-    //jedis = new Jedis(redisIP, redisPort);
-  }
+//  public void redisInit() {
+//    redisUtil = new RedisUtil(redisIP,redisPort);
+//    //jedis = new Jedis(redisIP, redisPort);
+//  }
 
+  public void cqInit(){
+    monitorCq = new ConcurrentLinkedQueue<>();
+    sioCq = new ConcurrentLinkedQueue<>();
+    iaCq = new ConcurrentLinkedQueue<>();
+    deviceCq = new ConcurrentLinkedQueue<>();
+    serverCq = new ConcurrentLinkedQueue<>();
+    cCq = new ConcurrentLinkedQueue<>();
+  }
 
   public String evenType2string(int type) {
     if ((type == 1) || ((type > 100) && (type < 200))) { //VSEventTypeMonitor
@@ -665,8 +751,10 @@ public class EventServerStart implements WatchCallerInterface {
     server = NettyServerBuilder.forPort(PORT)
 //            .addService(new EventServer(redisIP, redisPort).bindService())
 //            .addService(new EventServer2(redisIP, redisPort).bindService())
-            .addService(new EventServer(getRedisUtil()).bindService())
-            .addService(new EventServer2(getRedisUtil()).bindService())
+//            .addService(new EventServer(getRedisUtil()).bindService())
+//            .addService(new EventServer2(getRedisUtil()).bindService())
+            .addService(new EventServer(getMonitorCq(),getSioCq(),getIaCq(),getServerCq(),getDeviceCq()).bindService())
+            .addService(new EventServer2(getcCq()).bindService())
             .build();
     server.start();
 
@@ -751,7 +839,8 @@ public class EventServerStart implements WatchCallerInterface {
     System.out.println("cpuNums :" + cpuNums);
     final EventServerStart simpleServerStart = new EventServerStart();
     simpleServerStart.cfgInit();
-    simpleServerStart.redisInit();
+    //simpleServerStart.redisInit();
+    simpleServerStart.cqInit();
     simpleServerStart.dbInit();
     MicroService myservice = new MicroServiceImpl();
     myservice.init(registerCenterAddress, simpleServerStart);
@@ -820,7 +909,8 @@ public class EventServerStart implements WatchCallerInterface {
     monitorProcess.setIaagMap(simpleServerStart.getIaagMap());
     monitorProcess.setProcessType(ProcessMonitorType);
     monitorProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    monitorProcess.setRedisUtil(simpleServerStart.getRedisUtil());
+    monitorProcess.setMonitorCq(simpleServerStart.getMonitorCq());
+    //monitorProcess.setRedisUtil(simpleServerStart.getRedisUtil());
     //monitorProcess.redisInit(redisIP, redisPort);
     monitorProcess.mqInit(activemqIp, activemqPort);
     monitorProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
@@ -835,7 +925,8 @@ public class EventServerStart implements WatchCallerInterface {
     sioProcess.setIaagMap(simpleServerStart.getIaagMap());
     sioProcess.setProcessType(ProcessSioType);
     sioProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    sioProcess.setRedisUtil(simpleServerStart.getRedisUtil());
+    sioProcess.setSioCq(simpleServerStart.getSioCq());
+    //sioProcess.setRedisUtil(simpleServerStart.getRedisUtil());
     //sioProcess.redisInit(redisIP, redisPort);
     sioProcess.mqInit(activemqIp, activemqPort);
     sioProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
@@ -850,7 +941,8 @@ public class EventServerStart implements WatchCallerInterface {
     iaProcess.setIaagMap(simpleServerStart.getIaagMap());
     iaProcess.setProcessType(ProcessIaType);
     iaProcess.dbInit(dbname, dbAddress, driverClassName, dbUser, dbPasswd);
-    iaProcess.setRedisUtil(simpleServerStart.getRedisUtil());
+    iaProcess.setIaCq(simpleServerStart.getIaCq());
+    //iaProcess.setRedisUtil(simpleServerStart.getRedisUtil());
     //iaProcess.redisInit(redisIP, redisPort);
     iaProcess.mqInit(activemqIp, activemqPort);
     iaProcess.setAlarmBellUrl(simpleServerStart.getAlarmUrl());
