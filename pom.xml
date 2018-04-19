@@ -78,8 +78,8 @@
             <version>1.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>activemq</artifactId>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
             <version>5.14.5</version>
         </dependency>
         <dependency>
