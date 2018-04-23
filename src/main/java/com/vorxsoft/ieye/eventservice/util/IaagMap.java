@@ -1,10 +1,17 @@
 package com.vorxsoft.ieye.eventservice.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.vorxsoft.ieye.eventservice.config.EventInfo;
 import com.vorxsoft.ieye.eventservice.config.IaConfigKey;
+import com.vorxsoft.ieye.eventservice.config.TimePeriod;
+import com.vorxsoft.ieye.eventservice.config.TimeScheduleItem;
 import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.eventservice.redis.EventRecord;
 import com.vorxsoft.ieye.proto.IACMDType;
+import com.vorxsoft.ieye.proto.Point;
+import com.vorxsoft.ieye.proto.Zoom;
+import com.vorxsoft.ieye.proto.ZoomOrBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,6 +88,54 @@ public class IaagMap {
     return type;
   }
 
+  public List<Zoom> createIaagChannelZoom(int iaag_channel_id) throws SQLException {
+    String sql = "SELECT ia_rule FROM ti_iaag_channel_zone WHERE iaag_channel_id = ?";
+    PreparedStatement pstmt = conn.prepareStatement(sql);
+    pstmt.setInt(1, iaag_channel_id);
+    ResultSet ret = pstmt.executeQuery();
+    List<Zoom> zooms = new ArrayList<>();
+    while (ret.next()) {
+      String rule = ret.getString(1);
+      JSONObject da = JSONObject.parseObject(rule);
+      System.out.println(da);
+      JSONArray b = da.getJSONArray("ia_rule");
+      System.out.println(b);
+      //JSONArray ja = JSONObject.parseArray(b.toString());
+      JSONObject ez = (JSONObject) b.getJSONObject(0).get("exclusionarea");
+      JSONObject rz = (JSONObject) b.getJSONObject(0).get("recognizearea");
+      JSONObject jo = null;
+      boolean isAnalysis = true;
+      if (ez != null) {
+        jo = ez;
+        isAnalysis = false;
+      } else if (rz != null) {
+        jo = rz;
+        isAnalysis = true;
+      }
+      if (jo == null) {
+        return null;
+      }
+      List<Point> points = new ArrayList();
+      Zoom.Builder build = Zoom.newBuilder().setIsAnalysis(isAnalysis);
+      for (int i = 0; i < jo.size(); i++) {
+        JSONArray aaa = jo.getJSONArray("");
+        for (int j = 0; j < aaa.size(); j++) {
+          JSONObject bb = (JSONObject) aaa.toArray()[j];
+          float x = Float.parseFloat(bb.get("x").toString());
+          float y = Float.parseFloat(bb.get("y").toString());
+          Point op = Point.newBuilder().setX(x).setY(y).build();
+          points.add(op);
+        }
+        build.addAllPoints(points);
+      }
+      zooms.add(build.build());
+    }
+    if(zooms.isEmpty()){
+      return null;
+    }
+    return zooms;
+  }
+
   public HashMap<Integer, IaagChannelInfo> createIaagChannelFromDB(int svr_id) throws SQLException {
     String sql = "SELECT iaag_chn_id,res_id,preset_no FROM tr_iaag_cam WHERE svr_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -122,6 +177,8 @@ public class IaagMap {
       //channels.put(svr_id,chanel);
       ret2.close();
       pstmt2.close();
+      List<Zoom> zooms = createIaagChannelZoom(iaag_chn_id);
+      chanel.setZooms(zooms);
     }
     ret.close();
     pstmt.close();

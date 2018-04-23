@@ -6,6 +6,7 @@ import com.vorxsoft.ieye.proto.IACMDType;
 import com.vorxsoft.ieye.proto.ResInfo;
 import java.sql.Connection;
 //import redis.clients.jedis.Connection;
+import com.vorxsoft.ieye.proto.Zoom;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
@@ -24,6 +25,16 @@ public class IaagChannelInfo {
   boolean hasSendCmd;
   private IACMDType cmdType;
 
+  public List<Zoom> getZooms() {
+    return zooms;
+  }
+
+  public void setZooms(List<Zoom> zooms) {
+    this.zooms = zooms;
+  }
+
+  private List<Zoom> zooms;
+
   public IaagChannelInfo() {
     this.iaag_chn_id =  0;
     this.svr_id = 0;
@@ -35,13 +46,15 @@ public class IaagChannelInfo {
     this.needSendcmd = false;
     this.hasSendCmd = false;
     cmdType = IACMDType.Stop;
+    zooms = new ArrayList<>();
   }
 
-  public com.vorxsoft.ieye.proto.ResInfo convert2ResInfo(Connection conn){
+  public ResInfo convert2ResInfo(Connection conn){
     ResUtil resUtil = new ResUtilImpl();
     resUtil.init(conn);
-    com.vorxsoft.ieye.proto.ResInfo resInfo = ResInfo.newBuilder().
+    ResInfo resInfo = ResInfo.newBuilder().
             setResourceId(getRes_id()).
+            addAllZoom(getZooms()).
             setResourceNo(resUtil.getResNo(getRes_id())).
             setDeviceId(resUtil.getResDevId(getRes_id())).
             setDeviceNo(resUtil.getResDevNo(getRes_id())).
@@ -58,9 +71,10 @@ public class IaagChannelInfo {
     setChn_state(builder.chn_state);
     setDev_id(builder.dev_id);
     setEvent_ids(builder.event_ids);
-    needSendcmd = builder.needSendcmd;
-    hasSendCmd = builder.hasSendCmd;
-    cmdType = builder.cmdType;
+    setNeedSendcmd(builder.needSendcmd);
+    setHasSendCmd(builder.hasSendCmd);
+    setCmdType(builder.cmdType);
+    setZooms(builder.zooms);
   }
 
   @Override
@@ -175,6 +189,7 @@ public class IaagChannelInfo {
     private boolean needSendcmd;
     private boolean hasSendCmd;
     private IACMDType cmdType;
+    private List<Zoom> zooms;
 
     private Builder() {
     }
@@ -226,6 +241,11 @@ public class IaagChannelInfo {
 
     public Builder cmdType(IACMDType val) {
       cmdType = val;
+      return this;
+    }
+
+    public Builder zooms(List<Zoom> val) {
+      zooms = val;
       return this;
     }
 
@@ -286,6 +306,7 @@ public class IaagChannelInfo {
     this.needSendcmd = false;
     this.hasSendCmd = false;
     cmdType = IACMDType.Stop;
+    zooms.clear();
   }
 
 }
