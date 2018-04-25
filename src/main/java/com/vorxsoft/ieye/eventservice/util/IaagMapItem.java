@@ -5,6 +5,7 @@ import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
 import com.vorxsoft.ieye.proto.*;
 import com.vorxsoft.ieye.proto.ResInfo;
 
+import javax.swing.event.DocumentEvent;
 import java.sql.Connection;
 import java.util.*;
 
@@ -14,12 +15,28 @@ public class IaagMapItem {
   public HashMap<Integer, IauItem> iaus;
   VsIAClient client;
 
+  public void clearhasSendCmd() {
+    sethasSendCmd(false);
+  }
+
   public void sethasSendCmd() {
+    sethasSendCmd(true);
+  }
+
+  private void sethasSendCmd(boolean flag) {
     Iterator it = getChannels().entrySet().iterator();
     while (it.hasNext()) {
       Map.Entry entry = (Map.Entry) it.next();
       IaagChannelInfo channal = (IaagChannelInfo) entry.getValue();
-      channal.setHasSendCmd(true);
+      channal.setHasSendCmd(flag);
+    }
+  }
+  private void setneedSendCmd(boolean flag) {
+    Iterator it = getChannels().entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry entry = (Map.Entry) it.next();
+      IaagChannelInfo channal = (IaagChannelInfo) entry.getValue();
+      channal.setNeedSendcmd(flag);
     }
   }
 
@@ -38,22 +55,32 @@ public class IaagMapItem {
   private void dispatch(Connection conn, boolean ischeckstat, boolean issendStop) {
     if (getClient() == null)
       return;
-    if (getChannels() == null || getChannels().size() == 0)
-      return;
-    SentIACMDRequest.Builder builer = SentIACMDRequest.newBuilder();
-    SentIACMDRequest.Builder builer2 = SentIACMDRequest.newBuilder();
-    //start list
-    List<ResInfo> resInfos = new ArrayList<>();
-    //stop list
-    List<ResInfo> resInfos2 = new ArrayList<>();
-    Iterator it = getChannels().entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry entry = (Map.Entry) it.next();
-      Object key = entry.getKey();
-      Object val = entry.getValue();
-      IaagChannelInfo channal = (IaagChannelInfo) val;
-      if (ischeckstat) {
-        if (channal.isNeedSendcmd() && !channal.isHasSendCmd()) {
+    if(getChannels() != null && getChannels().size() != 0) {
+      SentIACMDRequest.Builder builer = SentIACMDRequest.newBuilder();
+      SentIACMDRequest.Builder builer2 = SentIACMDRequest.newBuilder();
+      //start list
+      List<ResInfo> resInfos = new ArrayList<>();
+      //stop list
+      List<ResInfo> resInfos2 = new ArrayList<>();
+      Iterator it = getChannels().entrySet().iterator();
+      while (it.hasNext()) {
+        Map.Entry entry = (Map.Entry) it.next();
+        Object key = entry.getKey();
+        Object val = entry.getValue();
+        IaagChannelInfo channal = (IaagChannelInfo) val;
+        if (ischeckstat) {
+          if (channal.mustSendCmd()) {
+            ResInfo a = channal.convert2ResInfo(conn);
+            if (channal.getCmdType() == IACMDType.Start) {
+              resInfos.add(a);
+            } else if (channal.getCmdType() == IACMDType.Stop) {
+              resInfos2.add(a);
+            }
+          }
+        } else if (issendStop) { //stop all channel
+          ResInfo a = channal.convert2ResInfo(conn);
+          resInfos2.add(a);
+        } else {
           ResInfo a = channal.convert2ResInfo(conn);
           if (channal.getCmdType() == IACMDType.Start) {
             resInfos.add(a);
@@ -61,27 +88,37 @@ public class IaagMapItem {
             resInfos2.add(a);
           }
         }
-      } else if (issendStop) { //stop all channel
-        ResInfo a = channal.convert2ResInfo(conn);
-        resInfos2.add(a);
-      } else {
-        ResInfo a = channal.convert2ResInfo(conn);
-        if (channal.getCmdType() == IACMDType.Start) {
-          resInfos.add(a);
-        } else if (channal.getCmdType() == IACMDType.Stop) {
-          resInfos2.add(a);
-        }
       }
+      if (resInfos.size() > 0) {
+        SentIACMDRequest req = builer.setCmdId(0).setCmdType(IACMDType.Start).addAllResInfoList(resInfos).build();
+        getClient().sentIACMD(req);
+      }
+      if (resInfos2.size() > 0) {
+        SentIACMDRequest req2 = builer2.setCmdId(1).setCmdType(IACMDType.Stop).addAllResInfoList(resInfos2).build();
+        getClient().sentIACMD(req2);
+      }
+      sethasSendCmd();
     }
-    if (resInfos.size() > 0) {
-      SentIACMDRequest req = builer.setCmdId(0).setCmdType(IACMDType.Start).addAllResInfoList(resInfos).build();
-      getClient().sentIACMD(req);
+    dispatchInterval();
+  }
+
+
+  public void  dispatchInterval()
+  {
+    HashMap<String, Integer> map = getIaagInfo().getIntervalMap();
+    if(map == null) return ;
+    if(!iaagInfo.mustSendInterval()) return ;
+    Iterator iter = map.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry entry = (Map.Entry) iter.next();
+      String type = (String)entry.getKey();
+      int interval = (int) entry.getValue();
+      VSEventType vsEventType = Constant.eventType2VSEventType(type);
+      SentIAIntervalRequest request = SentIAIntervalRequest.newBuilder().
+                            setCmdId(0).setInterval(interval).setType(vsEventType).build();
+      getClient().sendIAInterval(request);
+      getIaagInfo().setHasSendInterval(true);
     }
-    if (resInfos2.size() > 0) {
-      SentIACMDRequest req2 = builer2.setCmdId(1).setCmdType(IACMDType.Stop).addAllResInfoList(resInfos2).build();
-      getClient().sentIACMD(req2);
-    }
-    sethasSendCmd();
   }
 
   public VsIAClient getClient() {

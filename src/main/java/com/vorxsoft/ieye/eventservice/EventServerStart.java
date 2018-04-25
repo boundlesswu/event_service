@@ -149,6 +149,7 @@ public class EventServerStart implements WatchCallerInterface {
             IaagMapItem b = getIaagMap().findIaagMapItem(address);
             if (b != null) {
               getLogger().error("find iaag of address(" + address + ") in IaagMap and redispatch ");
+              b.getIaagInfo().setOnLine(true);
               b.setClient(client);
               b.redispatch(getConn());
             } else {
@@ -203,6 +204,7 @@ public class EventServerStart implements WatchCallerInterface {
             IaagMapItem b = getIaagMap().findIaagMapItem(address);
             if (b != null) {
               b.setClient(null);
+              b.getIaagInfo().setOnLine(false);
               getIaagMap().getIaags().remove(b);
             } else {
               getLogger().error("server_iaag :" + address + " client not found in IaagMap");

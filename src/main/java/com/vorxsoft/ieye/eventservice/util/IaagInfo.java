@@ -1,6 +1,6 @@
 package com.vorxsoft.ieye.eventservice.util;
 
-import com.vorxsoft.ieye.eventservice.grpc.VsIAClient;
+import java.util.HashMap;
 
 public class IaagInfo {
   private int svr_id;
@@ -13,6 +13,46 @@ public class IaagInfo {
   private int port_intranet;
   private String remark;
   private String preset_no;
+  private HashMap<String, Integer> intervalMap;
+  private boolean isOnLine = false;
+  private boolean needSendInterval;
+  private boolean hasSendInterval;
+
+  public boolean mustSendInterval(){
+    return (isOnLine() && isNeedSendInterval() && isHasSendInterval()) ;
+  }
+
+  public boolean isOnLine() {
+    return isOnLine;
+  }
+
+  public void setOnLine(boolean onLine) {
+    isOnLine = onLine;
+  }
+
+  public boolean isNeedSendInterval() {
+    return needSendInterval;
+  }
+
+  public void setNeedSendInterval(boolean needSendInterval) {
+    this.needSendInterval = needSendInterval;
+  }
+
+  public boolean isHasSendInterval() {
+    return hasSendInterval;
+  }
+
+  public void setHasSendInterval(boolean hasSendInterval) {
+    this.hasSendInterval = hasSendInterval;
+  }
+
+  public HashMap<String, Integer> getIntervalMap() {
+    return intervalMap;
+  }
+
+  public void setIntervalMap(HashMap<String, Integer> intervalMap) {
+    this.intervalMap = intervalMap;
+  }
 
   public IaagInfo() {
   }
@@ -28,6 +68,10 @@ public class IaagInfo {
     setPort_intranet(builder.port_intranet);
     setRemark(builder.remark);
     setPreset_no(builder.preset_no);
+    setIntervalMap(builder.intervalMap);
+    setOnLine(builder.isOnLine);
+    setNeedSendInterval(builder.needSendcmd);
+    setHasSendInterval(builder.hasSendCmd);
   }
 
   public static Builder newBuilder() {
@@ -140,6 +184,10 @@ public class IaagInfo {
     private int port_intranet;
     private String remark;
     private String preset_no;
+    private HashMap<String, Integer> intervalMap;
+    private boolean isOnLine;
+    private boolean needSendcmd;
+    private boolean hasSendCmd;
 
     private Builder() {
     }
@@ -191,6 +239,26 @@ public class IaagInfo {
 
     public Builder preset_no(String val) {
       preset_no = val;
+      return this;
+    }
+
+    public Builder intervalMap(HashMap<String, Integer> val) {
+      intervalMap = val;
+      return this;
+    }
+
+    public Builder isOnLine(boolean val) {
+      isOnLine = val;
+      return this;
+    }
+
+    public Builder needSendcmd(boolean val) {
+      needSendcmd = val;
+      return this;
+    }
+
+    public Builder hasSendCmd(boolean val) {
+      hasSendCmd = val;
       return this;
     }
 
@@ -281,5 +349,7 @@ public class IaagInfo {
     this.port_intranet = 0;
     this.remark = "";
     this.preset_no = "";
+    this.intervalMap.clear();
+    this.intervalMap = null;
   }
 }

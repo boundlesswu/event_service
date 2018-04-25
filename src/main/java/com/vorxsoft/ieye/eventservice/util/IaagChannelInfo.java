@@ -1,7 +1,5 @@
 package com.vorxsoft.ieye.eventservice.util;
 
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.prism.paint.Stop;
 import com.vorxsoft.ieye.proto.IACMDType;
 import com.vorxsoft.ieye.proto.ResInfo;
 import java.sql.Connection;
@@ -25,6 +23,9 @@ public class IaagChannelInfo {
   boolean hasSendCmd;
   private IACMDType cmdType;
 
+  public boolean mustSendCmd(){
+    return (isNeedSendCmd() && !isHasSendCmd());
+  }
   public List<Zoom> getZooms() {
     return zooms;
   }
@@ -97,7 +98,7 @@ public class IaagChannelInfo {
     return new Builder();
   }
 
-  public boolean isNeedSendcmd() {
+  public boolean isNeedSendCmd() {
     return needSendcmd;
   }
 

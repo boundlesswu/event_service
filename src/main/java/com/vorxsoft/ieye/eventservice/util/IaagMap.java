@@ -42,6 +42,24 @@ public class IaagMap {
     this.conn = conn;
   }
 
+  public HashMap<String, Integer> createIaagIntervalMap(int svr_id) throws SQLException{
+    String sql = "SELECT a.event_type,a.interval from ti_event_ia_interval a where a.svr_id = ?";
+    PreparedStatement pstmt = conn.prepareStatement(sql);
+    ResultSet ret = pstmt.executeQuery();
+    HashMap<String, Integer> hash = null;
+    while (ret.next()) {
+      String type  = ret.getString(1);
+      int interval = ret.getInt(2);
+      if(hash == null){
+        hash = new  HashMap<>();
+      }
+      hash.put(type,interval);
+    }
+    ret.close();
+    pstmt.close();
+    return hash;
+  }
+
   public void load() throws SQLException {
     String sql = "SELECT a.svr_id,a.svr_no ,a.svr_name,a.machine_id,a.remark,b.ip_intranet,b.ip_extranet,b.port_intranet,b.port_extranet" +
             " FROM ti_server a INNER JOIN ti_server_main_ex b ON a.svr_id = b.svr_id " +
@@ -62,6 +80,10 @@ public class IaagMap {
               ip_extranet(ret.getString(7)).
               port_intranet(ret.getInt(8)).
               port_extranet(ret.getInt(9)).
+              intervalMap(createIaagIntervalMap(svr_id)).
+              isOnLine(false).
+              needSendcmd(true).
+              hasSendCmd(false).
               build();
       HashMap<Integer, IauItem> iaus = createIauHashMapFromDB(svr_id);
       HashMap<Integer, IaagChannelInfo> channels = createIaagChannelFromDB(svr_id);

@@ -116,6 +116,27 @@ public class VsIAClient extends GrpcClient {
     stub.queryIAUList(request, responseObserver);
   }
 
+  public void sendIAInterval(SentIAIntervalRequest request){
+    StreamObserver<SentIAIntervalResponse> responseObserver = new StreamObserver<SentIAIntervalResponse>(){
+      @Override
+      public void onNext(SentIAIntervalResponse value) {
+        System.out.println("cmdId : " + value.getCmdId() + " result is : "+ value.getResult());
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        System.out.println("sendIAInterval onError" + t);
+      }
+
+      @Override
+      public void onCompleted() {
+        // Won't be called, since the server in this example always
+        // fails.
+      }
+    };
+    stub.sentIAInterval(request,responseObserver);
+  }
+
   public void zero() {
     this.stub = null;
     super.zero();

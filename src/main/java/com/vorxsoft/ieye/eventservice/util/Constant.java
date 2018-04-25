@@ -1,5 +1,9 @@
 package com.vorxsoft.ieye.eventservice.util;
 
+import com.vorxsoft.ieye.proto.VSEventType;
+
+import static com.vorxsoft.ieye.proto.VSEventType.*;
+
 public class Constant {
   public static final String sGenusSio = new String("event_sio");
   public static final String sGenusMonitor = new String("event_monitor");
@@ -42,6 +46,9 @@ public class Constant {
     if(type.equals("event_ia_traffic_condition")) return sGenusIa;
     if(type.equals("event_ia_traffic_lowspeed")) return sGenusIa;
     if(type.equals("event_ia_traffic_flowrate")) return sGenusIa;
+    if(type.equals("event_ia_traffic_smoke")) return sGenusIa;
+    if(type.equals("event_ia_traffic_abandoned")) return sGenusIa;
+    if(type.equals("event_ia_traffic_jam")) return sGenusIa;
 
     if(type.equals("event_server")) return sGenusServer;
     if(type.equals("event_svr_offline")) return sGenusServer;
@@ -60,5 +67,53 @@ public class Constant {
     if(type.equals("event_dev_record_err")) return sGenusDeveice;
 
     return null;
+  }
+  public static VSEventType eventType2VSEventType(String type){
+    if (type.equals("event_monitor")) return event_monitor;
+    if (type.equals("event_motion_detect")) return event_motion_detect;
+    if (type.equals("event_video_lose")) return event_video_lose;
+    if (type.equals("event_video_occlusion")) return event_video_occlusion;
+    if (type.equals("event_face_snapshot")) return event_face_snapshot;
+    if (type.equals("event_face_recognize")) return event_face_recognize;
+    if (type.equals("event_steal_move")) return event_steal_move;
+    if (type.equals("event_perimeter_alarm")) return event_perimeter_alarm;
+
+    if(type.equals("event_sio")) return event_sio;
+    if(type.equals("event_sio_common")) return event_sio_common;
+    if(type.equals("event_sio_smoke")) return event_sio_smoke;
+    if(type.equals("event_sio_temperature")) return event_sio_temperature;
+    if(type.equals("event_sio_fire")) return event_sio_fire;
+    if(type.equals("event_sio_gas")) return event_sio_gas;
+    if(type.equals("event_sio_infrared")) return event_sio_infrared;
+    if(type.equals("event_sio_vibration")) return event_sio_vibration;
+
+    if(type.equals("event_ia")) return event_ia;
+    if(type.equals("event_ia_traffic_stop")) return event_ia_traffic_stop;
+    if(type.equals("event_ia_traffic_human")) return event_ia_traffic_human;
+    if(type.equals("event_ia_traffic_converse")) return event_ia_traffic_converse;
+    if(type.equals("event_ia_traffic_condition")) return event_ia_traffic_condition;
+    if(type.equals("event_ia_traffic_lowspeed")) return event_ia_traffic_lowspeed;
+    if(type.equals("event_ia_traffic_flowrate")) return event_ia_traffic_flowrate;
+    if(type.equals("event_ia_traffic_smoke")) return event_ia_traffic_smoke;
+    if(type.equals("event_ia_traffic_abandoned")) return event_ia_traffic_abandoned;
+    if(type.equals("event_ia_traffic_jam")) return event_ia_traffic_jam;
+
+    if(type.equals("event_server")) return event_server;
+    if(type.equals("event_svr_offline")) return event_svr_offline;
+    if(type.equals("event_svr_cpu")) return event_svr_cpu;
+    if(type.equals("event_svr_ram")) return event_svr_ram;
+    if(type.equals("event_svr_disk_err")) return event_svr_disk_err;
+    if(type.equals("event_svr_disk_full")) return event_svr_disk_full;
+    if(type.equals("event_svr_record_err")) return event_svr_record_err;
+
+    if(type.equals("event_device")) return event_device;
+    if(type.equals("event_dev_offline")) return event_dev_offline;
+    if(type.equals("event_dev_cpu")) return event_dev_cpu;
+    if(type.equals("event_dev_ram")) return event_dev_ram;
+    if(type.equals("event_dev_disk_err")) return event_dev_disk_err;
+    if(type.equals("event_dev_disk_full")) return event_dev_disk_full;
+    if(type.equals("event_dev_record_err")) return event_dev_record_err;
+
+    return event_null;
   }
 }
