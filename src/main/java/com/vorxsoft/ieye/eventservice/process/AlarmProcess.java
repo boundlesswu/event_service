@@ -1,15 +1,14 @@
 package com.vorxsoft.ieye.eventservice.process;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import com.vorxsoft.ieye.eventservice.config.*;
 import com.vorxsoft.ieye.eventservice.db.*;
 import com.vorxsoft.ieye.eventservice.grpc.VsIeyeClient;
 import com.vorxsoft.ieye.eventservice.mq.Publisher;
-import com.vorxsoft.ieye.eventservice.redis.AlarmStormInfo;
-import com.vorxsoft.ieye.eventservice.redis.AlarmStormRecordMap;
-import com.vorxsoft.ieye.eventservice.redis.EventRecord;
-import com.vorxsoft.ieye.eventservice.redis.EventRecordMap;
+import com.vorxsoft.ieye.eventservice.redis.*;
 import com.vorxsoft.ieye.eventservice.util.*;
 import com.vorxsoft.ieye.proto.EventWithLinkage;
 import com.vorxsoft.ieye.proto.ReportLinkageRequest;
@@ -21,6 +20,7 @@ import javax.jms.JMSException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +34,15 @@ public class AlarmProcess implements Runnable {
   private ConcurrentLinkedQueue<Map<String, String>> iaCq;
   private ConcurrentLinkedQueue<Map<String, String>> serverCq;
   private ConcurrentLinkedQueue<Map<String, String>> deviceCq;
+  private ConcurrentLinkedQueue<TrafficFlowrateLog> flowrateCq = new ConcurrentLinkedQueue<>();
+
+  public ConcurrentLinkedQueue<TrafficFlowrateLog> getFlowrateCq() {
+    return flowrateCq;
+  }
+
+  public void setFlowrateCq(ConcurrentLinkedQueue<TrafficFlowrateLog> flowrateCq) {
+    this.flowrateCq = flowrateCq;
+  }
 
   public ConcurrentLinkedQueue<Map<String, String>> getMonitorCq() {
     return monitorCq;
@@ -276,6 +285,8 @@ public class AlarmProcess implements Runnable {
         Thread.sleep(100);
         processEvent();
         //Thread.sleep((int) Math.random() * 10);
+        Thread.sleep(100);
+        processFlowrateCq();
         Thread.sleep(100);
         if (i % 100 == 0) {
           //System.out.println("process :" + getName() + getProcessType() + "is running");
@@ -659,6 +670,10 @@ public class AlarmProcess implements Runnable {
           getLogger().debug("success insert event  log" + "event log id :" + LogId);
           record.setnEventlogID(LogId);
           record.setbInsert2log(false);
+          //event_ia_traffic_flowrate process
+          if(record.getsEventType().equals("event_ia_traffic_flowrate")){
+            insert2flowrateCq(LogId,record.getnEventID(),record.getsExtraDesc(),TimeUtil.string2timestamp(record.getsHappentime()));
+          }
         }
       }
       if (LogId > 0) {
@@ -807,6 +822,54 @@ public class AlarmProcess implements Runnable {
 //      publisher.publishMsg(getEventRecordMap().convert2jsonString());
 //    }
     getEventRecordMap().clearRecord();
+  }
+
+  private void processFlowrateCq() throws SQLException {
+    while (!getFlowrateCq().isEmpty()){
+      TrafficFlowrateLog  trafficFlowrateLog = getFlowrateCq().poll();
+      trafficFlowrateLog.insert2db(getConn());
+    }
+  }
+
+  private void insert2flowrateCq(int logId, int eventId, String s, Timestamp timestamp) {
+//    {
+//      "trafficFlowrate": [{
+//      "direction": "up",
+//              "vehicleType": "all",
+//              "value": "1234"
+//    }, {
+//      "direction": "down",
+//              "vehicleType": "all",
+//              "value": "2134"
+//    }, {
+//      "direction": "up",
+//              "vehicleType": "car",
+//              "value": "231"
+//    }, {
+//      "direction": "up",
+//              "vehicleType": "suv",
+//              "value": "312"
+//    }, {
+//      "direction": "down",
+//              "vehicleType": "car",
+//              "value": "2134"
+//    }]
+//    }
+    JSONObject da = JSONObject.parseObject(s);
+    System.out.println(da);
+    JSONArray b = da.getJSONArray("trafficFlowrate");
+    System.out.println(b);
+
+    for (int i = 0; i<b.size() ; i++) {
+      JSONObject bbb = (JSONObject) b.toArray()[i];
+      System.out.println(bbb);
+      System.out.println(bbb.get("name"));
+      String direction =  bbb.get("direction").toString();
+      String type = bbb.get("vehicleType").toString();
+      int value = Integer.parseInt(bbb.get("value").toString());
+      TrafficFlowrateLog trafficFlowrateLog = new TrafficFlowrateLog(logId,eventId,direction,type,timestamp,value);
+      getFlowrateCq().add(trafficFlowrateLog);
+    }
   }
 }
 
