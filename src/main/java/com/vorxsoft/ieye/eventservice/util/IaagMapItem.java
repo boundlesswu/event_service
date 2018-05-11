@@ -55,6 +55,7 @@ public class IaagMapItem {
   private void dispatch(Connection conn, boolean ischeckstat, boolean issendStop) {
     if (getClient() == null)
       return;
+    dispatchInterval();
     if(getChannels() != null && getChannels().size() != 0) {
       SentIACMDRequest.Builder builer = SentIACMDRequest.newBuilder();
       SentIACMDRequest.Builder builer2 = SentIACMDRequest.newBuilder();
@@ -99,7 +100,6 @@ public class IaagMapItem {
       }
       sethasSendCmd();
     }
-    dispatchInterval();
   }
 
 

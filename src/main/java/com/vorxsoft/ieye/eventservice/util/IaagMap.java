@@ -45,19 +45,26 @@ public class IaagMap {
   public HashMap<String, Integer> createIaagIntervalMap(int svr_id) throws SQLException{
     String sql = "SELECT a.event_type,a.interval from ti_event_ia_interval a where a.svr_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
-    ResultSet ret = pstmt.executeQuery();
+    pstmt.setInt(1, svr_id);
     HashMap<String, Integer> hash = null;
-    while (ret.next()) {
-      String type  = ret.getString(1);
-      int interval = ret.getInt(2);
-      if(hash == null){
-        hash = new  HashMap<>();
-      }
-      hash.put(type,interval);
+    if (hash == null) {
+      hash = new HashMap<>();
     }
-    ret.close();
-    pstmt.close();
-    return hash;
+    try {
+      ResultSet ret = pstmt.executeQuery();
+      while (ret.next()) {
+        String type = ret.getString(1);
+        int interval = ret.getInt(2);
+        hash.put(type, interval);
+      }
+      ret.close();
+      pstmt.close();
+      //return hash;
+    } catch (Exception e) {
+      System.out.println(e);
+    } finally {
+      return hash;
+    }
   }
 
   public void load() throws SQLException {
@@ -111,49 +118,52 @@ public class IaagMap {
   }
 
   public List<Zoom> createIaagChannelZoom(int iaag_channel_id) throws SQLException {
-    String sql = "SELECT ia_rule FROM ti_iaag_channel_zone WHERE iaag_channel_id = ?";
+    String sql = "SELECT ia_rule FROM ti_iaag_channel_zone WHERE iaag_chn_id = ?";
     PreparedStatement pstmt = conn.prepareStatement(sql);
     pstmt.setInt(1, iaag_channel_id);
-    ResultSet ret = pstmt.executeQuery();
     List<Zoom> zooms = new ArrayList<>();
-    while (ret.next()) {
-      String rule = ret.getString(1);
-      JSONObject da = JSONObject.parseObject(rule);
-      System.out.println(da);
-      JSONArray b = da.getJSONArray("ia_rule");
-      System.out.println(b);
-      //JSONArray ja = JSONObject.parseArray(b.toString());
-      JSONObject ez = (JSONObject) b.getJSONObject(0).get("exclusionarea");
-      JSONObject rz = (JSONObject) b.getJSONObject(0).get("recognizearea");
-      JSONObject jo = null;
-      boolean isAnalysis = true;
-      if (ez != null) {
-        jo = ez;
-        isAnalysis = false;
-      } else if (rz != null) {
-        jo = rz;
-        isAnalysis = true;
-      }
-      if (jo == null) {
-        return null;
-      }
-      List<Point> points = new ArrayList();
-      Zoom.Builder build = Zoom.newBuilder().setIsAnalysis(isAnalysis);
-      for (int i = 0; i < jo.size(); i++) {
-        JSONArray aaa = jo.getJSONArray("");
-        for (int j = 0; j < aaa.size(); j++) {
-          JSONObject bb = (JSONObject) aaa.toArray()[j];
-          float x = Float.parseFloat(bb.get("x").toString());
-          float y = Float.parseFloat(bb.get("y").toString());
-          Point op = Point.newBuilder().setX(x).setY(y).build();
-          points.add(op);
+    try {
+      ResultSet ret = pstmt.executeQuery();
+      while (ret.next()) {
+        String rule = ret.getString(1);
+        JSONObject da = JSONObject.parseObject(rule);
+        System.out.println(da);
+        JSONArray b = da.getJSONArray("ia_rule");
+        System.out.println(b);
+        //JSONArray ja = JSONObject.parseArray(b.toString());
+        JSONObject ez = (JSONObject) b.getJSONObject(0).get("exclusionarea");
+        JSONObject rz = (JSONObject) b.getJSONObject(0).get("recognizearea");
+        JSONObject jo = null;
+        boolean isAnalysis = true;
+        if (ez != null) {
+          jo = ez;
+          isAnalysis = false;
+        } else if (rz != null) {
+          jo = rz;
+          isAnalysis = true;
         }
-        build.addAllPoints(points);
+        if (jo == null) {
+          return null;
+        }
+        List<Point> points = new ArrayList();
+        Zoom.Builder build = Zoom.newBuilder().setIsAnalysis(isAnalysis);
+        for (int i = 0; i < jo.size(); i++) {
+          JSONArray aaa = jo.getJSONArray("");
+          for (int j = 0; j < aaa.size(); j++) {
+            JSONObject bb = (JSONObject) aaa.toArray()[j];
+            float x = Float.parseFloat(bb.get("x").toString());
+            float y = Float.parseFloat(bb.get("y").toString());
+            Point op = Point.newBuilder().setX(x).setY(y).build();
+            points.add(op);
+          }
+          build.addAllPoints(points);
+        }
+        zooms.add(build.build());
       }
-      zooms.add(build.build());
-    }
-    if(zooms.isEmpty()){
-      return null;
+      return zooms;
+    } catch (Exception e) {
+      System.out.println(e);
+    } finally {
     }
     return zooms;
   }

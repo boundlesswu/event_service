@@ -286,7 +286,7 @@ public class EventServerStart implements WatchCallerInterface {
     this.eventConfig = eventConfig;
   }
 
-  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(4);
+  private ScheduledExecutorService executor_ = Executors.newScheduledThreadPool(6);
   ;
   public long count = 0;
 
@@ -1000,6 +1000,7 @@ public class EventServerStart implements WatchCallerInterface {
       try {
         getLogger().info("updateConfig  thread : " + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + "  is running");
         simpleServerStart.updateConfig(myservice);
+        //simpleServerStart.getIaagMap().dispatch();
       } catch (SQLException e) {
         simpleServerStart.getLogger().error(e.getMessage(), e);
         e.printStackTrace();
@@ -1008,8 +1009,8 @@ public class EventServerStart implements WatchCallerInterface {
         e.printStackTrace();
       }
       simpleServerStart.getIaagMap().dispatch();
-    }, 1l, 1L, TimeUnit.SECONDS);
+    }, 1L, 1L, TimeUnit.SECONDS);
 
-    TimeUnit.DAYS.sleep(365 * 2000);
+    //TimeUnit.DAYS.sleep(365 * 2000);
   }
 }

@@ -14,12 +14,12 @@ public class IaagInfo {
   private String remark;
   private String preset_no;
   private HashMap<String, Integer> intervalMap;
-  private boolean isOnLine = false;
+  private boolean isOnLine = true;
   private boolean needSendInterval;
   private boolean hasSendInterval;
 
   public boolean mustSendInterval(){
-    return (isOnLine() && isNeedSendInterval() && isHasSendInterval()) ;
+    return (isOnLine() && isNeedSendInterval() && !isHasSendInterval());
   }
 
   public boolean isOnLine() {
