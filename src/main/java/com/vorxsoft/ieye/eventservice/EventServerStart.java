@@ -887,6 +887,23 @@ public class EventServerStart implements WatchCallerInterface {
     }
     simpleServerStart.setIaagClients2(iaagAdress);
 
+    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
+      try {
+        getLogger().info("updateConfig  thread : " + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + "  is running");
+        System.out.println("updateConfig  thread : " + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + "  is running");
+        simpleServerStart.updateConfig(myservice);
+        //simpleServerStart.getIaagMap().dispatch();
+      } catch (SQLException e) {
+        simpleServerStart.getLogger().error(e.getMessage(), e);
+        e.printStackTrace();
+      } catch (JsonFormat.ParseException e) {
+        simpleServerStart.getLogger().error(e.getMessage(), e);
+        e.printStackTrace();
+      }
+      simpleServerStart.getIaagMap().dispatch();
+    }, 1L, 1L, TimeUnit.SECONDS);
+
+
 //    //#####################################################################
 //    String alarmBellUrl = "http://" + "192.168.20.145"+ ":" + 8080 + "/" + "sendMessage";
 //    System.out.println("alarmBellUrl"+alarmBellUrl);
@@ -996,20 +1013,6 @@ public class EventServerStart implements WatchCallerInterface {
 //      }
 //    }, 1l, 1L, TimeUnit.SECONDS);
 
-    simpleServerStart.getExecutor().scheduleWithFixedDelay(() -> {
-      try {
-        getLogger().info("updateConfig  thread : " + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + "  is running");
-        simpleServerStart.updateConfig(myservice);
-        //simpleServerStart.getIaagMap().dispatch();
-      } catch (SQLException e) {
-        simpleServerStart.getLogger().error(e.getMessage(), e);
-        e.printStackTrace();
-      } catch (JsonFormat.ParseException e) {
-        simpleServerStart.getLogger().error(e.getMessage(), e);
-        e.printStackTrace();
-      }
-      simpleServerStart.getIaagMap().dispatch();
-    }, 1L, 1L, TimeUnit.SECONDS);
 
     //TimeUnit.DAYS.sleep(365 * 2000);
   }
